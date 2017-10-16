@@ -1,0 +1,31 @@
+
+<div *ngFor="let cardEntry of analyzerData">
+    <div class="col-md-4"> 
+        <div class="bg-color-green panel panel-primary text-center no-border">
+            <div class="panel-footer back-footer-green panel-title">
+                {{cardEntry.title}}
+            </div> 
+            <div class="panel-body">
+                <i class="fa fa-bar-chart-o fa-5x"></i>
+                <h3>{{cardEntry.subTitle}}</h3>
+                <hr/>
+                <div *ngFor="let content of cardEntry.contents">
+                    <div class="row">
+                        <div class="col-md-4 text-left">
+                            <span><strong>{{content.title}}:</strong></span>
+                        </div>
+                        <div class="col-lg-8 text-right">
+                            <div *ngIf="content.hasUrl()">
+                                <a class="statisticsEntry" href="{{content.url}}" target="_blank"><span>{{content.subTitle}}</span></a>
+                            </div>
+                            <div *ngIf="!content.hasUrl()">
+                                <span>{{content.subTitle}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                </div>
+            </div>
+        </div> 
+    </div>
+</div>

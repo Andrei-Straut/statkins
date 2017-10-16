@@ -1,0 +1,11 @@
+/src/main/webapp/node_modules/
+/src/main/webapp/app/**/*.js
+/src/main/webapp/app/**/*.js.map
+/src/main/webapp/aot/
+/src/main/webapp/dist/
+/target/
+/nb-configuration.xml
+/nbactions.xml
+/npmProxyDisable.cmd
+/npmProxyEnable.cmd
+/*.log

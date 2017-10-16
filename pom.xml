@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.andreistraut</groupId>
+    <artifactId>statkins</artifactId>
+    <name>statkins</name>
+    <version>1.0</version>
+    <packaging>war</packaging>
+
+    <properties>
+        <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <aot>false</aot>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>7.0</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <!-- Copy and clean node dir -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
+                    <warSourceExcludes>
+                        **/*.ts,
+                        **/*.md,
+                        **/node_modules/**/test/**,
+                        **/node_modules/**/tests/**,
+                        **/node_modules/**/testing/**,
+                        **/node_modules/**/src/**,
+                        **/node_modules/**/docs/**,
+                        **/node_modules/**/*.json,
+                        **/node_modules/**/*.jpg,
+                        **/node_modules/**/*.png,
+                        **/node_modules/**/.*,
+                        **/node_modules/**/licence
+                    </warSourceExcludes>
+                </configuration>
+            </plugin>
+            <!-- Switch to dev config -->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>replace-main-dev</id>
+                        <phase>process-sources</phase>
+                        <configuration>
+                            <tasks>
+                                <copy file="src/main/webapp/app/main.ts.dev" tofile="src/main/webapp/app/main.ts" overwrite="true"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.5.0</version>
+                <executions>
+                    <!-- Install node dependencies -->
+                    <execution>
+                        <id>exec-npm-install</id>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <workingDirectory>${project.basedir}/src/main/webapp</workingDirectory>
+                            <executable>npm.cmd</executable>
+                            <arguments>
+                                <argument>install</argument>
+                            </arguments>
+                        </configuration>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                    <!-- Compile typescript -->
+                    <execution>
+                        <id>exec-npm-run-tsc</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <workingDirectory>${project.basedir}/src/main/webapp</workingDirectory>
+                            <executable>tsc.cmd</executable>
+                        </configuration>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <profiles>
+        <profile>
+            <id>aot-compile</id>
+            <properties>
+                <aot>true</aot>
+            </properties>
+            <build>
+                <plugins>
+                    <!-- Switch to aot config -->
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <id>replace-main-aot</id>
+                                <phase>initialize</phase>
+                                <configuration>
+                                    <tasks>
+                                        <copy file="src/main/webapp/app/main.ts.aot" tofile="src/main/webapp/app/main.ts" overwrite="true"/>
+                                    </tasks>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.5.0</version>
+                        <executions>
+                            <execution>
+                                <id>exec-npm-run-tsc</id>
+                                <phase>none</phase>
+                            </execution>
+                            <!-- AOT Compile -->
+                            <execution>
+                                <id>exec-npm-run-aot</id>
+                                <phase>generate-sources</phase>
+                                <configuration>
+                                    <workingDirectory>${project.basedir}/src/main/webapp</workingDirectory>
+                                    <executable>node_modules/.bin/ngc.cmd</executable>
+                                    <arguments>
+                                        <argument>-p</argument>
+                                        <argument>tsconfig-aot.json</argument>
+                                    </arguments>
+                                </configuration>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                            </execution>
+                            <!-- Rollup -->
+                            <execution>
+                                <id>exec-npm-run-rollup</id>
+                                <phase>generate-sources</phase>
+                                <configuration>
+                                    <workingDirectory>${project.basedir}/src/main/webapp</workingDirectory>
+                                    <executable>node_modules/.bin/rollup.cmd</executable>
+                                    <arguments>
+                                        <argument>-c</argument>
+                                        <argument>rollup-config.js</argument>
+                                    </arguments>
+                                </configuration>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>

@@ -1,0 +1,43 @@
+
+<div class="bg-color-white panel panel-primary text-center no-border">
+    <div class="panel-footer back-footer-green panel-title">
+        Builds Timeline (Last 2d). Double-click to view in Jenkins
+    </div>
+    <div>
+        <div id="buildTimeline"></div>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <span>Show:</span><br/>
+            <label class="checkbox-inline">
+                <input id="stackToggle" name="stackToggle" type="checkbox" checked
+                       [ngModel]="groupVisibility.stack"
+                       (ngModelChange)="toggleOverlap()"> Stack Items
+            </label><br/>
+            <label class="checkbox-inline">
+                <input id="successfulToggle" name="successfulToggle" type="checkbox" checked
+                       [ngModel]="groupVisibility.success"
+                       (ngModelChange)="toggleSuccessful()"> Successful
+            </label>
+            |
+            <label class="checkbox-inline">
+                <input id="unstableToggle" name="unstableToggle" type="checkbox" checked
+                       [ngModel]="groupVisibility.unstable"
+                       (ngModelChange)="toggleUnstable()"> Unstable
+            </label>
+            |
+            <label class="checkbox-inline">
+                <input id="failedToggle" name="failedToggle" type="checkbox" checked
+                       [ngModel]="groupVisibility.failed"
+                       (ngModelChange)="toggleFailed()"> Failed
+            </label>
+            |
+            <label class="checkbox-inline">
+                <input id="defaultToggle" name="defaultToggle" type="checkbox" checked
+                       [ngModel]="groupVisibility.defaultGroup"
+                       (ngModelChange)="toggleDefault()"> Aborted or Running
+            </label><br/>
+        </div>
+        <hr/>
+    </div>
+</div>

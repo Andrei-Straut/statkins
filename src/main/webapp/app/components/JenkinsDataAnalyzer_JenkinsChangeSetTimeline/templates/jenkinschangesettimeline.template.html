@@ -1,0 +1,45 @@
+
+<div class="bg-color-white panel panel-primary text-center no-border">
+    <div class="panel-footer back-footer-green panel-title">
+        Change Sets Timeline (Last 7d)
+    </div>
+    <div>
+        <div id="changeSetTimeline"></div>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <span>Show:</span><br/>
+            <label class="checkbox-inline">
+                <input id="stackToggle" name="stackToggle" type="checkbox" checked
+                       [ngModel]="groupVisibility.stack"
+                       (ngModelChange)="toggleOverlap()"> Stack Items
+            </label><br/>
+            <label class="checkbox-inline">
+                <input id="successfulToggle" name="successfulToggle" type="checkbox" checked
+                       [ngModel]="groupVisibility.success"
+                       (ngModelChange)="toggleSuccessful()"> Successful
+            </label>
+            |
+            <label class="checkbox-inline">
+                <input id="unstableToggle" name="unstableToggle" type="checkbox" checked
+                       [ngModel]="groupVisibility.unstable"
+                       (ngModelChange)="toggleUnstable()"> Unstable
+            </label>
+            |
+            <label class="checkbox-inline">
+                <input id="failedToggle" name="failedToggle" type="checkbox" checked
+                       [ngModel]="groupVisibility.failed"
+                       (ngModelChange)="toggleFailed()"> Failed
+            </label>
+            |
+            <label class="checkbox-inline">
+                <input id="defaultToggle" name="defaultToggle" type="checkbox" checked
+                       [ngModel]="groupVisibility.defaultGroup"
+                       (ngModelChange)="toggleDefault()"> Aborted or Running
+            </label><br/>
+            <span><b><i>Color of items represents the worst status across the builds in which this commit was included</i></b></span><br/>
+            <span><b><i>Color in item tooltips represents the result of each individual build in which this commit was included</i></b></span><br/>
+        </div>
+        <hr/>
+    </div>
+</div>

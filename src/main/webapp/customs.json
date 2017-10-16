@@ -1,0 +1,19 @@
+{
+    "elements": {
+        "jenkins-build-timeline": {},
+        "jenkins-changeset-timeline": {},
+        "jenkins-job-build-graph": {},
+        "jenkins-data-retriever": {},
+        "jenkins-basic-statistics": {},
+        "jenkins-job-average-build-duration": {}
+    },
+    "attributes": {
+        "[(ngmodel)]": {},
+        "(ngmodelchange)": {},
+        "[hidden]": {},
+        "[ngmodel]": {},
+        "*ngfor": {
+            "context": "div"
+        }
+    }
+}
