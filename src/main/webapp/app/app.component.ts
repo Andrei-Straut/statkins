@@ -31,8 +31,8 @@ export class AppComponent implements OnInit {
         this.name = appDef.appName;
         this.copyright = appDef.copyright;
         this.jenkinsDefinitionService = jenkinsDef;
-//        this.jenkinsUrl = 'https://www.andreistraut.info/jenkins';
-        this.jenkinsUrl = 'http://ptlisvltnet016.dci.co-int.net/';
+        this.jenkinsUrl = 'https://www.andreistraut.info/jenkins';
+//        this.jenkinsUrl = 'http://ptlisvltnet016.dci.co-int.net/';
     }
     
     ngOnInit() {

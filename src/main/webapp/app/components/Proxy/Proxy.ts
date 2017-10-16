@@ -25,8 +25,8 @@ export class Proxy {
     readonly proxyEndpoint: string;
 
     constructor(private LOGGER: Logger, private http: Http, private definitionService: JenkinsDefinitionService) {
-        this.proxyEndpoint = "http://localhost:8089";
-//        this.proxyEndpoint = "https://www.andreistraut.info/drp/api/post";
+//        this.proxyEndpoint = "http://localhost:8089";
+        this.proxyEndpoint = "https://www.andreistraut.info/drp/api/post";
 //        this.proxyEndpoint = "http://vm-transnet-009.dci.co-int.net:8080/drp/api/post";
     }
 
