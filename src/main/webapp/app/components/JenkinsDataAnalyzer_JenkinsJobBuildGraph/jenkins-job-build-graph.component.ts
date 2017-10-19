@@ -35,6 +35,7 @@ export class JenkinsJobBuildGraphComponent implements OnInit {
     ngOnInit() {
         this.visGraphContainer = document.getElementById(this.graphElementId);
         this.visGraphOptions = {
+            height:'400px',
             autoResize: true,
             clickToUse: true,
             start: 0,
@@ -49,10 +50,7 @@ export class JenkinsJobBuildGraphComponent implements OnInit {
         
         this.visGroups.add({
             id: 0,
-            className: 'vis-group-green',
-            options: {
-                drawPoints: true
-            }
+            className: 'vis-group-green'
           });
     }
     

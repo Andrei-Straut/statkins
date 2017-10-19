@@ -44,29 +44,20 @@
                 [jenkinsUrl]="jenkinsUrl" 
                 [jenkinsDefinitionService]="jenkinsDefinitionService"
                 (dataRetrieved)="onDataRetrieved($event); jenkinsdataanalyzer.analyze($event);">
-        </jenkins-data-retriever>
+            </jenkins-data-retriever>
+        </div>
+
+        <div class="col-md-12">
+            <jenkins-data-analyzer #jenkinsdataanalyzer
+                [jenkinsData]="jenkinsData"
+                [dataAvailable]="dataAvailable">
+            </jenkins-data-analyzer>  
+        </div>  
     </div>
-
-    <div class="col-md-12">
-        <jenkins-data-analyzer #jenkinsdataanalyzer
-            [jenkinsData]="jenkinsData"
-            [dataAvailable]="dataAvailable">
-        </jenkins-data-analyzer>  
-    </div>  
+    <HR/>
 </div>
 
-<HR/>
-
 <div class="container">
-
-</div> <!-- /container -->
-</div>
-
-<HR/>
-
-<div class="container">
-
-    <hr>
     <footer>
         <p>{{copyright}}</p>
     </footer>
