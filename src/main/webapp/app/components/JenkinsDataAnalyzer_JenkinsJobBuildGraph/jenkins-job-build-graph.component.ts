@@ -35,7 +35,6 @@ export class JenkinsJobBuildGraphComponent implements OnInit {
     ngOnInit() {
         this.visGraphContainer = document.getElementById(this.graphElementId);
         this.visGraphOptions = {
-            height:'400px',
             autoResize: true,
             clickToUse: true,
             start: 0,
