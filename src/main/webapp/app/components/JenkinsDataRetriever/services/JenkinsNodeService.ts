@@ -48,7 +48,7 @@ export class JenkinsNodeService implements IJenkinsService {
                 });
             
         /* An error occurred, node list unretrievable */
-        if (Util.isInvalid(nodeResponse)) {
+        if (Util.isInvalid(nodeResponse) || Util.isInvalid(nodeResponse["computer"])) {
             this.nodeList = new Array<IJenkinsNode>();
             this.completedSuccessfully = false;
             this.complete = true;
