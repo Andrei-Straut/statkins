@@ -3,9 +3,8 @@ import { OnInit } from '@angular/core';
 import { Input } from '@angular/core';
 
 import { Logger } from 'angular2-logger/core';
-import { Functions } from '../Helper/Functions'
+import { Util } from '../Util/Util'
 import { IJenkinsData } from 'jenkins-api-ts-typings';
-import { IJenkinsBuild } from 'jenkins-api-ts-typings';
 
 import { JenkinsBasicJobStatistics } from './services/JenkinsBasicJobStatistics';
 import { JenkinsBasicBuildStatistics } from './services/JenkinsBasicBuildStatistics';
@@ -23,7 +22,7 @@ export class JenkinsBasicStatisticsComponent implements OnInit {
     
     @Input('jenkinsData')
     set jenkinsData(jenkinsData: IJenkinsData) {
-        if (Functions.isInvalid(jenkinsData)) {
+        if (Util.isInvalid(jenkinsData)) {
             return;
         }
         this.analyze(jenkinsData);

@@ -4,7 +4,7 @@ import { Input } from '@angular/core';
 import { TimelineOptions, Timeline, DataSet } from 'vis';
 
 import { Logger } from 'angular2-logger/core';
-import { Functions } from '../Helper/Functions'
+import { Util } from '../Util/Util'
 import { IJenkinsData } from 'jenkins-api-ts-typings';
 import { IJenkinsBuild } from 'jenkins-api-ts-typings';
 import { IJenkinsJob } from 'jenkins-api-ts-typings';
@@ -24,7 +24,7 @@ export class JenkinsBuildTimelineComponent implements OnInit {
     
     @Input('jenkinsData')
     set jenkinsData(jenkinsData: IJenkinsData) {
-        if (Functions.isInvalid(jenkinsData)) {
+        if (Util.isInvalid(jenkinsData)) {
             return;
         }
         this.analyze(jenkinsData);
@@ -103,12 +103,12 @@ export class JenkinsBuildTimelineComponent implements OnInit {
         
         let visDataSet: DataSet<DataSetItem> = this.visJobsData;
         this.visTimeline.on('doubleClick', function(properties:VisEventProperties) {
-            if (Functions.isInvalid(properties) || Functions.isInvalid(properties.item)) {
+            if (Util.isInvalid(properties) || Util.isInvalid(properties.item)) {
                 return;
             }
             
             let item:DataSetItem = visDataSet.get(properties.item);
-            if (Functions.isInvalid(item)) {
+            if (Util.isInvalid(item)) {
                 return;
             }
             
@@ -145,7 +145,7 @@ export class JenkinsBuildTimelineComponent implements OnInit {
     }
     
     setGroupVisibility(group: number, visibility: boolean):void {
-        if (Functions.isInvalid(this.visGroups.get(group))) {
+        if (Util.isInvalid(this.visGroups.get(group))) {
             return;
         }
         
@@ -186,7 +186,7 @@ export class JenkinsBuildTimelineComponent implements OnInit {
     }
     
     private isToBeIncluded(build: IJenkinsBuild): boolean {
-        if (Functions.isInvalid(build) || Functions.isInvalid(build.duration)) {
+        if (Util.isInvalid(build) || Util.isInvalid(build.duration)) {
             return false;
         }
 
@@ -194,7 +194,7 @@ export class JenkinsBuildTimelineComponent implements OnInit {
         let today = new Date();
         let lastWeek = new Date(today);
         lastWeek.setDate(today.getDate() - 7);
-        if(!Functions.isAfterDate(new Date(build.timestamp), lastWeek)) {
+        if(!Util.isAfterDate(new Date(build.timestamp), lastWeek)) {
             return false;
         }
         
@@ -202,7 +202,7 @@ export class JenkinsBuildTimelineComponent implements OnInit {
     }
     
     private getGroup(build: IJenkinsBuild): number {
-        if (Functions.isInvalid(build) || Functions.isInvalid(build.result)) {
+        if (Util.isInvalid(build) || Util.isInvalid(build.result)) {
             return JenkinsBuildTimelineComponent.DEFAULT_GROUP;
         }
         
@@ -224,7 +224,7 @@ export class JenkinsBuildTimelineComponent implements OnInit {
     private getBuildClass(build: IJenkinsBuild): string {
         
         let className = "white";
-        if (Functions.isInvalid(build) || Functions.isInvalid(build.result)) {
+        if (Util.isInvalid(build) || Util.isInvalid(build.result)) {
             return className;
         }
         
@@ -248,9 +248,9 @@ export class JenkinsBuildTimelineComponent implements OnInit {
         let endDateTime = new Date(build.timestamp + build.duration);
         
         return job.name + " #" + build.number + "<br/>"
-            + (!Functions.isInvalid(build.displayName) ? "Name: " + build.displayName + "<br/>" : "")
-            + (!Functions.isInvalid(build.description) ? "Description: " + build.description + "<br/>" : "")
-            + "Start: " + Functions.padTime(startDateTime) + ", " + "End: " + Functions.padTime(endDateTime) + "<br/>"
+            + (!Util.isInvalid(build.displayName) ? "Name: " + build.displayName + "<br/>" : "")
+            + (!Util.isInvalid(build.description) ? "Description: " + build.description + "<br/>" : "")
+            + "Start: " + Util.padTime(startDateTime) + ", " + "End: " + Util.padTime(endDateTime) + "<br/>"
             + "<i>Double-click to open in Jenkins</i>";
     }
 }

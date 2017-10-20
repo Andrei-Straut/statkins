@@ -6,7 +6,7 @@ import { EventEmitter  } from '@angular/core';
 import { Http } from '@angular/http';
 
 import { Logger } from 'angular2-logger/core';
-import { Functions } from '../Helper/Functions';
+import { Util } from '../Util/Util';
 import { Proxy } from '../Proxy/Proxy';
 
 import { IJenkinsData } from 'jenkins-api-ts-typings';
@@ -45,7 +45,7 @@ interface ResponseWithBody {
     selector: 'jenkins-data-retriever',
     templateUrl: 'app/components/JenkinsDataRetriever/templates/jenkinsdataretriever.template.html',
     providers: [
-        JenkinsDefinitionService, Logger, Functions
+        JenkinsDefinitionService, Logger, Util
     ],
 })
 export class JenkinsDataRetrieverComponent implements OnInit {

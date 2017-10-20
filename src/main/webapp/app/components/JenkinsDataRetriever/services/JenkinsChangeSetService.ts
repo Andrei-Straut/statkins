@@ -4,7 +4,7 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/first';
 
 import { Logger } from 'angular2-logger/core';
-import { Functions } from '../../Helper/Functions';
+import { Util } from '../../Util/Util';
 import { IJenkinsBuild } from 'jenkins-api-ts-typings';
 import { IJenkinsJob } from 'jenkins-api-ts-typings';
 import { IJenkinsChangeSet } from 'jenkins-api-ts-typings';
@@ -28,7 +28,7 @@ export class JenkinsChangeSetService implements IJenkinsService {
     }
     
     async execute() {
-        if (Functions.isInvalid(this.buildList)) {
+        if (Util.isInvalid(this.buildList)) {
             this.LOGGER.error("Empty or null build list received");
             this.completedSuccessfully = false;
             this.complete = true;
@@ -60,7 +60,7 @@ export class JenkinsChangeSetService implements IJenkinsService {
                         this.LOGGER.debug("ChangeSet with ID", jsonData["commitId"], "created");
                         changeSet.fromJsonString(JSON.stringify(jsonData));
                         changeSet.author = this.getChangeSetAuthor(this.userList, jsonData);
-                        changeSet.timestamp = Functions.padTimestamp(changeSet.timestamp);
+                        changeSet.timestamp = Util.padTimestamp(changeSet.timestamp);
                         
                         if (changeSet.date.toString().toLowerCase().indexOf("invalid") !== -1) {
                             changeSet.date = new Date(changeSet.timestamp);
@@ -132,6 +132,6 @@ export class JenkinsChangeSetService implements IJenkinsService {
             return undefined;
         }
         
-        return Functions.getUserByFullName(users, authorData["fullName"]);
+        return Util.getUserByFullName(users, authorData["fullName"]);
     }
 }

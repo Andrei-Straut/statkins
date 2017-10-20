@@ -4,7 +4,7 @@ import { Input } from '@angular/core';
 import { TimelineOptions, Timeline, DataSet } from 'vis';
 
 import { Logger } from 'angular2-logger/core';
-import { Functions } from '../Helper/Functions'
+import { Util } from '../Util/Util'
 import { IJenkinsData } from 'jenkins-api-ts-typings';
 import { DataSetItem } from '../JenkinsDataAnalyzer/model/DataSetItem';
     
@@ -17,7 +17,7 @@ export class JenkinsJobBuildGraphComponent implements OnInit {
     
     @Input('jenkinsData')
     set jenkinsData(jenkinsData: IJenkinsData) {
-        if (Functions.isInvalid(jenkinsData)) {
+        if (Util.isInvalid(jenkinsData)) {
             return;
         }
         this.analyze(jenkinsData);
@@ -57,11 +57,11 @@ export class JenkinsJobBuildGraphComponent implements OnInit {
         this.visJobsData = this.getJobsData(jenkinsData);
         this.visGraph =  new Timeline(this.visGraphContainer, this.visJobsData, this.visGroups, this.visGraphOptions);
         
-        if (Functions.isInvalid(jenkinsData) && !Functions.isInvalid(jenkinsData.jobs)) {
+        if (Util.isInvalid(jenkinsData) && !Util.isInvalid(jenkinsData.jobs)) {
             return;
         }
         let maxNumber = jenkinsData.jobs.sort(function (job1, job2) {return (job1.builds.length - job2.builds.length) * -1});
-        if (Functions.isInvalid(maxNumber)) {
+        if (Util.isInvalid(maxNumber)) {
             return;
         }
         this.visGraphOptions.max = Math.round((maxNumber[0]).builds.length * 1.25);
@@ -78,7 +78,7 @@ export class JenkinsJobBuildGraphComponent implements OnInit {
         data.jobs.sort(function (job1, job2) {return (job1.builds.length - job2.builds.length) * -1}).forEach(function(job) {
             
             let jobData: any = undefined;
-            if (Functions.isInvalid(jobsData.get(job.builds.length))) {
+            if (Util.isInvalid(jobsData.get(job.builds.length))) {
                 jobData = {
                     id: job.builds.length,
                     title: job.name + "<br/>",

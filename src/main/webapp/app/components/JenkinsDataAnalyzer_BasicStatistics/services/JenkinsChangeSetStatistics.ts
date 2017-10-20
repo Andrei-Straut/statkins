@@ -1,5 +1,5 @@
 import { Logger } from 'angular2-logger/core';
-import { Functions } from '../../Helper/Functions'
+import { Util } from '../../Util/Util'
 
 import { IJenkinsBuild } from 'jenkins-api-ts-typings';
 import { IJenkinsUser } from 'jenkins-api-ts-typings';
@@ -20,7 +20,7 @@ export class JenkinsChangeSetStatistics implements StatisticsEntryProvider {
     public getStatistics(): StatisticsCardEntry {
         this.analyzerData = new StatisticsCardEntry(
                 "Commits",
-                "Number Of Commits: " + Functions.getChangeSetArray(this.data.changeSets).length,
+                "Number Of Commits: " + Util.getChangeSetArray(this.data.changeSets).length,
                 [
                     this.getNumberOfChangeSetsToday(this.data.changeSets),
                     this.getNumberOfChangeSetsYesterday(this.data.changeSets),
@@ -38,8 +38,8 @@ export class JenkinsChangeSetStatistics implements StatisticsEntryProvider {
         let numberOfChangeSets:number = 0;
         
         let today = new Date();
-        Functions.getChangeSetArray(data).forEach(function (changeSet) {
-            if(!Functions.isInvalid(changeSet.timestamp) && Functions.isSameDate(new Date(changeSet.timestamp), today)) {
+        Util.getChangeSetArray(data).forEach(function (changeSet) {
+            if(!Util.isInvalid(changeSet.timestamp) && Util.isSameDate(new Date(changeSet.timestamp), today)) {
                 numberOfChangeSets += 1;
             }
         });
@@ -54,8 +54,8 @@ export class JenkinsChangeSetStatistics implements StatisticsEntryProvider {
         let yesterday = new Date(today);
         yesterday.setDate(today.getDate() - 1);
         
-        Functions.getChangeSetArray(data).forEach(function (changeSet) {
-            if(Functions.isSameDate(new Date(changeSet.timestamp), yesterday)) {
+        Util.getChangeSetArray(data).forEach(function (changeSet) {
+            if(Util.isSameDate(new Date(changeSet.timestamp), yesterday)) {
                 numberOfChangeSets += 1;
             }
         });
@@ -66,7 +66,7 @@ export class JenkinsChangeSetStatistics implements StatisticsEntryProvider {
     private getUserWithMostCommits(data:Map<IJenkinsBuild, Array<IJenkinsChangeSet>>):StatisticsEntry {
         let changeSetsByUser:Map<IJenkinsUser, Array<IJenkinsChangeSet>> = this.getChangeSetsByUser(data);
         
-        if (Functions.isInvalid(changeSetsByUser)) {
+        if (Util.isInvalid(changeSetsByUser)) {
             return new StatisticsEntry("User with most commits", "N/A", undefined);
         }
         
@@ -89,14 +89,14 @@ export class JenkinsChangeSetStatistics implements StatisticsEntryProvider {
     }
     
     private getTotalChangedFiles(data:Map<IJenkinsBuild, Array<IJenkinsChangeSet>>):StatisticsEntry {
-        let numberOfAffectedPaths = Functions.getAffectedPathsArray(data).length;
+        let numberOfAffectedPaths = Util.getAffectedPathsArray(data).length;
         
         return new StatisticsEntry("Total changed files", numberOfAffectedPaths + "", undefined);
     }
     
     private getAverageChangedFilesPerBuild(data:Map<IJenkinsBuild, Array<IJenkinsChangeSet>>):StatisticsEntry {
         let numberOfBuilds = Array.from(data.keys()).length;
-        let numberOfAffectedPaths = Functions.getAffectedPathsArray(data).length;
+        let numberOfAffectedPaths = Util.getAffectedPathsArray(data).length;
         let average = (numberOfAffectedPaths / numberOfBuilds).toFixed(2);
         
         return new StatisticsEntry("Average changed files per build", average + "", undefined);
@@ -105,7 +105,7 @@ export class JenkinsChangeSetStatistics implements StatisticsEntryProvider {
     private getMostChangedFile(data:Map<IJenkinsBuild, Array<IJenkinsChangeSet>>):StatisticsEntry {
         let files: Map<string, number> = new Map<string, number>();
         
-        Functions.getAffectedPathsArray(data).forEach(function(path) {
+        Util.getAffectedPathsArray(data).forEach(function(path) {
             if(!files.has(path)) {
                 files.set(path, 0);
             }
@@ -114,7 +114,7 @@ export class JenkinsChangeSetStatistics implements StatisticsEntryProvider {
             files.set(path, changed + 1);
         });
         
-        if (Functions.isInvalid(files)) {
+        if (Util.isInvalid(files)) {
             return new StatisticsEntry("Most changed file", "N/A", undefined);
         }
         
@@ -128,7 +128,7 @@ export class JenkinsChangeSetStatistics implements StatisticsEntryProvider {
     private getChangeSetsByUser(data:Map<IJenkinsBuild, Array<IJenkinsChangeSet>>):Map<IJenkinsUser, Array<IJenkinsChangeSet>> {
         var changeSetsByUser: Map<IJenkinsUser, Array<IJenkinsChangeSet>> = new Map<IJenkinsUser, Array<IJenkinsChangeSet>>();
         
-        Functions.getChangeSetArray(data).forEach(function (changeSet) {
+        Util.getChangeSetArray(data).forEach(function (changeSet) {
             
             if (!changeSetsByUser.has(changeSet.author)) {
                 changeSetsByUser.set(changeSet.author, new Array<IJenkinsChangeSet>());

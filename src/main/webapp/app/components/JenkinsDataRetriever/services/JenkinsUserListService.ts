@@ -5,7 +5,7 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/first';
 
 import { Logger } from 'angular2-logger/core';
-import { Functions } from '../../Helper/Functions'
+import { Util } from '../../Util/Util'
 import { Proxy } from '../../Proxy/Proxy';
 import { IJenkinsUser } from 'jenkins-api-ts-typings';
 import { JenkinsUser } from 'jenkins-api-ts-typings';
@@ -49,7 +49,7 @@ export class JenkinsUserListService implements IJenkinsService {
                 });
             
         /* An error occurred, job list unretrievable */
-        if (Functions.isInvalid(userResponse)) {
+        if (Util.isInvalid(userResponse)) {
             this.userList = new Array<IJenkinsUser>();
             this.completedSuccessfully = false;
             this.complete = true;

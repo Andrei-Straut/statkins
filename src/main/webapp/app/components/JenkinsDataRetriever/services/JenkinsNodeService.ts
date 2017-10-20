@@ -5,7 +5,7 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/first';
 
 import { Logger } from 'angular2-logger/core';
-import { Functions } from '../../Helper/Functions';
+import { Util } from '../../Util/Util';
 import { Proxy } from '../../Proxy/Proxy';
 import { IJenkinsNode } from 'jenkins-api-ts-typings';
 import { JenkinsNode } from 'jenkins-api-ts-typings';
@@ -48,7 +48,7 @@ export class JenkinsNodeService implements IJenkinsService {
                 });
             
         /* An error occurred, node list unretrievable */
-        if (Functions.isInvalid(nodeResponse)) {
+        if (Util.isInvalid(nodeResponse)) {
             this.nodeList = new Array<IJenkinsNode>();
             this.completedSuccessfully = false;
             this.complete = true;

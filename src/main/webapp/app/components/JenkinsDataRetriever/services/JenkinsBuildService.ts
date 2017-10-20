@@ -6,7 +6,7 @@ import 'rxjs/add/operator/first';
 
 import { Logger } from 'angular2-logger/core';
 import { Proxy } from '../../Proxy/Proxy';
-import { Functions } from '../../Helper/Functions';
+import { Util } from '../../Util/Util';
 import { IJenkinsBuild } from 'jenkins-api-ts-typings';
 import { IJenkinsJob } from 'jenkins-api-ts-typings';
 
@@ -29,7 +29,7 @@ export class JenkinsBuildService implements IJenkinsService {
     
     async execute() {
         
-        if (Functions.isInvalid(this.buildList)) {
+        if (Util.isInvalid(this.buildList)) {
             this.LOGGER.error("Empty or null build list received");
             this.completedSuccessfully = false;
             this.complete = true;
@@ -54,7 +54,7 @@ export class JenkinsBuildService implements IJenkinsService {
                         continue;
                     }
                     
-                    let build = Functions.getBuildByBuildNumber(job.builds, buildJson["number"]);
+                    let build = Util.getBuildByBuildNumber(job.builds, buildJson["number"]);
                     
                     if (build === undefined || build === null) {
                         this.LOGGER.warn("Build with number #" + buildJson["number"], "not found for job", job.name);
@@ -149,7 +149,7 @@ export class JenkinsBuildService implements IJenkinsService {
             return undefined;
         }
         
-        return Functions.getBuildByBuildNumber(builds, buildData["number"]);
+        return Util.getBuildByBuildNumber(builds, buildData["number"]);
         
     }
 }

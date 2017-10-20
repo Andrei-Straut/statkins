@@ -5,7 +5,7 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/first';
 
 import { Logger } from 'angular2-logger/core';
-import { Functions } from '../../Helper/Functions';
+import { Util } from '../../Util/Util';
 import { Proxy } from '../../Proxy/Proxy';
 import { IJenkinsView } from 'jenkins-api-ts-typings';
 import { JenkinsView } from 'jenkins-api-ts-typings';
@@ -49,7 +49,7 @@ export class JenkinsViewListService implements IJenkinsService {
                 });
             
         /* An error occurred, view list unretrievable */
-        if (Functions.isInvalid(viewListResponse)) {
+        if (Util.isInvalid(viewListResponse)) {
             this.viewList = new Array<IJenkinsView>();
             this.completedSuccessfully = false;
             this.complete = true;

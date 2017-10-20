@@ -4,7 +4,7 @@ import { Input } from '@angular/core';
 import { TimelineOptions, Timeline, DataSet } from 'vis';
 
 import { Logger } from 'angular2-logger/core';
-import { Functions } from '../Helper/Functions';
+import { Util } from '../Util/Util';
 import { IJenkinsData } from 'jenkins-api-ts-typings';
 import { IJenkinsBuild } from 'jenkins-api-ts-typings';
 import { IJenkinsChangeSet } from 'jenkins-api-ts-typings';
@@ -21,7 +21,7 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
     
     @Input('jenkinsData')
     set jenkinsData(jenkinsData: IJenkinsData) {
-        if (Functions.isInvalid(jenkinsData)) {
+        if (Util.isInvalid(jenkinsData)) {
             return;
         }
         this.analyze(jenkinsData);
@@ -131,7 +131,7 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
     }
     
     setGroupVisibility(group: number, visibility: boolean):void {
-        if (Functions.isInvalid(this.visGroups.get(group))) {
+        if (Util.isInvalid(this.visGroups.get(group))) {
             return;
         }
         
@@ -155,11 +155,11 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
                     let startDateTime = new Date(changeSet.timestamp);
                     
                     let changeSetData:DataSetItem = undefined;
-                    if (!Functions.isInvalid(changeSetsData.get(changeSet.commitId))) {
+                    if (!Util.isInvalid(changeSetsData.get(changeSet.commitId))) {
                         return;
                     } else {
         
-                        let buildsContainingCommit = Functions.getBuildMapContainingCommit(data.builds, changeSet.commitId);
+                        let buildsContainingCommit = Util.getBuildMapContainingCommit(data.builds, changeSet.commitId);
                         
                         changeSetData = {
                             id: changeSet.commitId,
@@ -187,7 +187,7 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
         let today = new Date();
         let lastWeek = new Date(today);
         lastWeek.setDate(today.getDate() - 7);
-        if(!Functions.isAfterDate(new Date(changeSet.timestamp), lastWeek)) {
+        if(!Util.isAfterDate(new Date(changeSet.timestamp), lastWeek)) {
             return false;
         }
         
@@ -197,16 +197,16 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
     private getItemTitle(data: IJenkinsData, changeSet: IJenkinsChangeSet) {
         let startDateTime = new Date(changeSet.timestamp);
         
-        let buildsContainingCommit = Functions.getBuildMapContainingCommit(data.builds, changeSet.commitId);
+        let buildsContainingCommit = Util.getBuildMapContainingCommit(data.builds, changeSet.commitId);
         let buildString = "";
         let parent = this;
         
-        if (!Functions.isInvalid(buildsContainingCommit)) {
+        if (!Util.isInvalid(buildsContainingCommit)) {
             Array.from(buildsContainingCommit.keys()).forEach(function(job) {
                 buildsContainingCommit.get(job).forEach(function(build) {
                     let spanClass = parent.getChangeSetSpanTitleClass(build);
-                    let abortedStatus = Functions.isAborted(build) ? " <b><i>(aborted)</i></b>" : "";
-                    let runningStatus = Functions.isRunning(build) ? " <b><i>(running)</i></b>" : "";
+                    let abortedStatus = Util.isAborted(build) ? " <b><i>(aborted)</i></b>" : "";
+                    let runningStatus = Util.isRunning(build) ? " <b><i>(running)</i></b>" : "";
                     buildString = buildString + "<span class='vis-build-result-span " + spanClass + "'>"
                         + job.name + " #" + build.number + abortedStatus + runningStatus +"</span>" + "<br/>"
                 });
@@ -214,26 +214,26 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
         }
         
         return "<b>" + parent.getItemContent(changeSet) + "</b>: " + changeSet.commitId + "<br/><br/>"
-            + (!Functions.isInvalid(changeSet.comment) ? changeSet.comment : changeSet.msg) + "<br/><br/>"
-            + Functions.padDate(startDateTime) + ", " + Functions.padTime(startDateTime) + "<br/>"
+            + (!Util.isInvalid(changeSet.comment) ? changeSet.comment : changeSet.msg) + "<br/><br/>"
+            + Util.padDate(startDateTime) + ", " + Util.padTime(startDateTime) + "<br/>"
             + "Present in builds:<br/>" + buildString + "<br/>"
-            + (!Functions.isInvalid(changeSet.affectedPaths) ? changeSet.affectedPaths.length + " changed files" : "")
+            + (!Util.isInvalid(changeSet.affectedPaths) ? changeSet.affectedPaths.length + " changed files" : "")
     }
     
     private getItemContent(changeSet: IJenkinsChangeSet) {
-        if (!Functions.isInvalid(changeSet.author) && !Functions.isInvalid(changeSet.author.fullName)) {
+        if (!Util.isInvalid(changeSet.author) && !Util.isInvalid(changeSet.author.fullName)) {
             return changeSet.author.fullName;
         }
         
-        if (!Functions.isInvalid(changeSet.author) && !Functions.isInvalid(changeSet.author.id)) {
+        if (!Util.isInvalid(changeSet.author) && !Util.isInvalid(changeSet.author.id)) {
             return changeSet.author.id;
         }
         
-        if (!Functions.isInvalid(changeSet.authorEmail)) {
+        if (!Util.isInvalid(changeSet.authorEmail)) {
             return changeSet.authorEmail;
         }
         
-        if (!Functions.isInvalid(changeSet.authorData) && (changeSet.authorData as JSON).hasOwnProperty("fullName")) {
+        if (!Util.isInvalid(changeSet.authorData) && (changeSet.authorData as JSON).hasOwnProperty("fullName")) {
             return (changeSet.authorData as JSON)["fullName"];
         }
         
@@ -241,13 +241,13 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
     }
     
     private getGroupForBuilds(builds: Map<IJenkinsJob, Array<IJenkinsBuild>>): number {
-        if (Functions.isInvalid(builds)) {
+        if (Util.isInvalid(builds)) {
             return JenkinsChangeSetTimelineComponent.DEFAULT_GROUP;
         }
         
-        let hasFailed = Functions.getBuildArray(builds).filter(build => Functions.isFailed(build)).length > 0;
-        let hasUnstable = Functions.getBuildArray(builds).filter(build => Functions.isUnstable(build)).length > 0;
-        let hasSuccessful = Functions.getBuildArray(builds).filter(build => Functions.isSuccessful(build)).length > 0;
+        let hasFailed = Util.getBuildArray(builds).filter(build => Util.isFailed(build)).length > 0;
+        let hasUnstable = Util.getBuildArray(builds).filter(build => Util.isUnstable(build)).length > 0;
+        let hasSuccessful = Util.getBuildArray(builds).filter(build => Util.isSuccessful(build)).length > 0;
         
         if (hasFailed) {
             return JenkinsChangeSetTimelineComponent.FAILED_GROUP;
@@ -265,19 +265,19 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
     }
     
     private getGroupForBuild(build: IJenkinsBuild): number {
-        if (Functions.isInvalid(build) || Functions.isInvalid(build.result)) {
+        if (Util.isInvalid(build) || Util.isInvalid(build.result)) {
             return JenkinsChangeSetTimelineComponent.DEFAULT_GROUP;
         }
         
-        if (Functions.isSuccessful(build)) {
+        if (Util.isSuccessful(build)) {
             return JenkinsChangeSetTimelineComponent.SUCCESS_GROUP;
         }
         
-        if (Functions.isUnstable(build)) {
+        if (Util.isUnstable(build)) {
             return JenkinsChangeSetTimelineComponent.UNSTABLE_GROUP;
         }
         
-        if (Functions.isFailed(build)) {
+        if (Util.isFailed(build)) {
             return JenkinsChangeSetTimelineComponent.FAILED_GROUP;
         }
 
@@ -287,7 +287,7 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
     private getChangeSetSpanTitleClass(build: IJenkinsBuild): string {
         
         let className = "white";
-        if (Functions.isInvalid(build) || Functions.isInvalid(build.result)) {
+        if (Util.isInvalid(build) || Util.isInvalid(build.result)) {
             return className;
         }
         
@@ -308,9 +308,9 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
     
     private getChangeSetTimelineClass(builds: Map<IJenkinsJob, Array<IJenkinsBuild>>): string {
         
-        let hasFailed = Functions.getBuildArray(builds).filter(build => Functions.isFailed(build)).length > 0;
-        let hasUnstable = Functions.getBuildArray(builds).filter(build => Functions.isUnstable(build)).length > 0;
-        let hasSuccessful = Functions.getBuildArray(builds).filter(build => Functions.isSuccessful(build)).length > 0;
+        let hasFailed = Util.getBuildArray(builds).filter(build => Util.isFailed(build)).length > 0;
+        let hasUnstable = Util.getBuildArray(builds).filter(build => Util.isUnstable(build)).length > 0;
+        let hasSuccessful = Util.getBuildArray(builds).filter(build => Util.isSuccessful(build)).length > 0;
         
         if (hasFailed) {
             return "red";

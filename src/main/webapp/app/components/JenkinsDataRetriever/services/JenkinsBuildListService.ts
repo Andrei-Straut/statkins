@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/first';
 
-import { Functions } from '../../Helper/Functions'
+import { Util } from '../../Util/Util'
 import { Logger } from 'angular2-logger/core';
 import { IJenkinsBuild } from 'jenkins-api-ts-typings';
 import { JenkinsBuild } from 'jenkins-api-ts-typings';
@@ -29,7 +29,7 @@ export class JenkinsBuildListService implements IJenkinsService {
     
     async execute() {
         
-        if (Functions.isInvalid(this.jobList)) {
+        if (Util.isInvalid(this.jobList)) {
             this.LOGGER.error("Empty or null job list received");
             this.completedSuccessfully = false;
             this.complete = true;
@@ -39,7 +39,7 @@ export class JenkinsBuildListService implements IJenkinsService {
         for (let job of this.jobList) {
             let buildsJson: Array<JSON> = (JSON.parse(job.getJsonData()))["builds"];
             
-            if (Functions.isInvalid(buildsJson)) {
+            if (Util.isInvalid(buildsJson)) {
                 this.LOGGER.warn("No job details found for:", job.name);
                 continue;
             }

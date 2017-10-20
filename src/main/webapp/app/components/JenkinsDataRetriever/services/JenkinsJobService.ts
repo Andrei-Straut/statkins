@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/first';
 
-import { Functions } from '../../Helper/Functions';
+import { Util } from '../../Util/Util';
 import { Logger } from 'angular2-logger/core';
 import { Proxy } from '../../Proxy/Proxy';
 import { IJenkinsJob } from 'jenkins-api-ts-typings';
@@ -27,7 +27,7 @@ export class JenkinsJobService implements IJenkinsService {
     }
     
     async execute() {
-        if (Functions.isInvalid(this.jobList)) {
+        if (Util.isInvalid(this.jobList)) {
             this.LOGGER.error("Empty or null job list received");
             this.completedSuccessfully = false;
             this.complete = true;
@@ -52,12 +52,12 @@ export class JenkinsJobService implements IJenkinsService {
             .then(values => {
                 
                 for(let jobJson of <Array<JSON>>values) {
-                    if (Functions.isInvalid(jobJson) || !(<JSON>jobJson).hasOwnProperty("name")) {
+                    if (Util.isInvalid(jobJson) || !(<JSON>jobJson).hasOwnProperty("name")) {
                         this.LOGGER.warn("No job details found for:", jobJson);
                         continue;
                     }
                     
-                    let job = Functions.getJobByName(this.jobList, jobJson["name"]);
+                    let job = Util.getJobByName(this.jobList, jobJson["name"]);
 
                     if(job === undefined) {
                         this.LOGGER.warn("No job with name", jobJson["name"], "found");
@@ -106,7 +106,7 @@ export class JenkinsJobService implements IJenkinsService {
         }
         
         for(let upstreamJobJson of (jobJson["upstreamProjects"] as Array<JSON>)) {
-            let upstreamJob: IJenkinsJob = Functions.getJobByName(this.jobList, upstreamJobJson["name"]);
+            let upstreamJob: IJenkinsJob = Util.getJobByName(this.jobList, upstreamJobJson["name"]);
             
             if (upstreamJob === undefined) {
                 continue;
@@ -127,7 +127,7 @@ export class JenkinsJobService implements IJenkinsService {
         }
         
         for(let downstreamJobJson of (jobJson["downstreamProjects"] as Array<JSON>)) {
-            let downstreamJob: IJenkinsJob = Functions.getJobByName(this.jobList, downstreamJobJson["name"]);
+            let downstreamJob: IJenkinsJob = Util.getJobByName(this.jobList, downstreamJobJson["name"]);
             
             if (downstreamJob === undefined) {
                 continue;

@@ -1,7 +1,7 @@
 import { Logger } from 'angular2-logger/core';
 import * as moment from 'moment';
 
-import { Functions } from '../../Helper/Functions'
+import { Util } from '../../Util/Util'
 import { IJenkinsJob } from 'jenkins-api-ts-typings';
 import { IJenkinsBuild } from 'jenkins-api-ts-typings';
 import { IJenkinsData } from 'jenkins-api-ts-typings';
@@ -36,12 +36,12 @@ export class JenkinsBasicJobStatistics implements StatisticsEntryProvider {
     
     private getMostBuiltJob(builds: Map<IJenkinsJob, Array<any>>):StatisticsEntry {
         
-        if (Functions.isInvalid(builds)) {
+        if (Util.isInvalid(builds)) {
             return new StatisticsEntry("Most Built", "N/A", undefined);
         }
         
         var mostBuilt = Array.from(builds.keys()).reduce(function (job1, job2) {
-            return Functions.getNumberOfBuilds(job1) >= Functions.getNumberOfBuilds(job2) ? job1 : job2;
+            return Util.getNumberOfBuilds(job1) >= Util.getNumberOfBuilds(job2) ? job1 : job2;
         });
         
         var text = mostBuilt.name + " (" + mostBuilt.builds.length + " builds)";
@@ -51,15 +51,15 @@ export class JenkinsBasicJobStatistics implements StatisticsEntryProvider {
     
     private getLastSuccessfulJob(builds: Map<IJenkinsJob, Array<IJenkinsBuild>>):StatisticsEntry {
         
-        if (Functions.isInvalid(builds)) {
+        if (Util.isInvalid(builds)) {
             return new StatisticsEntry("Last Successful", "N/A", undefined);
         }
         
         let lastSuccessful:IJenkinsJob = Array.from(builds.keys()).reduce(function (job1, job2) {
-            return Functions.getLastSuccessfulBuildTimestamp(job1) >= Functions.getLastSuccessfulBuildTimestamp(job2) ? job1 : job2;
+            return Util.getLastSuccessfulBuildTimestamp(job1) >= Util.getLastSuccessfulBuildTimestamp(job2) ? job1 : job2;
         });
         
-        if (Functions.isInvalid(lastSuccessful)) {
+        if (Util.isInvalid(lastSuccessful)) {
             return new StatisticsEntry("Last Successful", "N/A", undefined);
         }
         
@@ -71,15 +71,15 @@ export class JenkinsBasicJobStatistics implements StatisticsEntryProvider {
     
     private getLastFailedJob(builds: Map<IJenkinsJob, Array<IJenkinsBuild>>):StatisticsEntry {
         
-        if (Functions.isInvalid(builds)) {
+        if (Util.isInvalid(builds)) {
             return new StatisticsEntry("Last Failed", "N/A", undefined);
         }
         
         let lastFailed:IJenkinsJob = Array.from(builds.keys()).reduce(function (job1, job2) {
-            return Functions.getLastFailedBuildTimestamp(job1) >= Functions.getLastFailedBuildTimestamp(job2) ? job1 : job2;
+            return Util.getLastFailedBuildTimestamp(job1) >= Util.getLastFailedBuildTimestamp(job2) ? job1 : job2;
         });
         
-        if (Functions.isInvalid(lastFailed) || Functions.isInvalid(lastFailed.lastFailedBuild)) {
+        if (Util.isInvalid(lastFailed) || Util.isInvalid(lastFailed.lastFailedBuild)) {
             return new StatisticsEntry("Last Failed", "N/A", undefined);
         }
         
@@ -91,15 +91,15 @@ export class JenkinsBasicJobStatistics implements StatisticsEntryProvider {
     
     private getLastRunJob(builds: Map<IJenkinsJob, Array<IJenkinsBuild>>):StatisticsEntry {
         
-        if (Functions.isInvalid(builds)) {
+        if (Util.isInvalid(builds)) {
             return new StatisticsEntry("Last Run", "N/A", undefined);
         }
         
         var lastRun:IJenkinsJob = Array.from(builds.keys()).reduce(function (job1, job2) {
-            return Functions.getLastBuildTimestamp(job1) >= Functions.getLastBuildTimestamp(job2) ? job1 : job2;
+            return Util.getLastBuildTimestamp(job1) >= Util.getLastBuildTimestamp(job2) ? job1 : job2;
         });
         
-        if (Functions.isInvalid(lastRun) || Functions.isInvalid(lastRun.lastBuild)) {
+        if (Util.isInvalid(lastRun) || Util.isInvalid(lastRun.lastBuild)) {
             return new StatisticsEntry("Last Failed", "N/A", undefined);
         }
         
@@ -111,22 +111,22 @@ export class JenkinsBasicJobStatistics implements StatisticsEntryProvider {
     
     private getLongestDurationJob(builds: Map<IJenkinsJob, Array<IJenkinsBuild>>):StatisticsEntry {
         
-        let buildArray: Array<IJenkinsBuild> = Functions.getBuildArray(builds);
+        let buildArray: Array<IJenkinsBuild> = Util.getBuildArray(builds);
         
-        if (Functions.isInvalid(buildArray)) {
+        if (Util.isInvalid(buildArray)) {
             return new StatisticsEntry("Longest Duration", "N/A", undefined);
         }
         
         let longestRunningBuild = buildArray.reduce(function (build1, build2) {
-            return Functions.getBuildDuration(build1) > Functions.getBuildDuration(build2) ? build1 : build2;
+            return Util.getBuildDuration(build1) > Util.getBuildDuration(build2) ? build1 : build2;
         });
         
-        if (Functions.isInvalid(longestRunningBuild) || Functions.isInvalid(longestRunningBuild.url)) {
+        if (Util.isInvalid(longestRunningBuild) || Util.isInvalid(longestRunningBuild.url)) {
             return new StatisticsEntry("Longest Duration", "N/A", undefined);
         }
         
-        let longestRunningJob = Functions.getJobByBuildUrl(Array.from(builds.keys()), longestRunningBuild.url);
-        if (Functions.isInvalid(longestRunningJob)) {
+        let longestRunningJob = Util.getJobByBuildUrl(Array.from(builds.keys()), longestRunningBuild.url);
+        if (Util.isInvalid(longestRunningJob)) {
             return new StatisticsEntry("Longest Duration", "N/A", undefined);
         }
         
@@ -140,19 +140,19 @@ export class JenkinsBasicJobStatistics implements StatisticsEntryProvider {
     
     private getLongestAverageDurationJob(builds: Map<IJenkinsJob, Array<IJenkinsBuild>>):StatisticsEntry {
         
-        if (Functions.isInvalid(builds)) {
+        if (Util.isInvalid(builds)) {
             return new StatisticsEntry("Longest Average Duration", "N/A", undefined);
         }
         
         let longestAverageRunning: IJenkinsJob = Array.from(builds.keys()).reduce(function(job1, job2) {
-            return Functions.getBuildAverageDuration(job1.builds) > Functions.getBuildAverageDuration(job2.builds) ? job1 : job2;
+            return Util.getBuildAverageDuration(job1.builds) > Util.getBuildAverageDuration(job2.builds) ? job1 : job2;
         });
         
-        if (Functions.isInvalid(longestAverageRunning)) {
+        if (Util.isInvalid(longestAverageRunning)) {
             return new StatisticsEntry("Longest Average Duration", "N/A", undefined);
         }
         
-        let averageDuration = Functions.getBuildAverageDuration(longestAverageRunning.builds);
+        let averageDuration = Util.getBuildAverageDuration(longestAverageRunning.builds);
         let text = longestAverageRunning.name + "(" + Math.round(moment.duration(averageDuration, "milliseconds").asMinutes()) + " minutes out of " 
             + longestAverageRunning.builds.length + " builds)";
         let url = longestAverageRunning.url;

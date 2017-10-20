@@ -5,7 +5,7 @@ import { Graph2dOptions, Graph2d, DataSet } from 'vis';
 import * as moment from 'moment';
 
 import { Logger } from 'angular2-logger/core';
-import { Functions } from '../Helper/Functions'
+import { Util } from '../Util/Util'
 import { IJenkinsData } from 'jenkins-api-ts-typings';
 import { DataSetItem } from '../JenkinsDataAnalyzer/model/DataSetItem';
     
@@ -18,7 +18,7 @@ export class JenkinsJobAverageBuildDurationGraphComponent implements OnInit {
     
     @Input('jenkinsData')
     set jenkinsData(jenkinsData: IJenkinsData) {
-        if (Functions.isInvalid(jenkinsData)) {
+        if (Util.isInvalid(jenkinsData)) {
             return;
         }
         this.analyze(jenkinsData);
@@ -94,9 +94,9 @@ export class JenkinsJobAverageBuildDurationGraphComponent implements OnInit {
         let parent = this;
         
         data.jobs
-            .sort(function (jobA, jobB) {return (Functions.getBuildAverageDuration(jobA.builds) - Functions.getBuildAverageDuration(jobB.builds)) * -1})
+            .sort(function (jobA, jobB) {return (Util.getBuildAverageDuration(jobA.builds) - Util.getBuildAverageDuration(jobB.builds)) * -1})
             .forEach(function(job) {
-                let averageBuildDuration = Math.ceil(moment.duration(Functions.getBuildAverageDuration(job.builds), "milliseconds").asMinutes());
+                let averageBuildDuration = Math.ceil(moment.duration(Util.getBuildAverageDuration(job.builds), "milliseconds").asMinutes());
 
                 let jobData = {
                     label: {

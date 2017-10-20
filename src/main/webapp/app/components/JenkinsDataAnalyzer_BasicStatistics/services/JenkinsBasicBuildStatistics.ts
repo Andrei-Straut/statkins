@@ -1,6 +1,6 @@
 import { Logger } from 'angular2-logger/core';
 import * as moment from 'moment';
-import { Functions } from '../../Helper/Functions'
+import { Util } from '../../Util/Util';
 
 import { IJenkinsData } from 'jenkins-api-ts-typings';
 import { IJenkinsJob } from 'jenkins-api-ts-typings';
@@ -68,7 +68,7 @@ export class JenkinsBasicBuildStatistics implements StatisticsEntryProvider {
     }
     
     private getDayWithMostBuilds(builds: Map<IJenkinsJob, Array<IJenkinsBuild>>):StatisticsEntry {
-        let buildArray: Array<IJenkinsBuild> = Functions.getBuildArray(builds);
+        let buildArray: Array<IJenkinsBuild> = Util.getBuildArray(builds);
         let buildsByDay:Map<string, Array<IJenkinsBuild>> = new Map<string, Array<IJenkinsBuild>>();
         
         for (let build of buildArray) {
@@ -89,17 +89,17 @@ export class JenkinsBasicBuildStatistics implements StatisticsEntryProvider {
     }
     
     private getLastUnstableBuild(builds: Map<IJenkinsJob, Array<IJenkinsBuild>>):StatisticsEntry {
-        let jobsWithUnstableBuilds:Array<IJenkinsJob> = Array.from(builds.keys()).filter(job => !Functions.isInvalid(job.lastUnstableBuild));
+        let jobsWithUnstableBuilds:Array<IJenkinsJob> = Array.from(builds.keys()).filter(job => !Util.isInvalid(job.lastUnstableBuild));
         
-        if (Functions.isInvalid(jobsWithUnstableBuilds)) {
+        if (Util.isInvalid(jobsWithUnstableBuilds)) {
             return new StatisticsEntry("Longest Duration", "N/A", undefined);
         }
         
         let lastUnstableJob:IJenkinsJob = jobsWithUnstableBuilds.reduce(function (jobA, jobB) {
-            if (Functions.isInvalid(jobA) || Functions.isInvalid(jobA.lastUnstableBuild) || Functions.isInvalid(jobA.lastUnstableBuild.timestamp)) {
+            if (Util.isInvalid(jobA) || Util.isInvalid(jobA.lastUnstableBuild) || Util.isInvalid(jobA.lastUnstableBuild.timestamp)) {
                 return jobB;
             }
-            if (Functions.isInvalid(jobB) || Functions.isInvalid(jobB.lastUnstableBuild) || Functions.isInvalid(jobB.lastUnstableBuild.timestamp)) {
+            if (Util.isInvalid(jobB) || Util.isInvalid(jobB.lastUnstableBuild) || Util.isInvalid(jobB.lastUnstableBuild.timestamp)) {
                 return jobA;
             }
             
@@ -109,7 +109,7 @@ export class JenkinsBasicBuildStatistics implements StatisticsEntryProvider {
             return momentA.isAfter(momentB) ? jobA : jobB;
         });
         
-        if (Functions.isInvalid(lastUnstableJob) || Functions.isInvalid(lastUnstableJob.lastUnstableBuild)) {
+        if (Util.isInvalid(lastUnstableJob) || Util.isInvalid(lastUnstableJob.lastUnstableBuild)) {
             return new StatisticsEntry("Longest Duration", "N/A", undefined);
         }
         
@@ -120,24 +120,24 @@ export class JenkinsBasicBuildStatistics implements StatisticsEntryProvider {
     }
     
     private getBuildWithMostChangeSets(builds: Map<IJenkinsJob, Array<IJenkinsBuild>>):StatisticsEntry {
-        let buildArray: Array<IJenkinsBuild> = Functions.getBuildArray(builds);
+        let buildArray: Array<IJenkinsBuild> = Util.getBuildArray(builds);
         let mostCommitted = buildArray.reduce(function (buildA, buildB) {
-            if (Functions.isInvalid(buildA) || Functions.isInvalid(buildA.changeSets)) {
+            if (Util.isInvalid(buildA) || Util.isInvalid(buildA.changeSets)) {
                 return buildB;
             }
-            if (Functions.isInvalid(buildB) || Functions.isInvalid(buildB.changeSets)) {
+            if (Util.isInvalid(buildB) || Util.isInvalid(buildB.changeSets)) {
                 return buildA;
             }
             
             return buildA.changeSets.length >= buildB.changeSets.length ? buildA : buildB;
         });
         
-        if (Functions.isInvalid(mostCommitted) || Functions.isInvalid(mostCommitted.changeSets)) {
+        if (Util.isInvalid(mostCommitted) || Util.isInvalid(mostCommitted.changeSets)) {
             return new StatisticsEntry("Most commits", "N/A", undefined);
         }
         
-        let job = Functions.getJobByBuildUrl(Array.from(builds.keys()), mostCommitted.url);        
-        if (Functions.isInvalid(job)) {
+        let job = Util.getJobByBuildUrl(Array.from(builds.keys()), mostCommitted.url);        
+        if (Util.isInvalid(job)) {
             return new StatisticsEntry("Most commits", "N/A", undefined);
         }
         
@@ -148,25 +148,25 @@ export class JenkinsBasicBuildStatistics implements StatisticsEntryProvider {
     }
     
     private getAverageBuildDuration(builds: Map<IJenkinsJob, Array<IJenkinsBuild>>):StatisticsEntry {
-        let totalDurationTimestamp = Functions.getBuildArray(builds).map(build => build.duration).reduce(function(buildADuration, buildBDuration) {
+        let totalDurationTimestamp = Util.getBuildArray(builds).map(build => build.duration).reduce(function(buildADuration, buildBDuration) {
             return (isNaN(buildADuration) ? 0 : buildADuration) + (isNaN(buildBDuration) ? 0 : buildBDuration);
         });
         
-        let averageDurationTimestamp = Math.round(totalDurationTimestamp / Functions.getBuildArray(builds).length);
+        let averageDurationTimestamp = Math.round(totalDurationTimestamp / Util.getBuildArray(builds).length);
         let averageDurationMinutes = Math.round(moment.duration(averageDurationTimestamp, "milliseconds").asMinutes());
         
         return new StatisticsEntry("Average build duration", averageDurationMinutes + " minutes", undefined);
     }
     
     private getBuildsOfDate(builds: Map<IJenkinsJob, Array<IJenkinsBuild>>, date: Date):Array<IJenkinsBuild>  {
-        let buildArray: Array<IJenkinsBuild> = Functions.getBuildArray(builds);
+        let buildArray: Array<IJenkinsBuild> = Util.getBuildArray(builds);
         
-        return buildArray.filter(build => Functions.isSameDate(new Date(build.timestamp), date));
+        return buildArray.filter(build => Util.isSameDate(new Date(build.timestamp), date));
     }
     
     private getBuildsAfterDate(builds: Map<IJenkinsJob, Array<IJenkinsBuild>>, afterDate: Date):Array<IJenkinsBuild>  {
-        let buildArray: Array<IJenkinsBuild> = Functions.getBuildArray(builds);
+        let buildArray: Array<IJenkinsBuild> = Util.getBuildArray(builds);
         
-        return buildArray.filter(build => Functions.isAfterDate(new Date(build.timestamp), afterDate));
+        return buildArray.filter(build => Util.isAfterDate(new Date(build.timestamp), afterDate));
     }
 }

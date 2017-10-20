@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/first';
 
-import { Functions } from '../../Helper/Functions';
+import { Util } from '../../Util/Util';
 import { Logger } from 'angular2-logger/core';
 import { Proxy } from '../../Proxy/Proxy';
 import { IJenkinsJob } from 'jenkins-api-ts-typings';
@@ -30,7 +30,7 @@ export class JenkinsViewService implements IJenkinsService {
     }
     
     async execute() {
-        if (Functions.isInvalid(this.viewList)) {
+        if (Util.isInvalid(this.viewList)) {
             this.LOGGER.error("Empty or null view list received");
             this.completedSuccessfully = false;
             this.complete = true;
@@ -66,9 +66,9 @@ export class JenkinsViewService implements IJenkinsService {
                         continue;
                     }
                     
-                    let view = Functions.getViewByName(this.viewList, viewJson["name"]);
+                    let view = Util.getViewByName(this.viewList, viewJson["name"]);
 
-                    if (Functions.isInvalid(view)) {
+                    if (Util.isInvalid(view)) {
                         this.LOGGER.warn("No view with name", viewJson["name"], "found");
                         continue;
                     }
@@ -123,7 +123,7 @@ export class JenkinsViewService implements IJenkinsService {
         }
         
         for(let viewJob of (viewJson["jobs"] as Array<JSON>)) {
-            let job: IJenkinsJob = Functions.getJobByName(allJobs, viewJob["name"]);
+            let job: IJenkinsJob = Util.getJobByName(allJobs, viewJob["name"]);
             
             if (job === undefined) {
                 continue;

@@ -10,14 +10,14 @@ export class JenkinsDefinitionService {
     readonly loggerLevel = 3;
     readonly defaultDepth = "?depth=1";
     
-    readonly proxyUrl = "http://localhost:8089";                                            // DEV
-    readonly jenkinsUrl = "http://ptlisvltnet016.dci.co-int.net/";                          // DEV
+//    readonly proxyUrl = "http://localhost:8089";                                            // DEV
+//    readonly jenkinsUrl = "http://ptlisvltnet016.dci.co-int.net/";                          // DEV
     
 //    readonly proxyUrl = "http://vm-transnet-009.dci.co-int.net:8080/drp/api/post/";       // STAGING
 //    readonly jenkinsUrl = "http://ptlisvltnet016.dci.co-int.net/";                        // STAGING
     
-//    readonly proxyUrl = "http://vm-transnet-009.dci.co-int.net:8080/drp/api/post/";       // LIVE
-//    readonly jenkinsUrl = "https://www.andreistraut.info/jenkins/";                       // LIVE
+    readonly proxyUrl = "https://www.andreistraut.info/drp/api/post/";                    // LIVE
+    readonly jenkinsUrl = "https://www.andreistraut.info/jenkins/";                       // LIVE
     
     constructor() {
     }

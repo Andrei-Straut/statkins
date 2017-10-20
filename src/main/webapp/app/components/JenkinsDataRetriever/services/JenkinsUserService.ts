@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/first';
 
-import { Functions } from '../../Helper/Functions';
+import { Util } from '../../Util/Util';
 import { Logger } from 'angular2-logger/core';
 import { Proxy } from '../../Proxy/Proxy';
 import { IJenkinsUser } from 'jenkins-api-ts-typings';
@@ -27,7 +27,7 @@ export class JenkinsUserService implements IJenkinsService {
     }
     
     async execute() {
-        if (Functions.isInvalid(this.userList)) {
+        if (Util.isInvalid(this.userList)) {
             this.LOGGER.error("Empty or null user list received");
             this.completedSuccessfully = false;
             this.complete = true;
@@ -57,9 +57,9 @@ export class JenkinsUserService implements IJenkinsService {
                         continue;
                     }
                     
-                    let user = Functions.getUserByFullName(this.userList, userJson["fullName"]);
+                    let user = Util.getUserByFullName(this.userList, userJson["fullName"]);
 
-                    if (Functions.isInvalid(user)) {
+                    if (Util.isInvalid(user)) {
                         this.LOGGER.warn("No user with fullName", userJson["fullName"], "found");
                         continue;
                     }

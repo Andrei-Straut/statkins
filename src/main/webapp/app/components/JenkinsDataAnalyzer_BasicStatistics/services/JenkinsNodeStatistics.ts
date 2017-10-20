@@ -1,6 +1,6 @@
 import { Logger } from 'angular2-logger/core';
 import * as moment from 'moment';
-import { Functions } from '../../Helper/Functions';
+import { Util } from '../../Util/Util';
 
 import { IJenkinsData } from 'jenkins-api-ts-typings';
 import { IJenkinsNode } from 'jenkins-api-ts-typings';
@@ -29,7 +29,7 @@ export class JenkinsNodeStatistics implements StatisticsEntryProvider {
     
     private getNumberONodes(nodes: Array<IJenkinsNode>):string {
         
-        if (Functions.isInvalid(nodes)) {
+        if (Util.isInvalid(nodes)) {
             return "N/A";
         }
         
