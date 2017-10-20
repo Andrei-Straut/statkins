@@ -31,7 +31,7 @@
       'vis': 'npm:vis',
       'moment': 'npm:moment',
       'moment-duration-format': 'npm:moment-duration-format',
-      'jenkins-api-ts-typings': 'npm:jenkins-api-ts-typings',
+      'jenkins-api-ts-typings': 'npm:jenkins-api-ts-typings'
     },
     // packages tells the System loader how to load when no filename and/or no extension
     packages: {

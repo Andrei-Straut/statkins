@@ -5,8 +5,6 @@ import { Input } from '@angular/core';
 import { Logger } from 'angular2-logger/core';
 import { IJenkinsData } from 'jenkins-api-ts-typings';
 
-import { StatisticsCardEntry } from './model/StatisticsCardEntry';
-
 import { JenkinsBuildTimelineComponent } from '../JenkinsDataAnalyzer_JenkinsBuildTimeline/jenkins-build-timeline.component';
 import { JenkinsJobBuildGraphComponent } from '../JenkinsDataAnalyzer_JenkinsJobBuildGraph/jenkins-job-build-graph.component';
 

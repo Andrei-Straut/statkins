@@ -10,6 +10,7 @@ import { IJenkinsBuild } from 'jenkins-api-ts-typings';
 import { JenkinsBasicJobStatistics } from './services/JenkinsBasicJobStatistics';
 import { JenkinsBasicBuildStatistics } from './services/JenkinsBasicBuildStatistics';
 import { JenkinsChangeSetStatistics } from './services/JenkinsChangeSetStatistics';
+import { JenkinsNodeStatistics } from './services/JenkinsNodeStatistics';
 
 import { StatisticsCardEntry } from '../JenkinsDataAnalyzer/model/StatisticsCardEntry';
     
@@ -34,6 +35,7 @@ export class JenkinsBasicStatisticsComponent implements OnInit {
     basicStatistics: StatisticsCardEntry;
     basicBuildStatistics: StatisticsCardEntry;
     basicCommitStatistics: StatisticsCardEntry;
+    basicNodeStatistics: StatisticsCardEntry;
     
     constructor(private LOGGER: Logger) {}
     
@@ -45,14 +47,17 @@ export class JenkinsBasicStatisticsComponent implements OnInit {
         this.analyzerData = new Array<StatisticsCardEntry>();
         this.dataAvailable = true;
         
+        this.basicNodeStatistics = new JenkinsNodeStatistics(this.LOGGER, jenkinsData).getStatistics();
         this.basicStatistics = new JenkinsBasicJobStatistics(this.LOGGER, jenkinsData).getStatistics();
         this.basicBuildStatistics = new JenkinsBasicBuildStatistics(this.LOGGER, jenkinsData).getStatistics();
         this.basicCommitStatistics = new JenkinsChangeSetStatistics(this.LOGGER, jenkinsData).getStatistics();
         
+        this.LOGGER.info("Basic Node Statistics", this.basicNodeStatistics);
         this.LOGGER.info("Basic Job Statistics", this.basicStatistics);
         this.LOGGER.info("Basic Build Statistics", this.basicBuildStatistics);
         this.LOGGER.info("Basic Commit Statistics", this.basicCommitStatistics);
         
+        this.analyzerData.push(this.basicNodeStatistics);
         this.analyzerData.push(this.basicStatistics);
         this.analyzerData.push(this.basicBuildStatistics);
         this.analyzerData.push(this.basicCommitStatistics);
