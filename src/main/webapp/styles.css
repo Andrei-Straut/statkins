@@ -16,10 +16,6 @@ body {
 .navbar {
     margin-bottom: 0px;
 }
-.navbar-header {
-    padding-top: 15px;
-    padding-bottom: 15px;
-}
 
 @-webkit-keyframes spinner {
     0% {
@@ -182,7 +178,7 @@ a.statisticsEntry:hover, a.statisticsEntry:focus {
     color: #23527c;
 }
 .navbar-brand {
-     float: none;
+     float: left;
 }
 .vr {
     display:inline;

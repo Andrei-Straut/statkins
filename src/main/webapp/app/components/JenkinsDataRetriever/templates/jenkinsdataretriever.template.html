@@ -4,10 +4,10 @@
     <h3>Data Retrieval</h3>
     
     <div class="row">
-        <div class="col-sm-1">
+        <div class="col-sm-2">
             Checking URL:
         </div>
-        <div class="col-sm-1 box-content-box">
+        <div class="col-sm-4 box-content-box">
             <span [hidden]="isHideUrlCheckLoadingLabel()">
                 <i class="fa fa-spinner fa-spin fa-icon-green" aria-hidden="true"></i> Loading
             </span>
@@ -27,10 +27,10 @@
     </div>
     
     <div class="row" [hidden]="!retrievalStarted">
-        <div class="col-sm-1">
+        <div class="col-sm-2">
             Nodes:
         </div>
-        <div class="col-sm-1 box-content-box">
+        <div class="col-sm-4 box-content-box">
             <span [hidden]="isHideLoadingLabel(services.nodeService)">
                 <i class="fa fa-spinner fa-spin fa-icon-green" aria-hidden="true"></i> Loading
             </span>
@@ -44,10 +44,10 @@
     </div>
 
     <div class="row" [hidden]="!retrievalStarted">
-        <div class="col-sm-1">
+        <div class="col-sm-2">
             Users:
         </div>
-        <div class="col-sm-1 box-content-box">
+        <div class="col-sm-4 box-content-box">
             <span [hidden]="isHideLoadingLabel(services.userService)">
                 <i class="fa fa-spinner fa-spin fa-icon-green" aria-hidden="true"></i> Loading
             </span>
@@ -61,10 +61,10 @@
     </div>
 
     <div class="row" [hidden]="!retrievalStarted">
-        <div class="col-sm-1">
+        <div class="col-sm-2">
             Jobs:
         </div>
-        <div class="col-sm-1 box-content-box">
+        <div class="col-sm-4 box-content-box">
             <span [hidden]="isHideLoadingLabel(services.jobService)">
                 <i class="fa fa-spinner fa-spin fa-icon-green" aria-hidden="true"></i> Loading
             </span>
@@ -78,10 +78,10 @@
     </div>
 
     <div class="row" [hidden]="!retrievalStarted">
-        <div class="col-sm-1">
+        <div class="col-sm-2">
             Views:
         </div>
-        <div class="col-sm-1 box-content-box">
+        <div class="col-sm-4 box-content-box">
             <span [hidden]="isHideLoadingLabel(services.viewService)">
                 <i class="fa fa-spinner fa-spin fa-icon-green" aria-hidden="true"></i> Loading
             </span>
@@ -95,10 +95,10 @@
     </div>
 
     <div class="row" [hidden]="!retrievalStarted">
-        <div class="col-sm-1">
+        <div class="col-sm-2">
             Builds:
         </div>
-        <div class="col-sm-1 box-content-box">
+        <div class="col-sm-4 box-content-box">
             <span [hidden]="isHideLoadingLabel(services.buildService)">
                 <i class="fa fa-spinner fa-spin fa-icon-green" aria-hidden="true"></i> Loading
             </span>
@@ -112,10 +112,10 @@
     </div>
 
     <div class="row" [hidden]="!retrievalStarted">
-        <div class="col-sm-1">
+        <div class="col-sm-2">
             Commits:
         </div>
-        <div class="col-sm-1 box-content-box">
+        <div class="col-sm-4 box-content-box">
             <span [hidden]="isHideLoadingLabel(services.changeSetService)">
                 <i class="fa fa-spinner fa-spin fa-icon-green" aria-hidden="true"></i> Loading
             </span>
