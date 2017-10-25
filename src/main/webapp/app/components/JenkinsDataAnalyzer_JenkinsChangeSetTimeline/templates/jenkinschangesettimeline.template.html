@@ -1,7 +1,8 @@
 
 <div class="bg-color-white panel panel-primary text-center no-border">
     <div class="panel-footer back-footer-green panel-title">
-        Change Sets Timeline (Last 7d)
+        Change Sets Timeline (Last 7d)<br/>
+        <span><small><i>Click and drag to pan, or click and scroll to zoom</i></small></span>
     </div>
     <div>
         <div id="changeSetTimeline"></div>
@@ -37,6 +38,7 @@
                        [ngModel]="groupVisibility.defaultGroup"
                        (ngModelChange)="toggleDefault()"> Aborted or Running
             </label><br/>
+            <span><b><i>Color of items represents the worst status across the builds in which this commit was included</i></b></span><br/>
             <span><b><i>Color of items represents the worst status across the builds in which this commit was included</i></b></span><br/>
             <span><b><i>Color in item tooltips represents the result of each individual build in which this commit was included</i></b></span><br/>
         </div>
