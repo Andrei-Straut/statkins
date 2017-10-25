@@ -164,7 +164,7 @@ export class JenkinsDataRetrieverComponent implements OnInit {
         return this.data;
     }
     
-    isHideUrlCheckLoadingLabel(service: IJenkinsService): boolean {
+    isHideUrlCheckLoadingLabel(): boolean {
         if (this.urlCheckStarted && this.urlCheckFinished) {
             return true;
         }
@@ -172,7 +172,7 @@ export class JenkinsDataRetrieverComponent implements OnInit {
         return false;
     }
     
-    isHideUrlCheckSuccessfulLabel(service: IJenkinsService): boolean {
+    isHideUrlCheckSuccessfulLabel(): boolean {
         if (!this.urlCheckStarted || !this.urlCheckFinished) {
             return true;
         }
@@ -180,7 +180,7 @@ export class JenkinsDataRetrieverComponent implements OnInit {
         return !this.urlCheckSuccessful;
     }
     
-    isHideUrlCheckErrorLabel(service: IJenkinsService): boolean {
+    isHideUrlCheckErrorLabel(): boolean {
         if (!this.urlCheckStarted || !this.urlCheckFinished) {
             return true;
         }

@@ -40,31 +40,38 @@ export class JenkinsBuildService implements IJenkinsService {
         
         for(let job of promises.keys()) {
             
-            await Promise.all(promises.get(job)).then(values => {
+            await Promise.all(promises.get(job))
+                .then(values => {
                 
-                for(let buildJson of <Array<JSON>>values) {
+                    for(let buildJson of <Array<JSON>>values) {
+
+                        if (buildJson === undefined || buildJson === null) {
+                            // Failed, already handled by the promise's catch
+                            continue;
+                        }
+
+                        if(!(<JSON>buildJson).hasOwnProperty("number") || !(<JSON>buildJson).hasOwnProperty("url")) {
+                            this.LOGGER.warn("No build details found for build:", buildJson);
+                            continue;
+                        }
+
+                        let build = Util.getBuildByBuildNumber(job.builds, buildJson["number"]);
+
+                        if (build === undefined || build === null) {
+                            this.LOGGER.warn("Build with number #" + buildJson["number"], "not found for job", job.name);
+                            continue;
+                        }
+
+                        build.fromJsonString(JSON.stringify(buildJson));
+                        this.LOGGER.debug("Updated build:", buildJson);
+                    }})
+                .catch((err) => {
+                    this.LOGGER.warn("Build details not retrieved correctly");
+                    this.LOGGER.debug(err);
+                    this.completedSuccessfully = false;
+                    this.complete = true;
                     
-                    if (buildJson === undefined || buildJson === null) {
-                        // Failed, already handled by the promise's catch
-                        continue;
-                    }
-                
-                    if(!(<JSON>buildJson).hasOwnProperty("number") || !(<JSON>buildJson).hasOwnProperty("url")) {
-                        this.LOGGER.warn("No build details found for build:", buildJson);
-                        continue;
-                    }
-                    
-                    let build = Util.getBuildByBuildNumber(job.builds, buildJson["number"]);
-                    
-                    if (build === undefined || build === null) {
-                        this.LOGGER.warn("Build with number #" + buildJson["number"], "not found for job", job.name);
-                        continue;
-                    }
-                    
-                    build.fromJsonString(JSON.stringify(buildJson));
-                    this.LOGGER.debug("Updated build:", buildJson);
-                }
-            });
+                    return;});
             
             job.firstBuild = this.getBuild(job, "firstBuild", job.builds);
             job.lastBuild = this.getBuild(job, "lastBuild", job.builds);

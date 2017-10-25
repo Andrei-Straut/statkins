@@ -62,9 +62,10 @@ export class JenkinsChangeSetService implements IJenkinsService {
                         changeSet.author = this.getChangeSetAuthor(this.userList, jsonData);
                         changeSet.timestamp = Util.padTimestamp(changeSet.timestamp);
                         
-                        if (changeSet.date.toString().toLowerCase().indexOf("invalid") !== -1) {
+                        if (Util.isInvalid(changeSet.date) || changeSet.date.toString().toLowerCase().indexOf("invalid") !== -1) {
                             changeSet.date = new Date(changeSet.timestamp);
                         }
+                        
                         changeSetMap.set(changeSet.commitId, changeSet);
                     }
                     return changeSet;

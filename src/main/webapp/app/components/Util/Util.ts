@@ -248,15 +248,27 @@ export class Util {
     
     static padTimestamp(timestamp: number):number {
         
+        if (timestamp === 0) {
+            return 0;
+        }
+        
+        if (timestamp < 0) {
+            timestamp = timestamp * -1;
+        }
+        
         let lowerMargin = 999999999999;
         let upperMargin = lowerMargin * 10;
         
-        while (timestamp < lowerMargin) {
+        let maxIterations:number = 10;
+        while (timestamp < lowerMargin && maxIterations > 0) {
             timestamp = timestamp * 10;
+            maxIterations--;
         }
         
-        while (timestamp > upperMargin) {
+        maxIterations = 10;
+        while (timestamp > upperMargin && maxIterations > 0) {
             timestamp = timestamp / 10;
+            maxIterations--;
         }
         
         return timestamp;
