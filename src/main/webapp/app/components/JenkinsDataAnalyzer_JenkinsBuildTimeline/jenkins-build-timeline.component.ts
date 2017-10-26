@@ -246,9 +246,11 @@ export class JenkinsBuildTimelineComponent implements OnInit {
     private getItemTitle(job: IJenkinsJob, build: IJenkinsBuild) {
         let startDateTime = new Date(build.timestamp);
         let endDateTime = new Date(build.timestamp + build.duration);
+        let running = Util.isRunning(build) ? " (Running)" : "";
+        let aborted = Util.isAborted(build) ? " (Aborted)" : "";
         
         return job.name + " #" + build.number + "<br/>"
-            + (!Util.isInvalid(build.displayName) ? "Name: " + build.displayName + "<br/>" : "")
+            + (!Util.isInvalid(build.displayName) ? "Name: " + build.displayName + running + aborted + "<br/>" : "")
             + (!Util.isInvalid(build.description) ? "Description: " + build.description + "<br/>" : "")
             + "Start: " + Util.padTime(startDateTime) + ", " + "End: " + Util.padTime(endDateTime) + "<br/>"
             + "<i>Double-click to open in Jenkins</i>";
