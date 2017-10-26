@@ -15,10 +15,16 @@
         </jenkins-job-build-graph>  
     </div>
 
-    <div id="visBuildDuration" class="row">
-        <jenkins-job-average-build-duration #jenkinsjobaveragebuildduration
+    <div id="visFileChangesGraph" class="row">
+        <jenkins-file-changes-graph #jenkinsfilechangesgraph
             [jenkinsData]="jenkinsData">
-        </jenkins-job-average-build-duration>  
+        </jenkins-file-changes-graph>  
+    </div>
+
+    <div id="visBuildDuration" class="row">
+        <jenkins-average-build-duration #jenkinsaveragebuildduration
+            [jenkinsData]="jenkinsData">
+        </jenkins-average-build-duration>  
     </div>
 
     <div id="visBuildTimeline" class="row">

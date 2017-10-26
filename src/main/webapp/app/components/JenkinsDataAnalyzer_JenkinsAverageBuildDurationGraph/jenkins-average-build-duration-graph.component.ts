@@ -10,11 +10,11 @@ import { IJenkinsData } from 'jenkins-api-ts-typings';
 import { DataSetItem } from '../JenkinsDataAnalyzer/model/DataSetItem';
     
 @Component({
-    selector: 'jenkins-job-average-build-duration',
-    templateUrl: 'app/components/JenkinsDataAnalyzer_JenkinsJobAverageBuildDuration/templates/jenkinsjobaveragebuildduration.template.html',
+    selector: 'jenkins-average-build-duration',
+    templateUrl: 'app/components/JenkinsDataAnalyzer_JenkinsAverageBuildDurationGraph/templates/jenkinsaveragebuilddurationgraph.template.html',
     providers: [],
 })
-export class JenkinsJobAverageBuildDurationGraphComponent implements OnInit {
+export class JenkinsAverageBuildDurationGraphComponent implements OnInit {
     
     @Input('jenkinsData')
     set jenkinsData(jenkinsData: IJenkinsData) {
@@ -85,6 +85,8 @@ export class JenkinsJobAverageBuildDurationGraphComponent implements OnInit {
         this.visJobsData = new DataSet(this.getJobsData(jenkinsData));
         this.visGraph =  new Graph2d(this.visGraphContainer, this.visJobsData, this.visGroups, this.visGraphOptions);
         
+        this.LOGGER.debug("Average Build Duration Data", this.visJobsData);
+        
         return this.visGraph;
     }
     
@@ -92,6 +94,10 @@ export class JenkinsJobAverageBuildDurationGraphComponent implements OnInit {
         let jobsData:Array<any> = new Array<any>();
         let counter:number = 0;
         let parent = this;
+        
+        if (Util.isInvalid(data) || Util.isInvalid(data.jobs)) {
+            return jobsData;
+        }
         
         data.jobs
             .sort(function (jobA, jobB) {return (Util.getBuildAverageDuration(jobA.builds) - Util.getBuildAverageDuration(jobB.builds)) * -1})

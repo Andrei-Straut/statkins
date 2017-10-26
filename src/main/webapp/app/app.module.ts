@@ -11,14 +11,22 @@ import { JenkinsDataAnalyzerComponent } from './components/JenkinsDataAnalyzer/j
 import { JenkinsBuildTimelineComponent } from './components/JenkinsDataAnalyzer_JenkinsBuildTimeline/jenkins-build-timeline.component';
 import { JenkinsChangeSetTimelineComponent } from './components/JenkinsDataAnalyzer_JenkinsChangeSetTimeline/jenkins-changeset-timeline.component';
 import { JenkinsJobBuildGraphComponent } from './components/JenkinsDataAnalyzer_JenkinsJobBuildGraph/jenkins-job-build-graph.component';
-import { JenkinsJobAverageBuildDurationGraphComponent } from './components/JenkinsDataAnalyzer_JenkinsJobAverageBuildDuration/jenkins-job-average-build-duration.component';
+import { JenkinsFileChangesGraphComponent } from './components/JenkinsDataAnalyzer_JenkinsFileChangesGraph/jenkins-file-changes-graph.component';
+import { JenkinsAverageBuildDurationGraphComponent } from './components/JenkinsDataAnalyzer_JenkinsAverageBuildDurationGraph/jenkins-average-build-duration-graph.component';
 import { JenkinsBasicStatisticsComponent } from './components/JenkinsDataAnalyzer_BasicStatistics/jenkins-basic-statistics.component';
 
 @NgModule({
   imports:      [ BrowserModule, FormsModule, HttpModule ],
-  declarations: [ AppComponent, JenkinsDataRetrieverComponent, JenkinsDataAnalyzerComponent, 
-      JenkinsBuildTimelineComponent, JenkinsChangeSetTimelineComponent, JenkinsJobBuildGraphComponent, 
-      JenkinsJobAverageBuildDurationGraphComponent, JenkinsBasicStatisticsComponent ],
+  declarations: [ 
+        AppComponent, 
+        JenkinsDataRetrieverComponent, 
+        JenkinsDataAnalyzerComponent,  
+        JenkinsBasicStatisticsComponent,
+        JenkinsJobBuildGraphComponent, 
+        JenkinsAverageBuildDurationGraphComponent,  
+        JenkinsFileChangesGraphComponent,
+        JenkinsBuildTimelineComponent, 
+        JenkinsChangeSetTimelineComponent, ],
   bootstrap:    [ AppComponent ],
   providers:    [ Logger ]
 })

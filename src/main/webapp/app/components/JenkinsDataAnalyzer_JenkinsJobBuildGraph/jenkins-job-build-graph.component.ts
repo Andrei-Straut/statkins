@@ -30,6 +30,8 @@ export class JenkinsJobBuildGraphComponent implements OnInit {
     private visGroups: DataSet<any> = new DataSet<any>();
     private visJobsData: DataSet<DataSetItem> = new DataSet<DataSetItem>();
     
+    private maxNumberOfElements = 10;
+    
     constructor(private LOGGER: Logger) {}
     
     ngOnInit() {
@@ -57,9 +59,12 @@ export class JenkinsJobBuildGraphComponent implements OnInit {
         this.visJobsData = this.getJobsData(jenkinsData);
         this.visGraph =  new Timeline(this.visGraphContainer, this.visJobsData, this.visGroups, this.visGraphOptions);
         
-        if (Util.isInvalid(jenkinsData) && !Util.isInvalid(jenkinsData.jobs)) {
+        this.LOGGER.debug("Job Build Data", this.visJobsData);
+        
+        if (Util.isInvalid(jenkinsData) || Util.isInvalid(jenkinsData.jobs)) {
             return;
         }
+        
         let maxNumber = jenkinsData.jobs.sort(function (job1, job2) {return (job1.builds.length - job2.builds.length) * -1});
         if (Util.isInvalid(maxNumber)) {
             return;
@@ -73,9 +78,16 @@ export class JenkinsJobBuildGraphComponent implements OnInit {
     
     private getJobsData(data:IJenkinsData):DataSet<any> {
         let jobsData:DataSet<any> = new DataSet<any>();
+        let parent = this;
         
-        let counter:number = 0;
+        if (Util.isInvalid(data) || Util.isInvalid(data.jobs)) {
+            return jobsData;
+        }
+        
         data.jobs.sort(function (job1, job2) {return (job1.builds.length - job2.builds.length) * -1}).forEach(function(job) {
+            if (jobsData.length >= parent.maxNumberOfElements) {
+                return;
+            }
             
             let jobData: any = undefined;
             if (Util.isInvalid(jobsData.get(job.builds.length))) {
@@ -87,15 +99,13 @@ export class JenkinsJobBuildGraphComponent implements OnInit {
                     end: job.builds.length,
                     group: 0,
                     className: 'green left-aligned'
-                };                
+                };
             } else {
                 jobData = jobsData.get(job.builds.length);
                 let currentTitle = (jobData as DataSetItem).title;
                 (jobData as DataSetItem).title = currentTitle + job.name + "<br/>";
             }
             jobsData.update(jobData);
-            
-            counter++;
         });
         
         return jobsData;

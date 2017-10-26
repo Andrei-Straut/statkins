@@ -105,6 +105,12 @@ export class JenkinsBuildTimelineComponent implements OnInit {
         this.visJobsData = this.getJobsData(jenkinsData);
         this.visTimeline = new Timeline(this.visTimelineContainer, this.visJobsData, this.visGroups, this.visTimelineOptions);
         
+        this.LOGGER.debug("Build Timeline Data", this.visJobsData);
+        
+        if (Util.isInvalid(jenkinsData) || Util.isInvalid(jenkinsData.jobs)) {
+            return this.visTimeline;
+        }
+        
         let visDataSet: DataSet<DataSetItem> = this.visJobsData;
         this.visTimeline.on('doubleClick', function(properties:VisEventProperties) {
             if (Util.isInvalid(properties) || Util.isInvalid(properties.item)) {
@@ -159,6 +165,10 @@ export class JenkinsBuildTimelineComponent implements OnInit {
     private getJobsData(data: IJenkinsData):DataSet<DataSetItem> {
         let buildsData: DataSet<DataSetItem> = new DataSet<DataSetItem>();
         let parent = this;
+        
+        if (Util.isInvalid(data) || Util.isInvalid(data.jobs)) {
+            return buildsData;
+        }
         
         data.jobs.forEach(function(job) {
             job.builds.forEach(function(build) {

@@ -105,6 +105,8 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
         this.visChangeSetData = this.getChangeSetData(jenkinsData);
         this.visTimeline = new Timeline(this.visTimelineContainer, this.visChangeSetData, this.visGroups, this.visTimelineOptions);
         
+        this.LOGGER.debug("Change Set Data", this.visChangeSetData);
+        
         return this.visTimeline;
     }
     
@@ -146,6 +148,10 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
         let changeSetsData: DataSet<DataSetItem> = new DataSet<DataSetItem>();
         let parent = this;
         let counter = 0;
+        
+        if (Util.isInvalid(data) || Util.isInvalid(data.builds)) {
+            return changeSetsData;
+        }
         
         Array.from(data.builds.keys()).forEach(function(job) {
             job.builds.forEach(function(build) {
