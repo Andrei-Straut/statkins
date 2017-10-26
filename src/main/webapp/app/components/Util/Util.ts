@@ -132,11 +132,24 @@ export class Util {
             return false;
         }
         
-        if (Util.isInvalid(node.offline) && Util.isInvalid(node.temporarilyOffline)) {
+        if (Util.isInvalid(node.offline)) {
             return false;
         }
         
-        return node.offline || node.temporarilyOffline;
+        return node.offline;
+    }
+    
+    static isTemporarilyOffline(node: IJenkinsNode):boolean {
+        
+        if (Util.isInvalid(node)) {
+            return false;
+        }
+        
+        if (Util.isInvalid(node.temporarilyOffline)) {
+            return false;
+        }
+        
+        return node.temporarilyOffline;
     }
     
     static isIdle(node: IJenkinsNode):boolean {

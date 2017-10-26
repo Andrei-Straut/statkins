@@ -26,6 +26,7 @@ export class JenkinsNodeStatistics implements StatisticsEntryProvider {
                 this.getIdleNodes(this.data.nodes),
                 this.getBusyNodes(this.data.nodes),
                 this.getOfflineNodes(this.data.nodes),
+                this.getDisabledNodes(this.data.nodes),
             ]);
         return this.analyzerData;
     }
@@ -97,6 +98,25 @@ export class JenkinsNodeStatistics implements StatisticsEntryProvider {
         let text: string = offlineNodes.map(node => node.displayName).join(", ");
 
         return new StatisticsEntry("Offline Nodes", text, url);
+    }
+
+    private getDisabledNodes(nodes: Array<IJenkinsNode>): StatisticsEntry {
+
+        if (Util.isInvalid(nodes)) {
+            return new StatisticsEntry("Disabled Nodes", "N/A", undefined);
+        }
+
+        let disabledNodes: Array<IJenkinsNode> = nodes
+            .filter(node => Util.isTemporarilyOffline(node));
+
+        if (Util.isInvalid(disabledNodes)) {
+            return new StatisticsEntry("Disabled Nodes", "0", undefined);
+        }
+
+        let url: string = disabledNodes.length > 1 ? undefined : (disabledNodes[0]).url;
+        let text: string = disabledNodes.map(node => node.displayName).join(", ");
+
+        return new StatisticsEntry("Disabled Nodes", text, url);
     }
 
     private getIdleNodes(nodes: Array<IJenkinsNode>): StatisticsEntry {
