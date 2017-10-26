@@ -36,7 +36,7 @@ export class JenkinsJobBuildGraphComponent implements OnInit {
         this.visGraphContainer = document.getElementById(this.graphElementId);
         this.visGraphOptions = {
             autoResize: true,
-            clickToUse: true,
+            clickToUse: false,
             start: 0,
             min: 0,
             max: 1000,
