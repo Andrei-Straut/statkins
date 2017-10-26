@@ -88,7 +88,6 @@ body {
         transform: rotate(360deg);
     }
 }
-
 /* :not(:required) hides this rule from IE9 and below */
 .spinner:not(:required) {
     -webkit-animation: spinner 1500ms infinite linear;

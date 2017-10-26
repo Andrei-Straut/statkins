@@ -61,6 +61,10 @@ export class JenkinsNodeService implements IJenkinsService {
             let jenkinsNode:IJenkinsNode = new JenkinsNode();
             jenkinsNode.fromJsonString(JSON.stringify(node));
             
+            if (!Util.isInvalid(jenkinsNode) && !Util.isInvalid(jenkinsNode.name)) {
+                jenkinsNode.url = this.getJenkinsNodeUrl(this.url, this.definition, jenkinsNode.name);
+            }
+            
             this.nodeList.push(jenkinsNode);
         }
         
@@ -91,5 +95,9 @@ export class JenkinsNodeService implements IJenkinsService {
     private getJenkinsApiNodeUrl(jenkinsUrl: string, jenkinsDefinition: JenkinsDefinitionService) {
         /** Remove trailing slash ('/') from root url, if present, then concatenate the jenkins api suffix */
         return jenkinsUrl.replace(/\/$/, "") + '/' + jenkinsDefinition.slaveSuffix + jenkinsDefinition.apiSuffix + "?depth=1";
+    }
+    
+    private getJenkinsNodeUrl(jenkinsUrl: string, jenkinsDefinition: JenkinsDefinitionService, nodeName: string) {
+        return jenkinsUrl.replace(/\/$/, "") + '/' + jenkinsDefinition.slaveSuffix + "/" + nodeName;
     }
 }
