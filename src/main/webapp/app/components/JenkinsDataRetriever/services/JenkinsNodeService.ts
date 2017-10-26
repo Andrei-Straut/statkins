@@ -62,7 +62,7 @@ export class JenkinsNodeService implements IJenkinsService {
             jenkinsNode.fromJsonString(JSON.stringify(node));
             
             if (!Util.isInvalid(jenkinsNode) && !Util.isInvalid(jenkinsNode.name)) {
-                jenkinsNode.url = this.getJenkinsNodeUrl(this.url, this.definition, jenkinsNode.name);
+                jenkinsNode.url = this.getJenkinsNodeUrl(this.url, this.definition, jenkinsNode.displayName);
             }
             
             this.nodeList.push(jenkinsNode);

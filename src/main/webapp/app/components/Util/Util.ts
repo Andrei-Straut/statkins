@@ -6,6 +6,7 @@ import { IJenkinsUser } from 'jenkins-api-ts-typings';
 import { IJenkinsView } from 'jenkins-api-ts-typings';
 import { IJenkinsBuild } from 'jenkins-api-ts-typings';
 import { IJenkinsChangeSet } from 'jenkins-api-ts-typings';
+import { IJenkinsNode } from 'jenkins-api-ts-typings';
 
 
 @Injectable()
@@ -123,6 +124,32 @@ export class Util {
         }
         
         return build.building;
+    }
+    
+    static isOffline(node: IJenkinsNode):boolean {
+        
+        if (Util.isInvalid(node)) {
+            return false;
+        }
+        
+        if (Util.isInvalid(node.offline) && Util.isInvalid(node.temporarilyOffline)) {
+            return false;
+        }
+        
+        return node.offline || node.temporarilyOffline;
+    }
+    
+    static isIdle(node: IJenkinsNode):boolean {
+        
+        if (Util.isInvalid(node)) {
+            return false;
+        }
+        
+        if (Util.isInvalid(node.idle)) {
+            return false;
+        }
+        
+        return node.idle;
     }
     
     static getBuildMapContainingCommit(buildList: Map<any, Array<IJenkinsBuild>>, changeSetId: string):Map<IJenkinsJob, Array<IJenkinsBuild>> {
