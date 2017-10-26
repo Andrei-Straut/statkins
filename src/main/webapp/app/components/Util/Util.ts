@@ -119,7 +119,7 @@ export class Util {
     
     static isRunning(build: IJenkinsBuild):boolean {
         
-        if (Util.isInvalid(build) || Util.isInvalid(build.result)) {
+        if (Util.isInvalid(build) || Util.isInvalid(build.building)) {
             return false;
         }
         
