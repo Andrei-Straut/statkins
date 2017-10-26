@@ -34,6 +34,10 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
     private visGroups = new DataSet<any>();
     private visTimeline: Timeline;
     
+    private startTimeLimit: number = 8;
+    private endTimeLimit: number = 1;
+    private timeLimitUnit = "days";
+    
     private static readonly DEFAULT_GROUP = 0;
     private static readonly SUCCESS_GROUP = 1;
     private static readonly UNSTABLE_GROUP = 2;
@@ -51,12 +55,12 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
     
     ngOnInit() {
         let today = new Date();
-        let lastWeek = new Date(today);
-        lastWeek.setDate(today.getDate() - 8);
+        let startDate = new Date(today);
+        startDate.setDate(today.getDate() - this.startTimeLimit);
         let yesterday = new Date(today);
         yesterday.setDate(today.getDate() - 1);
-        let tomorrow = new Date(today);
-        tomorrow.setDate(today.getDate() + 1);
+        let endDate = new Date(today);
+        endDate.setDate(today.getDate() + this.endTimeLimit);
         
         this.visTimelineContainer = document.getElementById(this.visTimelineElementId);
         this.visTimelineOptions = {
@@ -66,8 +70,8 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
             clickToUse: true,
             start: yesterday,
             end: today,
-            min: lastWeek,
-            max: tomorrow,
+            min: startDate,
+            max: endDate,
             stack: this.groupVisibility.stack,
             showCurrentTime: true,
             showMajorLabels: true,
