@@ -89,23 +89,25 @@ export class JenkinsJobBuildGraphComponent implements OnInit {
                 return;
             }
             
-            let jobData: any = undefined;
-            if (Util.isInvalid(jobsData.get(job.builds.length))) {
-                jobData = {
-                    id: job.builds.length,
-                    title: job.name + "<br/>",
-                    content: job.builds.length + " builds",
-                    start: 0,
-                    end: job.builds.length,
-                    group: 0,
-                    className: 'green left-aligned'
-                };
-            } else {
-                jobData = jobsData.get(job.builds.length);
-                let currentTitle = (jobData as DataSetItem).title;
-                (jobData as DataSetItem).title = currentTitle + job.name + "<br/>";
+            if(job.builds.length !== 0) {
+                let jobData: any = undefined;
+                if (Util.isInvalid(jobsData.get(job.builds.length))) {
+                    jobData = {
+                        id: job.builds.length,
+                        title: job.name + "<br/>",
+                        content: job.builds.length + " builds",
+                        start: 0,
+                        end: job.builds.length,
+                        group: 0,
+                        className: 'green left-aligned'
+                    };
+                } else {
+                    jobData = jobsData.get(job.builds.length);
+                    let currentTitle = (jobData as DataSetItem).title;
+                    (jobData as DataSetItem).title = currentTitle + job.name + "<br/>";
+                }
+                jobsData.update(jobData);
             }
-            jobsData.update(jobData);
         });
         
         return jobsData;
