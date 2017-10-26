@@ -40,7 +40,7 @@ export class JenkinsJobAverageBuildDurationGraphComponent implements OnInit {
         this.visGraphContainer = document.getElementById(this.graphElementId);
         this.visGraphOptions = {
             height: '400px',
-            clickToUse: false,
+            clickToUse: true,
             style: "bar",
             barChart: {
                 width: 150,
