@@ -112,18 +112,51 @@ body {
     text-indent: 100%;
 }
 
+@media screen and (min-width: 1024px) {
+    div.container {
+        margin: 0 auto;
+        width: 100%;
+        padding: 15px;
+    }
+    div.sidePadded {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+@media screen and (max-width: 1024px) {
+    .col-md-3 {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    div.container {
+        padding-left: 2px;
+        padding-right: 2px;        
+    }
+    div.panel-primary {
+        padding-left: 2px;
+        padding-right: 2px;
+    }
+    .visStatisticsTimeline .vis-panel.vis-center {
+        left:0px;
+        width: 100%;
+    }
+    .visStatisticsTimeline .vis-panel.vis-left {
+        display: none;
+    }
+}
+@media screen and (min-width: 1024px) {
+}
+
+.statisticsSection {
+    padding-top: 20px;
+}
+
 .left-aligned {
     text-align: left;
 }
 span.wipSpan {
     vertical-align: super;
     color: #428bca;
-}
-
-div.container {
-    margin: 0 auto;
-    width: 100%;
-    padding: 15px;
 }
 
 div.box-content-box {

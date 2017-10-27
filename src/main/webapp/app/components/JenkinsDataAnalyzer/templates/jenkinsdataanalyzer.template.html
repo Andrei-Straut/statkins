@@ -1,39 +1,39 @@
 <!DOCTYPE html>
 <div id="processingInfo" [hidden]="!dataAvailable">
 
-    <h3>Statistics</h3>
+    <h3 class="statisticsSection">Statistics</h3>
 
-    <div id="visBasicStatistics" class="row">
+    <div id="visBasicStatistics" class="row statisticsSection">
         <jenkins-basic-statistics #jenkinsbasicstatistics
             [jenkinsData]="jenkinsData">
         </jenkins-basic-statistics>  
     </div>
 
-    <div id="visBuildNumberGraph" class="row">
+    <div id="visBuildNumberGraph" class="row statisticsSection sidePadded">
         <jenkins-job-build-graph #jenkinsjobbuildgraph
             [jenkinsData]="jenkinsData">
         </jenkins-job-build-graph>  
     </div>
 
-    <div id="visFileChangesGraph" class="row">
+    <div id="visFileChangesGraph" class="row statisticsSection sidePadded">
         <jenkins-file-changes-graph #jenkinsfilechangesgraph
             [jenkinsData]="jenkinsData">
         </jenkins-file-changes-graph>  
     </div>
 
-    <div id="visBuildDuration" class="row">
+    <div id="visBuildDuration" class="row statisticsSection sidePadded">
         <jenkins-average-build-duration #jenkinsaveragebuildduration
             [jenkinsData]="jenkinsData">
         </jenkins-average-build-duration>  
     </div>
 
-    <div id="visBuildTimeline" class="row">
+    <div id="visBuildTimeline" class="row statisticsSection sidePadded visStatisticsTimeline">
         <jenkins-build-timeline #jenkinsbuildtimeline
             [jenkinsData]="jenkinsData">
         </jenkins-build-timeline>
     </div>
 
-    <div id="visCommitTimeline" class="row">
+    <div id="visCommitTimeline" class="row statisticsSection sidePadded visStatisticsTimeline">
         <jenkins-changeset-timeline #jenkinschangesettimeline
             [jenkinsData]="jenkinsData">
         </jenkins-changeset-timeline>
