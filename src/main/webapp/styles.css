@@ -1,40 +1,6 @@
-/* Master Styles */
-h1 {
-    color: #369;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 250%;
-}
-h2, h3 {
-    color: #444;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-}
-body {
-    padding-top: 0px;
-    padding-bottom: 20px;
-}
-.navbar {
-    margin-bottom: 0px;
-}
-
-@-webkit-keyframes spinner {
-    0% {
-        -webkit-transform: rotate(0deg);
-        -moz-transform: rotate(0deg);
-        -ms-transform: rotate(0deg);
-        -o-transform: rotate(0deg);
-        transform: rotate(0deg);
-    }
-
-    100% {
-        -webkit-transform: rotate(360deg);
-        -moz-transform: rotate(360deg);
-        -ms-transform: rotate(360deg);
-        -o-transform: rotate(360deg);
-        transform: rotate(360deg);
-    }
-}
-
+/*================================================================================================*/
+/*=========================================== ANIMATIONS =========================================*/
+/*================================================================================================*/
 @-moz-keyframes spinner {
     0% {
         -webkit-transform: rotate(0deg);
@@ -72,6 +38,62 @@ body {
 }
 
 @keyframes spinner {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+/*================================================================================================*/
+/*========================================= MASTER STYLES ========================================*/
+/*================================================================================================*/
+h1 {
+    color: #369;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 250%;
+}
+h2, h3 {
+    color: #444;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+}
+body {
+    padding-top: 0px;
+    padding-bottom: 20px;
+}
+
+/*================================================================================================*/
+/*============================================ NAVBAR ============================================*/
+/*================================================================================================*/
+.navbar {
+    margin-bottom: 0px;
+}
+.navbar-brand {
+     float: left;
+}
+a.btn-navbar {
+    color: #9d9d9d;
+    padding: 15px 15px;
+    vertical-align: top;
+    text-decoration: none;
+}
+a.btn-navbar:hover {
+    text-decoration: none;
+    color: #FFFFFF;
+}
+
+@-webkit-keyframes spinner {
     0% {
         -webkit-transform: rotate(0deg);
         -moz-transform: rotate(0deg);
@@ -205,9 +227,6 @@ a.statisticsEntry {
 a.statisticsEntry:hover, a.statisticsEntry:focus {
     color: #23527c;
 }
-.navbar-brand {
-     float: left;
-}
 .vr {
     display:inline;
     height:100%;
@@ -215,16 +234,11 @@ a.statisticsEntry:hover, a.statisticsEntry:focus {
     border:1px inset;
     margin:5px
 }
-a.btn-navbar {
-    color: #9d9d9d;
-    padding: 15px 15px;
-    vertical-align: top;
-    text-decoration: none;
-}
-a.btn-navbar:hover {
-    text-decoration: none;
-    color: #FFFFFF;
-}
+
+/*================================================================================================*/
+/*========================================== VIS STYLES ==========================================*/
+/*================================================================================================*/
+
 div.vis-tooltip {
     max-width: 500px;
     white-space: inherit;
@@ -245,7 +259,6 @@ div.vis-tooltip {
     border-color: black;
 }
 
-/* custom styles for individual items, load this after vis.css/vis-timeline-graph2d.min.css */
 .vis-item.green {
     background-color: #00CE6F;
     border-color: green;
@@ -334,4 +347,3 @@ div.vis-tooltip {
     background-color: red;
     color: black;
 }
-

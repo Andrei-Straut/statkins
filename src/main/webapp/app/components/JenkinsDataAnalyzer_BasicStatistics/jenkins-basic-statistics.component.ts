@@ -51,10 +51,10 @@ export class JenkinsBasicStatisticsComponent implements OnInit {
         this.basicCommitStatistics = new JenkinsChangeSetStatistics(this.LOGGER, jenkinsData).getStatistics();
         this.basicNodeStatistics = new JenkinsNodeStatistics(this.LOGGER, jenkinsData).getStatistics();
         
-        this.LOGGER.info("Basic Job Statistics", this.basicStatistics);
-        this.LOGGER.info("Basic Build Statistics", this.basicBuildStatistics);
-        this.LOGGER.info("Basic Commit Statistics", this.basicCommitStatistics);
-        this.LOGGER.info("Basic Node Statistics", this.basicNodeStatistics);
+        this.LOGGER.debug("Basic Job Statistics", this.basicStatistics);
+        this.LOGGER.debug("Basic Build Statistics", this.basicBuildStatistics);
+        this.LOGGER.debug("Basic Commit Statistics", this.basicCommitStatistics);
+        this.LOGGER.debug("Basic Node Statistics", this.basicNodeStatistics);
         
         this.analyzerData.push(this.basicStatistics);
         this.analyzerData.push(this.basicBuildStatistics);
