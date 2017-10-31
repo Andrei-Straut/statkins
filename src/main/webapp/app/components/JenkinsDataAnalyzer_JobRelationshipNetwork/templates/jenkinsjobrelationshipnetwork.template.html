@@ -7,5 +7,19 @@
     </div>
     <div id="jobRelationshipNetwork"></div>
     <div class="panel-body">
+        <div class="row">
+            <span>Show:</span><br/>
+            <label class="checkbox-inline">
+                <input id="showUnconnectedToggle" name="showUnconnectedToggle" type="checkbox" checked
+                       [ngModel]="showNodesWithoutEdges"
+                       (ngModelChange)="toggleUnconnectedNodes()"> Nodes without edges
+            </label>
+            |
+            <label class="checkbox-inline">
+                <input id="showConnectedToggle" name="showConnectedToggle" type="checkbox" checked
+                       [ngModel]="showNodesWithEdges"
+                       (ngModelChange)="toggleConnectedNodes()"> Nodes with edges
+            </label><br/>
+        </div>
     </div>
 </div>
