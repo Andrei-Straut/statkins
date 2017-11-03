@@ -57,9 +57,9 @@ export class JenkinsJobListService implements IJenkinsService {
                 
         this.LOGGER.debug("Received response:", jobListResponse);
         
-        for (let job of jobListResponse["jobs"]) {
+        for(let job of jobListResponse["jobs"]) {
             let jenkinsJob:IJenkinsJob = new JenkinsJob();
-            jenkinsJob.fromJsonString(JSON.stringify(job));
+            jenkinsJob.fromJson(job);
             this.jobList.push(jenkinsJob);
         }
         

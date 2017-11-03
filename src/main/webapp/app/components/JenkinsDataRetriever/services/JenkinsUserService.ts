@@ -64,7 +64,7 @@ export class JenkinsUserService implements IJenkinsService {
                         continue;
                     }
 
-                    user.fromJsonString(JSON.stringify(userJson));
+                    user.fromJson(userJson);
                     this.LOGGER.debug("Updated details for user:", user.fullName);
                 }
                 

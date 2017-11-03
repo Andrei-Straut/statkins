@@ -103,6 +103,10 @@ export class JenkinsAverageBuildDurationGraphComponent implements OnInit {
             .sort(function (jobA, jobB) {return (Util.getBuildAverageDuration(jobA.builds) - Util.getBuildAverageDuration(jobB.builds)) * -1})
             .forEach(function(job) {
                 let averageBuildDuration = Math.ceil(moment.duration(Util.getBuildAverageDuration(job.builds), "milliseconds").asMinutes());
+                
+                if (isNaN(averageBuildDuration)) {
+                    return;
+                }
 
                 let jobData = {
                     label: {

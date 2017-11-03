@@ -36,7 +36,9 @@ export class JenkinsBuildListService implements IJenkinsService {
             return;
         }
         
-        for (let job of this.jobList) {
+        for (let i = 0, n = this.jobList.length; i < n; i++) {
+            
+            let job = this.jobList[i];
             let buildsJson: Array<JSON> = (JSON.parse(job.getJsonData()))["builds"];
             
             if (Util.isInvalid(buildsJson)) {
@@ -46,7 +48,7 @@ export class JenkinsBuildListService implements IJenkinsService {
             
             this.buildList.set(job, buildsJson.map(buildJson => {
                 let build = new JenkinsBuild();
-                build.fromJsonString(JSON.stringify(buildJson));
+                build.fromJson(buildJson);
                 return build;
             }));
             job.builds = this.buildList.get(job);

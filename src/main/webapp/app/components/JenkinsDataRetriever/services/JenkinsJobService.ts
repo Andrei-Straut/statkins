@@ -64,7 +64,7 @@ export class JenkinsJobService implements IJenkinsService {
                         continue;
                     }
 
-                    job.fromJsonString(JSON.stringify(jobJson));
+                    job.fromJson(jobJson);
                     job.upstreamProjects = this.getUpstreamProjects(jobJson, job);
                     job.downstreamProjects = this.getDownstreamProjects(jobJson, job);
                     this.LOGGER.debug("Updated details for job:", job.name);

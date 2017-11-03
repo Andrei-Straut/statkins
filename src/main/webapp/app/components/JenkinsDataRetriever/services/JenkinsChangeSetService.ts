@@ -58,7 +58,7 @@ export class JenkinsChangeSetService implements IJenkinsService {
                         this.LOGGER.debug("ChangeSet with ID", jsonData["commitId"], "retrieved from cache");
                     } else {
                         this.LOGGER.debug("ChangeSet with ID", jsonData["commitId"], "created");
-                        changeSet.fromJsonString(JSON.stringify(jsonData));
+                        changeSet.fromJson(jsonData);
                         changeSet.author = this.getChangeSetAuthor(this.userList, jsonData);
                         changeSet.timestamp = Util.padTimestamp(changeSet.timestamp);
                         

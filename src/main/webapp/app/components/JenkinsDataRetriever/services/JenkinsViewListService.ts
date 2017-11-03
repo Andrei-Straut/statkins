@@ -60,7 +60,7 @@ export class JenkinsViewListService implements IJenkinsService {
         
         for (let view of viewListResponse["views"]) {
             let jenkinsView:IJenkinsView = new JenkinsView();
-            jenkinsView.fromJsonString(JSON.stringify( view));
+            jenkinsView.fromJson(view);
             this.viewList.push(jenkinsView);
         }
         

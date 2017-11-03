@@ -41,30 +41,7 @@ export class JenkinsBuildService implements IJenkinsService {
         for(let job of promises.keys()) {
             
             await Promise.all(promises.get(job))
-                .then(values => {
-                
-                    for(let buildJson of <Array<JSON>>values) {
-
-                        if (buildJson === undefined || buildJson === null) {
-                            // Failed, already handled by the promise's catch
-                            continue;
-                        }
-
-                        if(!(<JSON>buildJson).hasOwnProperty("number") || !(<JSON>buildJson).hasOwnProperty("url")) {
-                            this.LOGGER.warn("No build details found for build:", buildJson);
-                            continue;
-                        }
-
-                        let build = Util.getBuildByBuildNumber(job.builds, buildJson["number"]);
-
-                        if (build === undefined || build === null) {
-                            this.LOGGER.warn("Build with number #" + buildJson["number"], "not found for job", job.name);
-                            continue;
-                        }
-
-                        build.fromJsonString(JSON.stringify(buildJson));
-                        this.LOGGER.debug("Updated build:", buildJson);
-                    }})
+                .then(values => this.handlePromises(job, values))
                 .catch((err) => {
                     this.LOGGER.warn("Build details not retrieved correctly");
                     this.LOGGER.debug(err);
@@ -113,32 +90,56 @@ export class JenkinsBuildService implements IJenkinsService {
     }
     
     private createPromises(builds: Map<IJenkinsJob, Array<IJenkinsBuild>>):Map<IJenkinsJob, Array<Promise<JSON>>> {
-        let numberOfBuilds = Array.from(builds.values()).map(value => value.length).reduce(function (a, b) { return a + b; }, 0);
         let i = 0;
         let promises:Map<IJenkinsJob, Array<Promise<JSON>>> = new Map<IJenkinsJob, Array<Promise<JSON>>>();
         
         for (let job of builds.keys()) {
-            let jobPromises: Array<Promise<JSON>> = new Array<Promise<JSON>>();
-            
-            for (let build of builds.get(job)) {
-                i++;
-                let buildUrl = this.getBuildApiUrl(build, this.definition);
-                
-                this.LOGGER.debug("Retrieving build details for build #" + build.number, "of job",  job, "(", i, "/", numberOfBuilds, ") from", buildUrl);
-                
-                jobPromises.push(this.proxy.proxy(buildUrl)
-                    .first()
-                    .toPromise()
-                    .catch((err) => {
-                        this.LOGGER.warn("Error retrieving details for build #" + build.number, "of job", job.name, "(" + buildUrl + ") - Enable Debug mode for stacktrace");
-                        this.LOGGER.debug(err);
-                    }));
-            }
-            
-            promises.set(job, jobPromises);
+            promises.set(job, this.createJobPromises(job));
         }
         
-        return promises;        
+        return promises;
+    }
+    
+    private createJobPromises(job: IJenkinsJob): Array<Promise<JSON>> {
+        let parent = this;
+        
+        return job.builds.map(function(build) {
+            let buildUrl = parent.getBuildApiUrl(build, parent.definition);
+
+            return parent.proxy.proxy(buildUrl)
+                .first()
+                .toPromise()
+                .catch((err) => {
+                    parent.LOGGER.warn("Error retrieving details for build #" + build.number, "of job", job.name, "(" + buildUrl + ") - Enable Debug mode for stacktrace");
+                    parent.LOGGER.debug(err);
+                });
+            });
+    }
+    
+    private handlePromises(job:IJenkinsJob, promises: Array<JSON>) {
+        
+        for(let buildJson of promises) {
+
+            if (buildJson === undefined || buildJson === null) {
+                // Failed, already handled by the promise's catch
+                continue;
+            }
+
+            if(!(<JSON>buildJson).hasOwnProperty("number") || !(<JSON>buildJson).hasOwnProperty("url")) {
+                this.LOGGER.warn("No build details found for build:", buildJson);
+                continue;
+            }
+
+            let build = Util.getBuildByBuildNumber(job.builds, buildJson["number"]);
+
+            if (build === undefined || build === null) {
+                this.LOGGER.warn("Build with number #" + buildJson["number"], "not found for job", job.name);
+                continue;
+            }
+
+            build.fromJson(buildJson);
+            this.LOGGER.debug("Updated build:", buildJson);
+        }
     }
     
     private getBuild(job: IJenkinsJob, buildTypeString: string, builds: Array<IJenkinsBuild>): IJenkinsBuild {

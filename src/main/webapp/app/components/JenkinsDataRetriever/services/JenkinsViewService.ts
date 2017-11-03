@@ -73,7 +73,7 @@ export class JenkinsViewService implements IJenkinsService {
                         continue;
                     }
 
-                    view.fromJsonString(JSON.stringify(viewJson));
+                    view.fromJson(viewJson);
                     view.jobs = this.getJobs(view, viewJson, this.jobList);
                     this.LOGGER.debug("Updated details for view:",  view.name);
                 }

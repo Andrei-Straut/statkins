@@ -67,7 +67,7 @@ export class JenkinsUserListService implements IJenkinsService {
         
         for (let user of userResponse["users"]) {
             let jenkinsUser:IJenkinsUser = new JenkinsUser();
-            jenkinsUser.fromJsonString(JSON.stringify(user["user"]));
+            jenkinsUser.fromJson(user["user"]);
 
             this.userList.push(jenkinsUser);
         }

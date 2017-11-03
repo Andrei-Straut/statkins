@@ -3,7 +3,6 @@ import { OnInit } from '@angular/core';
 import { AppDefinitionService } from './components/Definition/AppDefinitionService';
 
 import { Logger } from 'angular2-logger/core';
-import { Network, DataSet } from 'vis';
 
 import { IJenkinsData } from 'jenkins-api-ts-typings';
 import { JenkinsDataRetrieverComponent } from './components/JenkinsDataRetriever/jenkins-data-retriever.component';

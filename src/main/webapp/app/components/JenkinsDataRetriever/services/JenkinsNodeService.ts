@@ -57,9 +57,9 @@ export class JenkinsNodeService implements IJenkinsService {
         
         this.LOGGER.debug("Received response:", nodeResponse);
         
-        for (let node of nodeResponse["computer"]) {
+        for(let node of nodeResponse["computer"]) {
             let jenkinsNode:IJenkinsNode = new JenkinsNode();
-            jenkinsNode.fromJsonString(JSON.stringify(node));
+            jenkinsNode.fromJson(node);
             
             if (!Util.isInvalid(jenkinsNode) && !Util.isInvalid(jenkinsNode.name)) {
                 jenkinsNode.url = this.getJenkinsNodeUrl(this.url, this.definition, jenkinsNode.displayName);
