@@ -98,8 +98,8 @@ export class JobRelationshipNetworkService {
     }
     
     private mapJobToGraphNode(job: IJenkinsJob, xPosition: number, yPosition: number, showUnconnectedNodes: boolean, showConnectedNodes: boolean): any {
-        let hasEdges: boolean = job.downstreamProjects.length > 0 || job.upstreamProjects.length > 0;
-        let visible = (showUnconnectedNodes && !hasEdges) || (showConnectedNodes && hasEdges);
+        let hasEdges: boolean = (job.downstreamProjects.length > 0) || (job.upstreamProjects.length > 0);
+        let visible = (!hasEdges && showUnconnectedNodes) || (hasEdges && showConnectedNodes);
         
         return {
             id: (job as IJenkinsJob).name,

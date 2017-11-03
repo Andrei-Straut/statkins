@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {OnInit} from '@angular/core';
 import {Input} from '@angular/core';
-import {Options, Network, DataSet} from 'vis';
+import {Options, Network} from 'vis';
 
 import {Logger} from 'angular2-logger/core';
 import {Util} from '../Util/Util';
@@ -38,6 +38,9 @@ export class JenkinsJobRelationshipNetworkComponent implements OnInit {
     private readonly horizontalMultiplier = 350;
     private readonly maxHorizontalItemsPerLevel = 20;
     
+    private tooltipDelay = 1;
+    private timeLimitUnit = "seconds";
+    
     private showNodesWithEdges: boolean = true;
     private showNodesWithoutEdges: boolean = true;
     
@@ -60,6 +63,7 @@ export class JenkinsJobRelationshipNetworkComponent implements OnInit {
         
         this.visJobNetworkData = jobService.getDataSet(this.showNodesWithoutEdges, this.showNodesWithEdges);
         this.visNetwork = new Network(this.visNetworkContainer, this.visJobNetworkData, this.visNetworkOptions);
+        this.visNetwork.fit();
 
         if (Util.isInvalid(data) || Util.isInvalid(data.jobs)) {
             return;
@@ -82,6 +86,7 @@ export class JenkinsJobRelationshipNetworkComponent implements OnInit {
         
         let jobsData = jobService.getDataSet(this.showNodesWithoutEdges, this.showNodesWithEdges);
         this.visNetwork.setData(jobsData);
+        this.visNetwork.fit();
     }
     
     toggleConnectedNodes() {
@@ -96,6 +101,7 @@ export class JenkinsJobRelationshipNetworkComponent implements OnInit {
         
         let jobsData = jobService.getDataSet(this.showNodesWithoutEdges, this.showNodesWithEdges);
         this.visNetwork.setData(jobsData);
+        this.visNetwork.fit();
     }
 
     private getSettings() {
@@ -103,7 +109,7 @@ export class JenkinsJobRelationshipNetworkComponent implements OnInit {
             height: '500px',
             clickToUse: true,
             interaction: {
-                tooltipDelay: 100,
+                tooltipDelay: this.tooltipDelay * 1000, // milliseconds
                 hover: true
             },
             nodes: {
@@ -117,7 +123,10 @@ export class JenkinsJobRelationshipNetworkComponent implements OnInit {
                 },
                 font: {
                     size: 25,
-                },
+                },      	
+                fixed: {
+                    y: true
+    		}
             },
             edges: {
                 smooth: false,
