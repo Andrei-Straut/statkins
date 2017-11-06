@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { AppDefinitionService } from './components/Definition/AppDefinitionService';
 
 import { Logger } from 'angular2-logger/core';
 
@@ -8,13 +7,15 @@ import { IJenkinsData } from 'jenkins-api-ts-typings';
 import { JenkinsDataRetrieverComponent } from './components/JenkinsDataRetriever/jenkins-data-retriever.component';
 import { JenkinsDataAnalyzerComponent } from './components/JenkinsDataAnalyzer/jenkins-data-analyzer.component';
 
-import { JenkinsDefinitionService } from './components/Definition/JenkinsDefinitionService';
+import { ConfigService } from './Config/services/config.service';
+import { ProxyService } from './Proxy/services/proxy.service';
+import { UtilService } from './Util/services/util.service';
 
 @Component({
     selector: 'jenkins-analyzer',
-    templateUrl: 'app/templates/startpage.template.html',
+    templateUrl: 'app/app.template.html',
     providers: [
-        AppDefinitionService, JenkinsDefinitionService, Logger
+        ConfigService, ProxyService, UtilService, Logger
     ],
     entryComponents: [ JenkinsDataRetrieverComponent, JenkinsDataAnalyzerComponent ]
 })
@@ -22,21 +23,25 @@ export class AppComponent implements OnInit {
     name: string;
     copyright: string;
     jenkinsUrl: string;
-    jenkinsDefinitionService: JenkinsDefinitionService
+    configService: ConfigService
+    proxyService: ProxyService
+    utilService: UtilService
     jenkinsData: IJenkinsData;
     dataAvailable: boolean = false;
     
-    constructor(private LOGGER:Logger, appDef: AppDefinitionService, jenkinsDef: JenkinsDefinitionService) {
-        this.name = appDef.appName;
-        this.copyright = appDef.copyright;
-        this.jenkinsDefinitionService = jenkinsDef;
-        this.jenkinsUrl = this.jenkinsDefinitionService.jenkinsUrl;
+    constructor(private LOGGER:Logger, config: ConfigService, proxy: ProxyService, util: UtilService) {
+        this.name = config.appName;
+        this.copyright = config.copyright;
+        this.configService = config;
+        this.proxyService = proxy;
+        this.utilService = util;
+        this.jenkinsUrl = this.configService.jenkinsUrl;
     }
     
     ngOnInit() {
-        this.LOGGER.level = this.jenkinsDefinitionService.loggerLevel;
+        this.LOGGER.level = this.configService.loggerLevel;
         this.LOGGER.store();
-        console.info("Logger Level set to", this.jenkinsDefinitionService.loggerLevel, ". Possible level values", this.LOGGER.Level); 
+        console.info("Logger Level set to", this.configService.loggerLevel, ". Possible level values", this.LOGGER.Level); 
     }
     
     start(event: Event) {

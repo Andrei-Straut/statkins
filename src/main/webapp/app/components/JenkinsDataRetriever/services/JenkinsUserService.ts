@@ -1,16 +1,15 @@
-import { Http } from '@angular/http';
 import { Injectable } from '@angular/core';
 
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/first';
 
-import { Util } from '../../Util/Util';
+import { ConfigService } from '../../../Config/services/config.service';
+import { ProxyService } from '../../../Proxy/services/proxy.service';
+import { UtilService } from '../../../Util/services/util.service'
 import { Logger } from 'angular2-logger/core';
-import { Proxy } from '../../Proxy/Proxy';
-import { IJenkinsUser } from 'jenkins-api-ts-typings';
 
+import { IJenkinsUser } from 'jenkins-api-ts-typings';
 import { IJenkinsService } from './IJenkinsService';
-import { JenkinsDefinitionService } from '../../Definition/JenkinsDefinitionService';
 import { JenkinsServiceId } from './JenkinsServiceId';
 
 /**
@@ -18,16 +17,13 @@ import { JenkinsServiceId } from './JenkinsServiceId';
  */
 @Injectable()
 export class JenkinsUserService implements IJenkinsService {    
-    private proxy: Proxy;
     private complete: boolean = false;
     private completedSuccessfully: boolean = false;
     
-    constructor(private LOGGER:Logger, private http: Http, private definition: JenkinsDefinitionService, private userList: Array<IJenkinsUser>) {
-        this.proxy = new Proxy(this.LOGGER, this.http, this.definition);
-    }
+    constructor(private config: ConfigService, private proxy: ProxyService, private util: UtilService, private LOGGER:Logger, private userList: Array<IJenkinsUser>) {}
     
     async execute() {
-        if (Util.isInvalid(this.userList)) {
+        if (this.util.isInvalid(this.userList)) {
             this.LOGGER.error("Empty or null user list received");
             this.completedSuccessfully = false;
             this.complete = true;
@@ -40,7 +36,7 @@ export class JenkinsUserService implements IJenkinsService {
         for (let user of this.userList) {
             i++;
             this.LOGGER.debug("Retrieving user details for:", user.fullName, "(", i, "/", this.userList.length, ")");
-            let userUrl: string = this.getUserApiUrl(user.absoluteUrl, this.definition);
+            let userUrl: string = this.getUserApiUrl(user.absoluteUrl, this.config);
             
             userPromises.push(this.proxy.proxy(userUrl)
                 .first()
@@ -57,9 +53,9 @@ export class JenkinsUserService implements IJenkinsService {
                         continue;
                     }
                     
-                    let user = Util.getUserByFullName(this.userList, userJson["fullName"]);
+                    let user = this.util.getUserByFullName(this.userList, userJson["fullName"]);
 
-                    if (Util.isInvalid(user)) {
+                    if (this.util.isInvalid(user)) {
                         this.LOGGER.warn("No user with fullName", userJson["fullName"], "found");
                         continue;
                     }
@@ -96,8 +92,8 @@ export class JenkinsUserService implements IJenkinsService {
         return this.completedSuccessfully;
     }
     
-    private getUserApiUrl(userUrl: string, jenkinsDefinition: JenkinsDefinitionService) {
+    private getUserApiUrl(userUrl: string, config: ConfigService) {
         /** Remove trailing slash ('/') from root url, if present, then concatenate the jenkins api suffix */
-        return userUrl.replace(/\/$/, "") + '/' + jenkinsDefinition.apiSuffix;
+        return userUrl.replace(/\/$/, "") + '/' + config.apiSuffix;
     }
 }

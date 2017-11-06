@@ -1,16 +1,16 @@
-import { Http } from '@angular/http';
 import { Injectable } from '@angular/core';
 
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/first';
 
 import { Logger } from 'angular2-logger/core';
-import { Proxy } from '../../Proxy/Proxy';
+import { ConfigService } from '../../../Config/services/config.service';
+import { ProxyService } from '../../../Proxy/services/proxy.service';
+
 import { IJenkinsJob } from 'jenkins-api-ts-typings';
 import { JenkinsJob } from 'jenkins-api-ts-typings';
 
 import { IJenkinsService } from './IJenkinsService';
-import { JenkinsDefinitionService } from '../../Definition/JenkinsDefinitionService';
 import { JenkinsServiceId } from './JenkinsServiceId';
 
 /**
@@ -21,14 +21,12 @@ import { JenkinsServiceId } from './JenkinsServiceId';
 export class JenkinsJobListService implements IJenkinsService {
     readonly jenkinsJobListUrl: string;
     
-    private proxy: Proxy;
     private jobList: Array<IJenkinsJob>;
     private complete: boolean = false;
     private completedSuccessfully: boolean = false;
     
-    constructor(private LOGGER:Logger, private http: Http, private url: string, private definition: JenkinsDefinitionService) {
-        this.jenkinsJobListUrl = this.getJenkinsApiJobListUrl(this.url, this.definition);
-        this.proxy = new Proxy(this.LOGGER, this.http, this.definition);
+    constructor(private config: ConfigService, private proxy: ProxyService, private LOGGER:Logger, private url: string) {
+        this.jenkinsJobListUrl = this.getJenkinsApiJobListUrl(this.url, this.config);
         
         this.jobList = new Array<IJenkinsJob>();
     }
@@ -87,8 +85,8 @@ export class JenkinsJobListService implements IJenkinsService {
         return this.completedSuccessfully;
     }
     
-    private getJenkinsApiJobListUrl(jenkinsUrl: string, jenkinsDefinition: JenkinsDefinitionService) {
+    private getJenkinsApiJobListUrl(jenkinsUrl: string, config: ConfigService) {
         /** Remove trailing slash ('/') from root url, if present, then concatenate the jenkins api suffix */
-        return jenkinsUrl.replace(/\/$/, "") + '/' + jenkinsDefinition.apiSuffix + '?tree=jobs[name,url]';
+        return jenkinsUrl.replace(/\/$/, "") + '/' + config.apiSuffix + '?tree=jobs[name,url]';
     }
 }

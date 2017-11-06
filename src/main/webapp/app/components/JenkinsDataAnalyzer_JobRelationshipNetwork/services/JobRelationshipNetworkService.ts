@@ -1,13 +1,14 @@
 import { IJenkinsData, IJenkinsJob } from 'jenkins-api-ts-typings';
 import { DataSet } from 'vis';
 
-import { Util } from '../../Util/Util';
+import { UtilService } from '../../../Util/services/util.service';
 
 import { VisNetworkData } from '../../JenkinsDataAnalyzer/model/VisNetworkData';
 
 export class JobRelationshipNetworkService {
     
     constructor(
+        private utilService: UtilService,
         private jenkinsData:IJenkinsData, 
         private verticalMultiplier:number, 
         private verticalSubMultiplier:number, 
@@ -21,7 +22,7 @@ export class JobRelationshipNetworkService {
         relationshipDataSet.nodes = new DataSet<any>();
         relationshipDataSet.edges = new DataSet<any>();
 
-        if (Util.isInvalid(this.jenkinsData) || Util.isInvalid(this.jenkinsData.jobs)) {
+        if (this.utilService.isInvalid(this.jenkinsData) || this.utilService.isInvalid(this.jenkinsData.jobs)) {
             return relationshipDataSet;
         }
 
@@ -37,8 +38,8 @@ export class JobRelationshipNetworkService {
 
     private getJobTreeRoots(jobs: Array<IJenkinsJob>): Array<IJenkinsJob> {
         return jobs.filter(job => 
-            !Util.isInvalid(job) 
-            && Util.isInvalid(job.upstreamProjects));
+            !this.utilService.isInvalid(job) 
+            && this.utilService.isInvalid(job.upstreamProjects));
     }
     
     private getJobGraph(currentJobs: Array<IJenkinsJob>, treeLevel: number, showUnconnectedNodes: boolean, showConnectedNodes: boolean): VisNetworkData {
@@ -46,7 +47,7 @@ export class JobRelationshipNetworkService {
         jobsData.nodes = new DataSet<any>();
         jobsData.edges = new DataSet<any>();
         
-        if (Util.isInvalid(currentJobs)) {
+        if (this.utilService.isInvalid(currentJobs)) {
             return jobsData;
         }
         
@@ -58,9 +59,9 @@ export class JobRelationshipNetworkService {
             
         currentJobs.forEach(job => {
                 
-           if (!Util.isInvalid(job)) {
+           if (!this.utilService.isInvalid(job)) {
                 
-                if (Util.isInvalid(jobsData.nodes.get((job as IJenkinsJob).name))) {
+                if (this.utilService.isInvalid(jobsData.nodes.get((job as IJenkinsJob).name))) {
                     
                     if (horizontalCounter > parent.maxHorizontalItemsPerLevel) {
                         horizontalCounter = 0;
@@ -75,7 +76,7 @@ export class JobRelationshipNetworkService {
                     jobsData.nodes.update(node);
                 }
             
-                if (!Util.isInvalid(job.downstreamProjects)) {
+                if (!this.utilService.isInvalid(job.downstreamProjects)) {
                     jobsData.edges.update(parent.mapDownstreamJobsToGraphEdges(job, showConnectedNodes).edges.get());
                     
                     let donwstreamToAdd = job.downstreamProjects.filter(downstream => nextLevelJobs.indexOf(downstream) === -1);
@@ -130,7 +131,7 @@ export class JobRelationshipNetworkService {
     }
     
     private getInitialNodeHorizontalOrder(jobs: Array<IJenkinsJob>):number {
-        if (Util.isInvalid(jobs)) {
+        if (this.utilService.isInvalid(jobs)) {
             return Math.round(this.maxHorizontalItemsPerLevel) / 2 * -1;
         }
         

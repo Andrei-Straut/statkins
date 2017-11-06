@@ -1,16 +1,16 @@
-import { Http } from '@angular/http';
 import { Injectable } from '@angular/core';
 
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/first';
 
+import { ConfigService } from '../../../Config/services/config.service';
+import { ProxyService } from '../../../Proxy/services/proxy.service';
+import { UtilService } from '../../../Util/services/util.service';
 import { Logger } from 'angular2-logger/core';
-import { Proxy } from '../../Proxy/Proxy';
-import { Util } from '../../Util/Util';
+
 import { IJenkinsBuild } from 'jenkins-api-ts-typings';
 import { IJenkinsJob } from 'jenkins-api-ts-typings';
 
-import { JenkinsDefinitionService } from '../../Definition/JenkinsDefinitionService';
 import { IJenkinsService } from './IJenkinsService';
 import { JenkinsServiceId } from './JenkinsServiceId';
 
@@ -19,17 +19,15 @@ import { JenkinsServiceId } from './JenkinsServiceId';
  */
 @Injectable()
 export class JenkinsBuildService implements IJenkinsService {
-    private proxy: Proxy;
     private complete: boolean = false;
     private completedSuccessfully: boolean = false;
     
-    constructor(private LOGGER:Logger, private http: Http, private definition: JenkinsDefinitionService, private buildList: Map<IJenkinsJob, Array<IJenkinsBuild>>) {
-        this.proxy = new Proxy(this.LOGGER, this.http, this.definition);
-    }
+    constructor(private config: ConfigService, private proxy: ProxyService, private util: UtilService, private LOGGER:Logger, 
+        private buildList: Map<IJenkinsJob, Array<IJenkinsBuild>>) {}
     
     async execute() {
         
-        if (Util.isInvalid(this.buildList)) {
+        if (this.util.isInvalid(this.buildList)) {
             this.LOGGER.error("Empty or null build list received");
             this.completedSuccessfully = false;
             this.complete = true;
@@ -84,8 +82,8 @@ export class JenkinsBuildService implements IJenkinsService {
         return this.completedSuccessfully;
     }
     
-    private getBuildApiUrl(build: IJenkinsBuild, jenkinsDefinition: JenkinsDefinitionService) {
-        let buildApiUrl = build.url.replace(/\/$/, "") + '/' + jenkinsDefinition.apiSuffix;
+    private getBuildApiUrl(build: IJenkinsBuild, config: ConfigService) {
+        let buildApiUrl = build.url.replace(/\/$/, "") + '/' + config.apiSuffix;
         return buildApiUrl;
     }
     
@@ -104,7 +102,7 @@ export class JenkinsBuildService implements IJenkinsService {
         let parent = this;
         
         return job.builds.map(function(build) {
-            let buildUrl = parent.getBuildApiUrl(build, parent.definition);
+            let buildUrl = parent.getBuildApiUrl(build, parent.config);
 
             return parent.proxy.proxy(buildUrl)
                 .first()
@@ -130,7 +128,7 @@ export class JenkinsBuildService implements IJenkinsService {
                 continue;
             }
 
-            let build = Util.getBuildByBuildNumber(job.builds, buildJson["number"]);
+            let build = this.util.getBuildByBuildNumber(job.builds, buildJson["number"]);
 
             if (build === undefined || build === null) {
                 this.LOGGER.warn("Build with number #" + buildJson["number"], "not found for job", job.name);
@@ -157,7 +155,7 @@ export class JenkinsBuildService implements IJenkinsService {
             return undefined;
         }
         
-        return Util.getBuildByBuildNumber(builds, buildData["number"]);
+        return this.util.getBuildByBuildNumber(builds, buildData["number"]);
         
     }
 }

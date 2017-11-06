@@ -1,12 +1,10 @@
-import { Component } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Input } from '@angular/core';
+import { Component, Input, SimpleChanges, OnInit } from '@angular/core';
 import { TimelineOptions, Timeline, DataSet } from 'vis';
 
+import { UtilService } from '../../Util/services/util.service';
 import { Logger } from 'angular2-logger/core';
-import { Util } from '../Util/Util'
+
 import { IJenkinsData } from 'jenkins-api-ts-typings';
-import { IJenkinsChangeSet } from 'jenkins-api-ts-typings';
 import { DataSetItem } from '../JenkinsDataAnalyzer/model/DataSetItem';
     
 @Component({
@@ -15,13 +13,23 @@ import { DataSetItem } from '../JenkinsDataAnalyzer/model/DataSetItem';
     providers: [],
 })
 export class JenkinsFileChangesGraphComponent implements OnInit {
+    @Input('utilService')
+    utilService: UtilService;
     
     @Input('jenkinsData')
-    set jenkinsData(jenkinsData: IJenkinsData) {
-        if (Util.isInvalid(jenkinsData)) {
-            return;
+    jenkinsData: IJenkinsData;
+    
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes["utilService"] !== undefined && changes["utilService"].currentValue !== undefined) {
+            this.utilService = changes["utilService"].currentValue;
         }
-        this.analyze(jenkinsData);
+        if (changes["jenkinsData"] !== undefined && changes["jenkinsData"].currentValue !== undefined) {
+            this.jenkinsData = changes["jenkinsData"].currentValue;
+        }
+        
+        if (this.utilService !== undefined && !this.utilService.isInvalid(this.jenkinsData)) {
+            this.analyze(this.jenkinsData);
+        }
     }
     
     private readonly graphElementId = "fileChangesGraph";
@@ -62,7 +70,7 @@ export class JenkinsFileChangesGraphComponent implements OnInit {
         
         this.LOGGER.debug("File Changes Data", this.visFilesData);
         
-        if (Util.isInvalid(jenkinsData) || Util.isInvalid(jenkinsData.changeSets)) {
+        if (this.utilService.isInvalid(jenkinsData) || this.utilService.isInvalid(jenkinsData.changeSets)) {
             return;
         }
         
@@ -80,7 +88,7 @@ export class JenkinsFileChangesGraphComponent implements OnInit {
         let filesData:DataSet<any> = new DataSet<any>();
         let parent = this;
         
-        if (Util.isInvalid(data) || Util.isInvalid(data.changeSets)) {
+        if (this.utilService.isInvalid(data) || this.utilService.isInvalid(data.changeSets)) {
             return filesData;
         }
         
@@ -93,7 +101,7 @@ export class JenkinsFileChangesGraphComponent implements OnInit {
             }
             
             let fileData: any = undefined;
-            if (Util.isInvalid(filesData.get(changeNamesMapSorted.get(affectedPath)))) {
+            if (parent.utilService.isInvalid(filesData.get(changeNamesMapSorted.get(affectedPath)))) {
                 fileData = {
                     id: changeNamesMapSorted.get(affectedPath),
                     title: affectedPath + "<br/><br/>",
@@ -117,11 +125,11 @@ export class JenkinsFileChangesGraphComponent implements OnInit {
     private getAffectedPathsWithNoOfChangesMap(data:IJenkinsData):Map<string, number> {
         let changeNamesMap:Map<string, number> = new Map<string, number>();
         
-        if (Util.isInvalid(data) || Util.isInvalid(data.changeSets)) {
+        if (this.utilService.isInvalid(data) || this.utilService.isInvalid(data.changeSets)) {
             return changeNamesMap;
         }
         
-        Util.getAffectedPathsArray(data.changeSets).forEach(function (affectedPath: string) {
+        this.utilService.getAffectedPathsArray(data.changeSets).forEach(function (affectedPath: string) {
             if (!changeNamesMap.has(affectedPath)) {
                 changeNamesMap.set(affectedPath, 0);
             }
@@ -144,7 +152,7 @@ export class JenkinsFileChangesGraphComponent implements OnInit {
     }
     
     private getMaxNumberOfChanges(changeNamesMap: Map<string, number>): number {
-        if (Util.isInvalid(changeNamesMap)) {
+        if (this.utilService.isInvalid(changeNamesMap)) {
             return 0;
         }
         

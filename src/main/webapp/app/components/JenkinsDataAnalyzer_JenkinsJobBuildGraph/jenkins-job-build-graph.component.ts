@@ -1,10 +1,9 @@
-import { Component } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Input } from '@angular/core';
+import { Component, Input, SimpleChanges, OnInit } from '@angular/core';
 import { TimelineOptions, Timeline, DataSet } from 'vis';
 
+import { UtilService } from '../../Util/services/util.service';
 import { Logger } from 'angular2-logger/core';
-import { Util } from '../Util/Util'
+
 import { IJenkinsData } from 'jenkins-api-ts-typings';
 import { DataSetItem } from '../JenkinsDataAnalyzer/model/DataSetItem';
     
@@ -14,13 +13,23 @@ import { DataSetItem } from '../JenkinsDataAnalyzer/model/DataSetItem';
     providers: [],
 })
 export class JenkinsJobBuildGraphComponent implements OnInit {
+    @Input('utilService')
+    utilService: UtilService;
     
     @Input('jenkinsData')
-    set jenkinsData(jenkinsData: IJenkinsData) {
-        if (Util.isInvalid(jenkinsData)) {
-            return;
+    jenkinsData: IJenkinsData;
+    
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes["utilService"] !== undefined && changes["utilService"].currentValue !== undefined) {
+            this.utilService = changes["utilService"].currentValue;
         }
-        this.analyze(jenkinsData);
+        if (changes["jenkinsData"] !== undefined && changes["jenkinsData"].currentValue !== undefined) {
+            this.jenkinsData = changes["jenkinsData"].currentValue;
+        }
+        
+        if (this.utilService !== undefined && !this.utilService.isInvalid(this.jenkinsData)) {
+            this.analyze(this.jenkinsData);
+        }
     }
     
     private readonly graphElementId = "jobBuildGraph";
@@ -61,12 +70,12 @@ export class JenkinsJobBuildGraphComponent implements OnInit {
         
         this.LOGGER.debug("Job Build Data", this.visJobsData);
         
-        if (Util.isInvalid(jenkinsData) || Util.isInvalid(jenkinsData.jobs)) {
+        if (this.utilService.isInvalid(jenkinsData) || this.utilService.isInvalid(jenkinsData.jobs)) {
             return;
         }
         
         let maxNumber = jenkinsData.jobs.sort(function (job1, job2) {return (job1.builds.length - job2.builds.length) * -1});
-        if (Util.isInvalid(maxNumber)) {
+        if (this.utilService.isInvalid(maxNumber)) {
             return;
         }
         this.visGraphOptions.max = Math.round((maxNumber[0]).builds.length * 1.25);
@@ -80,7 +89,7 @@ export class JenkinsJobBuildGraphComponent implements OnInit {
         let jobsData:DataSet<any> = new DataSet<any>();
         let parent = this;
         
-        if (Util.isInvalid(data) || Util.isInvalid(data.jobs)) {
+        if (this.utilService.isInvalid(data) || this.utilService.isInvalid(data.jobs)) {
             return jobsData;
         }
         
@@ -91,7 +100,7 @@ export class JenkinsJobBuildGraphComponent implements OnInit {
             
             if(job.builds.length !== 0) {
                 let jobData: any = undefined;
-                if (Util.isInvalid(jobsData.get(job.builds.length))) {
+                if (parent.utilService.isInvalid(jobsData.get(job.builds.length))) {
                     jobData = {
                         id: job.builds.length,
                         title: job.name + "<br/>",

@@ -1,11 +1,10 @@
-import { Component } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Input } from '@angular/core';
+import { Component, Input, SimpleChanges, OnInit } from '@angular/core';
 import { Graph2dOptions, Graph2d, DataSet } from 'vis';
 import * as moment from 'moment';
 
+import { UtilService } from '../../Util/services/util.service';
 import { Logger } from 'angular2-logger/core';
-import { Util } from '../Util/Util'
+
 import { IJenkinsData } from 'jenkins-api-ts-typings';
 import { DataSetItem } from '../JenkinsDataAnalyzer/model/DataSetItem';
     
@@ -15,13 +14,23 @@ import { DataSetItem } from '../JenkinsDataAnalyzer/model/DataSetItem';
     providers: [],
 })
 export class JenkinsAverageBuildDurationGraphComponent implements OnInit {
+    @Input('utilService')
+    utilService: UtilService;
     
     @Input('jenkinsData')
-    set jenkinsData(jenkinsData: IJenkinsData) {
-        if (Util.isInvalid(jenkinsData)) {
-            return;
+    jenkinsData: IJenkinsData;
+    
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes["utilService"] !== undefined && changes["utilService"].currentValue !== undefined) {
+            this.utilService = changes["utilService"].currentValue;
         }
-        this.analyze(jenkinsData);
+        if (changes["jenkinsData"] !== undefined && changes["jenkinsData"].currentValue !== undefined) {
+            this.jenkinsData = changes["jenkinsData"].currentValue;
+        }
+        
+        if (this.utilService !== undefined && !this.utilService.isInvalid(this.jenkinsData)) {
+            this.analyze(this.jenkinsData);
+        }
     }
     
     private readonly BUILD_GREEN_THRESHOLD = 10;
@@ -95,14 +104,14 @@ export class JenkinsAverageBuildDurationGraphComponent implements OnInit {
         let counter:number = 0;
         let parent = this;
         
-        if (Util.isInvalid(data) || Util.isInvalid(data.jobs)) {
+        if (this.utilService.isInvalid(data) || this.utilService.isInvalid(data.jobs)) {
             return jobsData;
         }
         
         data.jobs
-            .sort(function (jobA, jobB) {return (Util.getBuildAverageDuration(jobA.builds) - Util.getBuildAverageDuration(jobB.builds)) * -1})
+            .sort(function (jobA, jobB) {return (parent.utilService.getBuildAverageDuration(jobA.builds) - parent.utilService.getBuildAverageDuration(jobB.builds)) * -1})
             .forEach(function(job) {
-                let averageBuildDuration = Math.ceil(moment.duration(Util.getBuildAverageDuration(job.builds), "milliseconds").asMinutes());
+                let averageBuildDuration = Math.ceil(moment.duration(parent.utilService.getBuildAverageDuration(job.builds), "milliseconds").asMinutes());
                 
                 if (isNaN(averageBuildDuration)) {
                     return;

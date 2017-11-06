@@ -1,9 +1,7 @@
-import { Component } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Input } from '@angular/core';
+import { Component, Input, SimpleChanges, OnInit } from '@angular/core';
 
 import { Logger } from 'angular2-logger/core';
-import { Util } from '../Util/Util'
+import { UtilService } from '../../Util/services/util.service';
 import { IJenkinsData } from 'jenkins-api-ts-typings';
 
 import { JenkinsBasicJobStatistics } from './services/JenkinsBasicJobStatistics';
@@ -19,13 +17,23 @@ import { StatisticsCardEntry } from '../JenkinsDataAnalyzer/model/StatisticsCard
     providers: [],
 })
 export class JenkinsBasicStatisticsComponent implements OnInit {
+    @Input('utilService')
+    utilService: UtilService;
     
     @Input('jenkinsData')
-    set jenkinsData(jenkinsData: IJenkinsData) {
-        if (Util.isInvalid(jenkinsData)) {
-            return;
+    jenkinsData: IJenkinsData;
+    
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes["utilService"] !== undefined && changes["utilService"].currentValue !== undefined) {
+            this.utilService = changes["utilService"].currentValue;
         }
-        this.analyze(jenkinsData);
+        if (changes["jenkinsData"] !== undefined && changes["jenkinsData"].currentValue !== undefined) {
+            this.jenkinsData = changes["jenkinsData"].currentValue;
+        }
+        
+        if (this.utilService !== undefined && !this.utilService.isInvalid(this.jenkinsData)) {
+            this.analyze(this.jenkinsData);
+        }
     }
     
     public dataAvailable: boolean;
@@ -38,18 +46,17 @@ export class JenkinsBasicStatisticsComponent implements OnInit {
     
     constructor(private LOGGER: Logger) {}
     
-    ngOnInit() {
-    }
+    ngOnInit() {}
     
     analyze(jenkinsData: IJenkinsData):void {
         
         this.analyzerData = new Array<StatisticsCardEntry>();
         this.dataAvailable = true;
         
-        this.basicStatistics = new JenkinsBasicJobStatistics(this.LOGGER, jenkinsData).getStatistics();
-        this.basicBuildStatistics = new JenkinsBasicBuildStatistics(this.LOGGER, jenkinsData).getStatistics();
-        this.basicCommitStatistics = new JenkinsChangeSetStatistics(this.LOGGER, jenkinsData).getStatistics();
-        this.basicNodeStatistics = new JenkinsNodeStatistics(this.LOGGER, jenkinsData).getStatistics();
+        this.basicStatistics = new JenkinsBasicJobStatistics(this.utilService, this.LOGGER, jenkinsData).getStatistics();
+        this.basicBuildStatistics = new JenkinsBasicBuildStatistics(this.utilService, this.LOGGER, jenkinsData).getStatistics();
+        this.basicCommitStatistics = new JenkinsChangeSetStatistics(this.utilService, this.LOGGER, jenkinsData).getStatistics();
+        this.basicNodeStatistics = new JenkinsNodeStatistics(this.utilService, this.LOGGER, jenkinsData).getStatistics();
         
         this.LOGGER.debug("Basic Job Statistics", this.basicStatistics);
         this.LOGGER.debug("Basic Build Statistics", this.basicBuildStatistics);

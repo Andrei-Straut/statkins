@@ -5,14 +5,14 @@ import { Output } from '@angular/core';
 import { EventEmitter  } from '@angular/core';
 import { Http } from '@angular/http';
 
+import { ConfigService } from '../../Config/services/config.service';
+import { ProxyService } from '../../Proxy/services/proxy.service';
+import { UtilService } from '../../Util/services/util.service';
 import { Logger } from 'angular2-logger/core';
-import { Util } from '../Util/Util';
-import { Proxy } from '../Proxy/Proxy';
 
 import { IJenkinsData } from 'jenkins-api-ts-typings';
 
 import { IJenkinsService } from './services/IJenkinsService';
-import { JenkinsDefinitionService } from '../Definition/JenkinsDefinitionService';
 import { JenkinsNodeService } from './services/JenkinsNodeService';
 import { JenkinsUserListService } from './services/JenkinsUserListService';
 import { JenkinsUserService } from './services/JenkinsUserService';
@@ -45,14 +45,18 @@ interface ResponseWithBody {
     selector: 'jenkins-data-retriever',
     templateUrl: 'app/components/JenkinsDataRetriever/templates/jenkinsdataretriever.template.html',
     providers: [
-        JenkinsDefinitionService, Logger, Util
+        ConfigService, ProxyService, Logger
     ],
 })
 export class JenkinsDataRetrieverComponent implements OnInit {
     @Input('jenkinsUrl')
     jenkinsUrl: string;
-    @Input('jenkinsDefinitionService')
-    jenkinsDefinitionService: JenkinsDefinitionService
+    @Input('configService')
+    configService: ConfigService
+    @Input('proxyService')
+    proxyService: ProxyService
+    @Input('utilService')
+    utilService: UtilService
     
     @Output('dataRetrieved')
     dataRetrieved:EventEmitter<IJenkinsData> = new EventEmitter<IJenkinsData>();
@@ -93,8 +97,7 @@ export class JenkinsDataRetrieverComponent implements OnInit {
         
         this.urlCheckStarted = true;
         
-        let proxy = new Proxy(this.LOGGER, this.http, this.jenkinsDefinitionService);
-        await proxy.proxyRaw(this.jenkinsUrl)
+        await this.proxyService.proxyRaw(this.jenkinsUrl)
                 .first()
                 .toPromise()
                 .then(() => {
@@ -118,39 +121,39 @@ export class JenkinsDataRetrieverComponent implements OnInit {
         this.retrievalStarted = true;
         this.LOGGER.info("Starting data retrieval for:", this.jenkinsUrl);
         
-        this.services.nodeService = new JenkinsNodeService(this.LOGGER, this.http, this.jenkinsUrl, this.jenkinsDefinitionService);
+        this.services.nodeService = new JenkinsNodeService(this.configService, this.proxyService, this.utilService, this.LOGGER, this.jenkinsUrl);
         await this.services.nodeService.execute();
         this.data.nodes = this.services.nodeService.getData();
         
-        this.services.userListService = new JenkinsUserListService(this.LOGGER, this.http, this.jenkinsUrl, this.jenkinsDefinitionService);
+        this.services.userListService = new JenkinsUserListService(this.configService, this.proxyService, this.utilService, this.LOGGER, this.jenkinsUrl);
         await this.services.userListService.execute();
         this.data.users = this.services.userListService.getData();
         
-        this.services.userService = new JenkinsUserService(this.LOGGER, this.http, this.jenkinsDefinitionService, this.data.users);
+        this.services.userService = new JenkinsUserService(this.configService, this.proxyService, this.utilService, this.LOGGER, this.data.users);
         await this.services.userService.execute();
         
-        this.services.jobListService = new JenkinsJobListService(this.LOGGER, this.http, this.jenkinsUrl, this.jenkinsDefinitionService);
+        this.services.jobListService = new JenkinsJobListService(this.configService, this.proxyService, this.LOGGER, this.jenkinsUrl);
         await this.services.jobListService.execute();
         this.data.jobs = this.services.jobListService.getData();
         
-        this.services.jobService = new JenkinsJobService(this.LOGGER, this.http, this.jenkinsDefinitionService, this.data.jobs);
+        this.services.jobService = new JenkinsJobService(this.configService, this.proxyService, this.utilService, this.LOGGER, this.data.jobs);
         await this.services.jobService.execute();
         
-        this.services.viewListService = new JenkinsViewListService(this.LOGGER, this.http, this.jenkinsUrl, this.jenkinsDefinitionService);
+        this.services.viewListService = new JenkinsViewListService(this.configService, this.proxyService, this.utilService, this.LOGGER, this.jenkinsUrl);
         await this.services.viewListService.execute();
         this.data.views = this.services.viewListService.getData();
         
-        this.services.viewService = new JenkinsViewService(this.LOGGER, this.http, this.jenkinsUrl, this.jenkinsDefinitionService, this.data.views, this.data.jobs);
+        this.services.viewService = new JenkinsViewService(this.configService, this.proxyService, this.utilService, this.LOGGER, this.jenkinsUrl, this.data.views, this.data.jobs);
         await this.services.viewService.execute();
         
-        this.services.buildListService = new JenkinsBuildListService(this.LOGGER, this.data.jobs);
+        this.services.buildListService = new JenkinsBuildListService(this.utilService, this.LOGGER, this.data.jobs);
         await this.services.buildListService.execute();
         this.data.builds = this.services.buildListService.getData();
         
-        this.services.buildService = new JenkinsBuildService(this.LOGGER, this.http, this.jenkinsDefinitionService, this.data.builds);
+        this.services.buildService = new JenkinsBuildService(this.configService, this.proxyService, this.utilService, this.LOGGER, this.data.builds);
         await this.services.buildService.execute();
         
-        this.services.changeSetService = new JenkinsChangeSetService(this.LOGGER, this.data.builds, this.data.users);
+        this.services.changeSetService = new JenkinsChangeSetService(this.utilService, this.LOGGER, this.data.builds, this.data.users);
         await this.services.changeSetService.execute();
         this.data.changeSets = this.services.changeSetService.getData();
         

@@ -1,17 +1,17 @@
-import { Http } from '@angular/http';
 import { Injectable } from '@angular/core';
 
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/first';
 
+import { ProxyService } from '../../../Proxy/services/proxy.service';
+import { ConfigService } from '../../../Config/services/config.service';
+import { UtilService } from '../../../Util/services/util.service';
 import { Logger } from 'angular2-logger/core';
-import { Util } from '../../Util/Util';
-import { Proxy } from '../../Proxy/Proxy';
+
 import { IJenkinsNode } from 'jenkins-api-ts-typings';
 import { JenkinsNode } from 'jenkins-api-ts-typings';
 
 import { IJenkinsService } from './IJenkinsService';
-import { JenkinsDefinitionService } from '../../Definition/JenkinsDefinitionService';
 import { JenkinsServiceId } from './JenkinsServiceId';
 
 /**
@@ -21,14 +21,12 @@ import { JenkinsServiceId } from './JenkinsServiceId';
 export class JenkinsNodeService implements IJenkinsService {
     readonly jenkinsNodeUrl: string;
     
-    private proxy: Proxy;
     private nodeList: Array<IJenkinsNode>;
     private complete: boolean = false;
     private completedSuccessfully: boolean = false;
     
-    constructor(private LOGGER:Logger, private http: Http, private url: string, private definition: JenkinsDefinitionService) {
-        this.jenkinsNodeUrl = this.getJenkinsApiNodeUrl(this.url, this.definition);
-        this.proxy = new Proxy(this.LOGGER, this.http, this.definition);
+    constructor(private config: ConfigService, private proxy: ProxyService, private util:UtilService, private LOGGER:Logger, private url: string) {
+        this.jenkinsNodeUrl = this.getJenkinsApiNodeUrl(this.url, this.config);
         
         this.nodeList = new Array<IJenkinsNode>();
     }
@@ -48,7 +46,7 @@ export class JenkinsNodeService implements IJenkinsService {
                 });
             
         /* An error occurred, node list unretrievable */
-        if (Util.isInvalid(nodeResponse) || Util.isInvalid(nodeResponse["computer"])) {
+        if (this.util.isInvalid(nodeResponse) || this.util.isInvalid(nodeResponse["computer"])) {
             this.nodeList = new Array<IJenkinsNode>();
             this.completedSuccessfully = false;
             this.complete = true;
@@ -61,8 +59,8 @@ export class JenkinsNodeService implements IJenkinsService {
             let jenkinsNode:IJenkinsNode = new JenkinsNode();
             jenkinsNode.fromJson(node);
             
-            if (!Util.isInvalid(jenkinsNode) && !Util.isInvalid(jenkinsNode.name)) {
-                jenkinsNode.url = this.getJenkinsNodeUrl(this.url, this.definition, jenkinsNode.displayName);
+            if (!this.util.isInvalid(jenkinsNode) && !this.util.isInvalid(jenkinsNode.name)) {
+                jenkinsNode.url = this.getJenkinsNodeUrl(this.url, this.config, jenkinsNode.displayName);
             }
             
             this.nodeList.push(jenkinsNode);
@@ -92,12 +90,12 @@ export class JenkinsNodeService implements IJenkinsService {
         return this.completedSuccessfully;
     }
     
-    private getJenkinsApiNodeUrl(jenkinsUrl: string, jenkinsDefinition: JenkinsDefinitionService) {
+    private getJenkinsApiNodeUrl(jenkinsUrl: string, config: ConfigService) {
         /** Remove trailing slash ('/') from root url, if present, then concatenate the jenkins api suffix */
-        return jenkinsUrl.replace(/\/$/, "") + '/' + jenkinsDefinition.slaveSuffix + jenkinsDefinition.apiSuffix + "?depth=1";
+        return jenkinsUrl.replace(/\/$/, "") + '/' + config.slaveSuffix + config.apiSuffix + "?depth=1";
     }
     
-    private getJenkinsNodeUrl(jenkinsUrl: string, jenkinsDefinition: JenkinsDefinitionService, nodeName: string) {
-        return jenkinsUrl.replace(/\/$/, "") + '/' + jenkinsDefinition.slaveSuffix + "/" + nodeName;
+    private getJenkinsNodeUrl(jenkinsUrl: string, config: ConfigService, nodeName: string) {
+        return jenkinsUrl.replace(/\/$/, "") + '/' + config.slaveSuffix + "/" + nodeName;
     }
 }

@@ -1,16 +1,16 @@
-import { Http } from '@angular/http';
 import { Injectable } from '@angular/core';
 
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/first';
 
-import { Util } from '../../Util/Util';
+import { ConfigService } from '../../../Config/services/config.service';
+import { ProxyService } from '../../../Proxy/services/proxy.service';
+import { UtilService } from '../../../Util/services/util.service'
 import { Logger } from 'angular2-logger/core';
-import { Proxy } from '../../Proxy/Proxy';
+
 import { IJenkinsJob } from 'jenkins-api-ts-typings';
 
 import { IJenkinsService } from './IJenkinsService';
-import { JenkinsDefinitionService } from '../../Definition/JenkinsDefinitionService';
 import { JenkinsServiceId } from './JenkinsServiceId';
 
 /**
@@ -18,16 +18,13 @@ import { JenkinsServiceId } from './JenkinsServiceId';
  */
 @Injectable()
 export class JenkinsJobService implements IJenkinsService {
-    private proxy: Proxy;
     private complete: boolean = false;
     private completedSuccessfully: boolean = false;
     
-    constructor(private LOGGER:Logger, private http: Http, private definition: JenkinsDefinitionService, private jobList: Array<IJenkinsJob>) {
-        this.proxy = new Proxy(this.LOGGER, this.http, this.definition);
-    }
+    constructor(private config: ConfigService, private proxy: ProxyService, private util: UtilService, private LOGGER:Logger, private jobList: Array<IJenkinsJob>) {}
     
     async execute() {
-        if (Util.isInvalid(this.jobList)) {
+        if (this.util.isInvalid(this.jobList)) {
             this.LOGGER.error("Empty or null job list received");
             this.completedSuccessfully = false;
             this.complete = true;
@@ -40,7 +37,7 @@ export class JenkinsJobService implements IJenkinsService {
         for (let job of this.jobList) {
             i++;
             this.LOGGER.debug("Retrieving job details for:", job.name, "(", i, "/", this.jobList.length, ")");
-            let jobUrl: string = this.getJobApiUrl(job.url, this.definition);
+            let jobUrl: string = this.getJobApiUrl(job.url, this.config);
             
             jobPromises.push(this.proxy.proxy(jobUrl)
                 .first()
@@ -52,12 +49,12 @@ export class JenkinsJobService implements IJenkinsService {
             .then(values => {
                 
                 for(let jobJson of <Array<JSON>>values) {
-                    if (Util.isInvalid(jobJson) || !(<JSON>jobJson).hasOwnProperty("name")) {
+                    if (this.util.isInvalid(jobJson) || !(<JSON>jobJson).hasOwnProperty("name")) {
                         this.LOGGER.warn("No job details found for:", jobJson);
                         continue;
                     }
                     
-                    let job = Util.getJobByName(this.jobList, jobJson["name"]);
+                    let job = this.util.getJobByName(this.jobList, jobJson["name"]);
 
                     if(job === undefined) {
                         this.LOGGER.warn("No job with name", jobJson["name"], "found");
@@ -106,7 +103,7 @@ export class JenkinsJobService implements IJenkinsService {
         }
         
         for(let upstreamJobJson of (jobJson["upstreamProjects"] as Array<JSON>)) {
-            let upstreamJob: IJenkinsJob = Util.getJobByName(this.jobList, upstreamJobJson["name"]);
+            let upstreamJob: IJenkinsJob = this.util.getJobByName(this.jobList, upstreamJobJson["name"]);
             
             if (upstreamJob === undefined) {
                 continue;
@@ -127,7 +124,7 @@ export class JenkinsJobService implements IJenkinsService {
         }
         
         for(let downstreamJobJson of (jobJson["downstreamProjects"] as Array<JSON>)) {
-            let downstreamJob: IJenkinsJob = Util.getJobByName(this.jobList, downstreamJobJson["name"]);
+            let downstreamJob: IJenkinsJob = this.util.getJobByName(this.jobList, downstreamJobJson["name"]);
             
             if (downstreamJob === undefined) {
                 continue;
@@ -139,8 +136,8 @@ export class JenkinsJobService implements IJenkinsService {
         return downstreamProjects;
     }
     
-    private getJobApiUrl(jobUrl: string, jenkinsDefinition: JenkinsDefinitionService) {
+    private getJobApiUrl(jobUrl: string, config: ConfigService) {
         /** Remove trailing slash ('/') from root url, if present, then concatenate the jenkins api suffix */
-        return jobUrl.replace(/\/$/, "") + '/' + jenkinsDefinition.apiSuffix;
+        return jobUrl.replace(/\/$/, "") + '/' + config.apiSuffix;
     }
 }

@@ -2,11 +2,9 @@ import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Input } from '@angular/core';
 
+import { UtilService } from '../../Util/services/util.service';
 import { Logger } from 'angular2-logger/core';
 import { IJenkinsData } from 'jenkins-api-ts-typings';
-
-import { JenkinsBuildTimelineComponent } from '../JenkinsDataAnalyzer_JenkinsBuildTimeline/jenkins-build-timeline.component';
-import { JenkinsJobBuildGraphComponent } from '../JenkinsDataAnalyzer_JenkinsJobBuildGraph/jenkins-job-build-graph.component';
 
 /**
  * Root component for statistics subcomponents
@@ -15,10 +13,12 @@ import { JenkinsJobBuildGraphComponent } from '../JenkinsDataAnalyzer_JenkinsJob
     selector: 'jenkins-data-analyzer',
     templateUrl: 'app/components/JenkinsDataAnalyzer/templates/jenkinsdataanalyzer.template.html',
     providers: [ Logger ],
-    entryComponents: [ JenkinsBuildTimelineComponent, JenkinsJobBuildGraphComponent ],
+    entryComponents: [],
 })
 export class JenkinsDataAnalyzerComponent implements OnInit {
     
+    @Input('utilService')
+    utilService: UtilService;
     @Input('jenkinsData')
     jenkinsData: IJenkinsData;
     @Input('dataAvailable')

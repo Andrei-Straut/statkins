@@ -1,11 +1,11 @@
-import { Http } from '@angular/http';
 import { Injectable } from '@angular/core';
 
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/first';
 
-import { Util } from '../../Util/Util'
+import { UtilService } from '../../../Util/services/util.service';
 import { Logger } from 'angular2-logger/core';
+
 import { IJenkinsBuild } from 'jenkins-api-ts-typings';
 import { JenkinsBuild } from 'jenkins-api-ts-typings';
 import { IJenkinsJob } from 'jenkins-api-ts-typings';
@@ -23,13 +23,13 @@ export class JenkinsBuildListService implements IJenkinsService {
     private complete: boolean = false;
     private completedSuccessfully: boolean = false;
     
-    constructor(private LOGGER:Logger, private jobList: Array<IJenkinsJob>) {
+    constructor(private util: UtilService, private LOGGER:Logger, private jobList: Array<IJenkinsJob>) {
         this.buildList = new Map<IJenkinsJob, Array<IJenkinsBuild>>();
     }
     
     async execute() {
         
-        if (Util.isInvalid(this.jobList)) {
+        if (this.util.isInvalid(this.jobList)) {
             this.LOGGER.error("Empty or null job list received");
             this.completedSuccessfully = false;
             this.complete = true;
@@ -41,7 +41,7 @@ export class JenkinsBuildListService implements IJenkinsService {
             let job = this.jobList[i];
             let buildsJson: Array<JSON> = (JSON.parse(job.getJsonData()))["builds"];
             
-            if (Util.isInvalid(buildsJson)) {
+            if (this.util.isInvalid(buildsJson)) {
                 this.LOGGER.warn("No job details found for:", job.name);
                 continue;
             }

@@ -1,10 +1,9 @@
-import {Component} from '@angular/core';
-import {OnInit} from '@angular/core';
-import {Input} from '@angular/core';
+import { Component, Input, SimpleChanges, OnInit } from '@angular/core';
 import {Options, Network} from 'vis';
 
+import { UtilService } from '../../Util/services/util.service';
 import {Logger} from 'angular2-logger/core';
-import {Util} from '../Util/Util';
+
 import {VisNetworkData} from '../JenkinsDataAnalyzer/model/VisNetworkData';
 import {IJenkinsData} from 'jenkins-api-ts-typings';
 
@@ -16,15 +15,23 @@ import { JobRelationshipNetworkService } from './services/JobRelationshipNetwork
     providers: [],
 })
 export class JenkinsJobRelationshipNetworkComponent implements OnInit {
-
+    @Input('utilService')
+    utilService: UtilService;
+    
     @Input('jenkinsData')
-    set jenkinsData(jenkinsData: IJenkinsData) {
-        if (Util.isInvalid(jenkinsData)) {
-            this.data = undefined;
-            return;
+    jenkinsData: IJenkinsData;
+    
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes["utilService"] !== undefined && changes["utilService"].currentValue !== undefined) {
+            this.utilService = changes["utilService"].currentValue;
         }
-        this.data = jenkinsData;
-        this.analyze(this.data);
+        if (changes["jenkinsData"] !== undefined && changes["jenkinsData"].currentValue !== undefined) {
+            this.jenkinsData = changes["jenkinsData"].currentValue;
+        }
+        
+        if (this.utilService !== undefined && !this.utilService.isInvalid(this.jenkinsData)) {
+            this.analyze(this.jenkinsData);
+        }
     }
 
     private readonly visNetworkElementId = "jobRelationshipNetwork";
@@ -44,8 +51,6 @@ export class JenkinsJobRelationshipNetworkComponent implements OnInit {
     private showNodesWithEdges: boolean = true;
     private showNodesWithoutEdges: boolean = true;
     
-    private data: IJenkinsData;
-
     constructor(private LOGGER: Logger) {}
 
     ngOnInit() {
@@ -55,7 +60,8 @@ export class JenkinsJobRelationshipNetworkComponent implements OnInit {
 
     analyze(data: IJenkinsData): Network {
         let jobService: JobRelationshipNetworkService = new JobRelationshipNetworkService(
-            this.data, 
+            this.utilService,
+            this.jenkinsData, 
             this.verticalMultiplier, 
             this.verticalSubMultiplier, 
             this.horizontalMultiplier, 
@@ -65,7 +71,7 @@ export class JenkinsJobRelationshipNetworkComponent implements OnInit {
         this.visNetwork = new Network(this.visNetworkContainer, this.visJobNetworkData, this.visNetworkOptions);
         this.visNetwork.fit();
 
-        if (Util.isInvalid(data) || Util.isInvalid(data.jobs)) {
+        if (this.utilService.isInvalid(data) || this.utilService.isInvalid(data.jobs)) {
             return;
         }
 
@@ -78,7 +84,8 @@ export class JenkinsJobRelationshipNetworkComponent implements OnInit {
         this.showNodesWithoutEdges = !this.showNodesWithoutEdges;
         
         let jobService: JobRelationshipNetworkService = new JobRelationshipNetworkService(
-            this.data, 
+            this.utilService,
+            this.jenkinsData, 
             this.verticalMultiplier, 
             this.verticalSubMultiplier, 
             this.horizontalMultiplier, 
@@ -93,7 +100,8 @@ export class JenkinsJobRelationshipNetworkComponent implements OnInit {
         this.showNodesWithEdges = !this.showNodesWithEdges;
         
         let jobService: JobRelationshipNetworkService = new JobRelationshipNetworkService(
-            this.data, 
+            this.utilService,
+            this.jenkinsData, 
             this.verticalMultiplier, 
             this.verticalSubMultiplier, 
             this.horizontalMultiplier, 

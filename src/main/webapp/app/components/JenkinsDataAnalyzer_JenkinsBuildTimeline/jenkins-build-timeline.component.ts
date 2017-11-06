@@ -1,10 +1,9 @@
-import { Component } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Input } from '@angular/core';
+import { Component, Input, SimpleChanges, OnInit } from '@angular/core';
 import { TimelineOptions, Timeline, DataSet } from 'vis';
 
+import { UtilService } from '../../Util/services/util.service';
 import { Logger } from 'angular2-logger/core';
-import { Util } from '../Util/Util'
+
 import { IJenkinsData } from 'jenkins-api-ts-typings';
 import { IJenkinsBuild } from 'jenkins-api-ts-typings';
 import { IJenkinsJob } from 'jenkins-api-ts-typings';
@@ -21,13 +20,23 @@ class VisEventProperties {
     providers: [],
 })
 export class JenkinsBuildTimelineComponent implements OnInit {
+    @Input('utilService')
+    utilService: UtilService;
     
     @Input('jenkinsData')
-    set jenkinsData(jenkinsData: IJenkinsData) {
-        if (Util.isInvalid(jenkinsData)) {
-            return;
+    jenkinsData: IJenkinsData;
+    
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes["utilService"] !== undefined && changes["utilService"].currentValue !== undefined) {
+            this.utilService = changes["utilService"].currentValue;
         }
-        this.analyze(jenkinsData);
+        if (changes["jenkinsData"] !== undefined && changes["jenkinsData"].currentValue !== undefined) {
+            this.jenkinsData = changes["jenkinsData"].currentValue;
+        }
+        
+        if (this.utilService !== undefined && !this.utilService.isInvalid(this.jenkinsData)) {
+            this.analyze(this.jenkinsData);
+        }
     }
     
     private readonly visTimelineElementId = "buildTimeline";
@@ -107,18 +116,19 @@ export class JenkinsBuildTimelineComponent implements OnInit {
         
         this.LOGGER.debug("Build Timeline Data", this.visJobsData);
         
-        if (Util.isInvalid(jenkinsData) || Util.isInvalid(jenkinsData.jobs)) {
+        if (this.utilService.isInvalid(jenkinsData) || this.utilService.isInvalid(jenkinsData.jobs)) {
             return this.visTimeline;
         }
         
+        let parent = this;
         let visDataSet: DataSet<DataSetItem> = this.visJobsData;
         this.visTimeline.on('doubleClick', function(properties:VisEventProperties) {
-            if (Util.isInvalid(properties) || Util.isInvalid(properties.item)) {
+            if (parent.utilService.isInvalid(properties) || parent.utilService.isInvalid(properties.item)) {
                 return;
             }
             
             let item:DataSetItem = visDataSet.get(properties.item);
-            if (Util.isInvalid(item)) {
+            if (parent.utilService.isInvalid(item)) {
                 return;
             }
             
@@ -155,7 +165,7 @@ export class JenkinsBuildTimelineComponent implements OnInit {
     }
     
     setGroupVisibility(group: number, visibility: boolean):void {
-        if (Util.isInvalid(this.visGroups.get(group))) {
+        if (this.utilService.isInvalid(this.visGroups.get(group))) {
             return;
         }
         
@@ -166,7 +176,7 @@ export class JenkinsBuildTimelineComponent implements OnInit {
         let buildsData: DataSet<DataSetItem> = new DataSet<DataSetItem>();
         let parent = this;
         
-        if (Util.isInvalid(data) || Util.isInvalid(data.jobs)) {
+        if (this.utilService.isInvalid(data) || this.utilService.isInvalid(data.jobs)) {
             return buildsData;
         }
         
@@ -200,7 +210,7 @@ export class JenkinsBuildTimelineComponent implements OnInit {
     }
     
     private isToBeIncluded(build: IJenkinsBuild): boolean {
-        if (Util.isInvalid(build) || Util.isInvalid(build.duration)) {
+        if (this.utilService.isInvalid(build) || this.utilService.isInvalid(build.duration)) {
             return false;
         }
 
@@ -208,7 +218,7 @@ export class JenkinsBuildTimelineComponent implements OnInit {
         let today = new Date();
         let lastWeek = new Date(today);
         lastWeek.setDate(today.getDate() - 7);
-        if(!Util.isAfterDate(new Date(build.timestamp), lastWeek)) {
+        if(!this.utilService.isAfterDate(new Date(build.timestamp), lastWeek)) {
             return false;
         }
         
@@ -216,7 +226,7 @@ export class JenkinsBuildTimelineComponent implements OnInit {
     }
     
     private getGroup(build: IJenkinsBuild): number {
-        if (Util.isInvalid(build) || Util.isInvalid(build.result)) {
+        if (this.utilService.isInvalid(build) || this.utilService.isInvalid(build.result)) {
             return JenkinsBuildTimelineComponent.DEFAULT_GROUP;
         }
         
@@ -238,7 +248,7 @@ export class JenkinsBuildTimelineComponent implements OnInit {
     private getBuildClass(build: IJenkinsBuild): string {
         
         let className = "white";
-        if (Util.isInvalid(build) || Util.isInvalid(build.result)) {
+        if (this.utilService.isInvalid(build) || this.utilService.isInvalid(build.result)) {
             return className;
         }
         
@@ -260,13 +270,13 @@ export class JenkinsBuildTimelineComponent implements OnInit {
     private getItemTitle(job: IJenkinsJob, build: IJenkinsBuild) {
         let startDateTime = new Date(build.timestamp);
         let endDateTime = new Date(build.timestamp + build.duration);
-        let running = Util.isRunning(build) ? " <b><i>(Running)</i></b>" : "";
-        let aborted = Util.isAborted(build) ? " <b><i>(Aborted)</i></b>" : "";
+        let running = this.utilService.isRunning(build) ? " <b><i>(Running)</i></b>" : "";
+        let aborted = this.utilService.isAborted(build) ? " <b><i>(Aborted)</i></b>" : "";
         
         return job.name + " #" + build.number + "<br/>"
-            + (!Util.isInvalid(build.displayName) ? "Name: " + build.displayName + "<br/>" : "")
-            + (!Util.isInvalid(build.description) ? "Description: " + build.description + "<br/>" : "")
-            + "Start: " + Util.padTime(startDateTime) + ", " + "End: " + Util.padTime(endDateTime) + running + aborted + "<br/>"
+            + (!this.utilService.isInvalid(build.displayName) ? "Name: " + build.displayName + "<br/>" : "")
+            + (!this.utilService.isInvalid(build.description) ? "Description: " + build.description + "<br/>" : "")
+            + "Start: " + this.utilService.padTime(startDateTime) + ", " + "End: " + this.utilService.padTime(endDateTime) + running + aborted + "<br/>"
             + "<i>Double-click to open in Jenkins</i>";
     }
 }

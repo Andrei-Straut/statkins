@@ -3,8 +3,9 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/first';
 
+import { UtilService } from '../../../Util/services/util.service';
 import { Logger } from 'angular2-logger/core';
-import { Util } from '../../Util/Util';
+
 import { IJenkinsBuild } from 'jenkins-api-ts-typings';
 import { IJenkinsJob } from 'jenkins-api-ts-typings';
 import { IJenkinsChangeSet } from 'jenkins-api-ts-typings';
@@ -23,12 +24,12 @@ export class JenkinsChangeSetService implements IJenkinsService {
     private complete: boolean = false;
     private completedSuccessfully: boolean = false;
     
-    constructor(private LOGGER:Logger, private buildList: Map<IJenkinsJob, Array<IJenkinsBuild>>, private userList: Array<IJenkinsUser>) {
+    constructor(private util:UtilService, private LOGGER:Logger, private buildList: Map<IJenkinsJob, Array<IJenkinsBuild>>, private userList: Array<IJenkinsUser>) {
         this.changeSets = new Map<IJenkinsBuild, Array<IJenkinsChangeSet>>();
     }
     
     async execute() {
-        if (Util.isInvalid(this.buildList)) {
+        if (this.util.isInvalid(this.buildList)) {
             this.LOGGER.error("Empty or null build list received");
             this.completedSuccessfully = false;
             this.complete = true;
@@ -60,9 +61,9 @@ export class JenkinsChangeSetService implements IJenkinsService {
                         this.LOGGER.debug("ChangeSet with ID", jsonData["commitId"], "created");
                         changeSet.fromJson(jsonData);
                         changeSet.author = this.getChangeSetAuthor(this.userList, jsonData);
-                        changeSet.timestamp = Util.padTimestamp(changeSet.timestamp);
+                        changeSet.timestamp = this.util.padTimestamp(changeSet.timestamp);
                         
-                        if (Util.isInvalid(changeSet.date) || changeSet.date.toString().toLowerCase().indexOf("invalid") !== -1) {
+                        if (this.util.isInvalid(changeSet.date) || changeSet.date.toString().toLowerCase().indexOf("invalid") !== -1) {
                             changeSet.date = new Date(changeSet.timestamp);
                         }
                         
@@ -133,6 +134,6 @@ export class JenkinsChangeSetService implements IJenkinsService {
             return undefined;
         }
         
-        return Util.getUserByFullName(users, authorData["fullName"]);
+        return this.util.getUserByFullName(users, authorData["fullName"]);
     }
 }

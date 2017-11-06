@@ -1,6 +1,6 @@
 import {Logger} from 'angular2-logger/core';
 import * as moment from 'moment';
-import {Util} from '../../Util/Util';
+import { UtilService } from '../../../Util/services/util.service';
 
 import {IJenkinsData} from 'jenkins-api-ts-typings';
 import {IJenkinsNode} from 'jenkins-api-ts-typings';
@@ -13,7 +13,7 @@ export class JenkinsNodeStatistics implements StatisticsEntryProvider {
 
     private analyzerData: StatisticsCardEntry;
 
-    constructor(private LOGGER: Logger, private data: IJenkinsData) {
+    constructor(private util: UtilService, private LOGGER: Logger, private data: IJenkinsData) {
     }
 
     public getStatistics(): StatisticsCardEntry {
@@ -33,7 +33,7 @@ export class JenkinsNodeStatistics implements StatisticsEntryProvider {
 
     private getNumberONodes(nodes: Array<IJenkinsNode>): string {
 
-        if (Util.isInvalid(nodes)) {
+        if (this.util.isInvalid(nodes)) {
             return "N/A";
         }
 
@@ -42,12 +42,12 @@ export class JenkinsNodeStatistics implements StatisticsEntryProvider {
 
     private getNumberOfExecutors(nodes: Array<IJenkinsNode>): StatisticsEntry {
 
-        if (Util.isInvalid(nodes)) {
+        if (this.util.isInvalid(nodes)) {
             return new StatisticsEntry("Number Of Executors", "N/A", undefined);
         }
 
         let executors: number = nodes
-            .map(node => {return (!Util.isInvalid(node) && !Util.isInvalid(node.numExecutors)) ? node.numExecutors : 0;})
+            .map(node => {return (!this.util.isInvalid(node) && !this.util.isInvalid(node.numExecutors)) ? node.numExecutors : 0;})
             .reduce(function (a: number, b: number) {
                 return a + b;
             });
@@ -57,19 +57,19 @@ export class JenkinsNodeStatistics implements StatisticsEntryProvider {
 
     private getNodeWithMostExecutors(nodes: Array<IJenkinsNode>): StatisticsEntry {
 
-        if (Util.isInvalid(nodes)) {
+        if (this.util.isInvalid(nodes)) {
             return new StatisticsEntry("Node With Most Executors", "N/A", undefined);
         }
 
         let maxNumberOfExecutors: number = nodes
-            .map(node => {return (!Util.isInvalid(node) && !Util.isInvalid(node.numExecutors)) ? node.numExecutors : 0;})
+            .map(node => {return (!this.util.isInvalid(node) && !this.util.isInvalid(node.numExecutors)) ? node.numExecutors : 0;})
             .reduce(function (a: number, b: number) {
                 return a >= b ? a : b;
             });
         let nodesWithMostExecutors: Array<IJenkinsNode> = nodes
-            .filter(node => !Util.isInvalid(node) && !Util.isInvalid(node.numExecutors) && node.numExecutors >= maxNumberOfExecutors);
+            .filter(node => !this.util.isInvalid(node) && !this.util.isInvalid(node.numExecutors) && node.numExecutors >= maxNumberOfExecutors);
 
-        if (Util.isInvalid(nodesWithMostExecutors)) {
+        if (this.util.isInvalid(nodesWithMostExecutors)) {
             return new StatisticsEntry("Node With Most Executors", "N/A", undefined);
         }
 
@@ -83,14 +83,14 @@ export class JenkinsNodeStatistics implements StatisticsEntryProvider {
 
     private getOfflineNodes(nodes: Array<IJenkinsNode>): StatisticsEntry {
 
-        if (Util.isInvalid(nodes)) {
+        if (this.util.isInvalid(nodes)) {
             return new StatisticsEntry("Offline Nodes", "N/A", undefined);
         }
 
         let offlineNodes: Array<IJenkinsNode> = nodes
-            .filter(node => Util.isOffline(node));
+            .filter(node => this.util.isOffline(node));
 
-        if (Util.isInvalid(offlineNodes)) {
+        if (this.util.isInvalid(offlineNodes)) {
             return new StatisticsEntry("Offline Nodes", "0", undefined);
         }
 
@@ -102,14 +102,14 @@ export class JenkinsNodeStatistics implements StatisticsEntryProvider {
 
     private getDisabledNodes(nodes: Array<IJenkinsNode>): StatisticsEntry {
 
-        if (Util.isInvalid(nodes)) {
+        if (this.util.isInvalid(nodes)) {
             return new StatisticsEntry("Disabled Nodes", "N/A", undefined);
         }
 
         let disabledNodes: Array<IJenkinsNode> = nodes
-            .filter(node => Util.isTemporarilyOffline(node));
+            .filter(node => this.util.isTemporarilyOffline(node));
 
-        if (Util.isInvalid(disabledNodes)) {
+        if (this.util.isInvalid(disabledNodes)) {
             return new StatisticsEntry("Disabled Nodes", "0", undefined);
         }
 
@@ -121,14 +121,14 @@ export class JenkinsNodeStatistics implements StatisticsEntryProvider {
 
     private getIdleNodes(nodes: Array<IJenkinsNode>): StatisticsEntry {
 
-        if (Util.isInvalid(nodes)) {
+        if (this.util.isInvalid(nodes)) {
             return new StatisticsEntry("Idle Nodes", "N/A", undefined);
         }
 
         let idleNodes: Array<IJenkinsNode> = nodes
-            .filter(node => Util.isIdle(node));
+            .filter(node => this.util.isIdle(node));
 
-        if (Util.isInvalid(idleNodes)) {
+        if (this.util.isInvalid(idleNodes)) {
             return new StatisticsEntry("Idle Nodes", "0", undefined);
         }
 
@@ -140,14 +140,14 @@ export class JenkinsNodeStatistics implements StatisticsEntryProvider {
 
     private getBusyNodes(nodes: Array<IJenkinsNode>): StatisticsEntry {
 
-        if (Util.isInvalid(nodes)) {
+        if (this.util.isInvalid(nodes)) {
             return new StatisticsEntry("Busy Nodes", "N/A", undefined);
         }
 
         let busyNodes: Array<IJenkinsNode> = nodes
-            .filter(node => !Util.isIdle(node));
+            .filter(node => !this.util.isIdle(node));
 
-        if (Util.isInvalid(busyNodes)) {
+        if (this.util.isInvalid(busyNodes)) {
             return new StatisticsEntry("Busy Nodes", "0", undefined);
         }
 

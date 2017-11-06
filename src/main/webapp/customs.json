@@ -2,16 +2,22 @@
     "elements": {
         "jenkins-build-timeline": {},
         "jenkins-changeset-timeline": {},
+        "jenkins-analyzer": {},
         "jenkins-job-build-graph": {},
         "jenkins-data-retriever": {},
         "jenkins-basic-statistics": {},
-        "jenkins-job-average-build-duration": {}
+        "jenkins-file-changes-graph": {},
+        "jenkins-job-average-build-duration": {},
+        "jenkins-average-build-duration": {},
+        "jenkins-job-relationship-network": {}
     },
     "attributes": {
         "[(ngmodel)]": {},
         "(ngmodelchange)": {},
         "[hidden]": {},
         "[ngmodel]": {},
+        "[utilService]": {},
+        "[jenkinsData]": {},
         "*ngfor": {
             "context": "div"
         }

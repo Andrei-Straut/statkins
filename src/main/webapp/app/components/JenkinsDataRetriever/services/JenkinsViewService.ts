@@ -1,17 +1,17 @@
-import { Http } from '@angular/http';
 import { Injectable } from '@angular/core';
 
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/first';
 
-import { Util } from '../../Util/Util';
+import { ConfigService } from '../../../Config/services/config.service';
+import { ProxyService } from '../../../Proxy/services/proxy.service';
+import { UtilService } from '../../../Util/services/util.service';
 import { Logger } from 'angular2-logger/core';
-import { Proxy } from '../../Proxy/Proxy';
+
 import { IJenkinsJob } from 'jenkins-api-ts-typings';
 import { IJenkinsView } from 'jenkins-api-ts-typings';
 
 import { IJenkinsService } from './IJenkinsService';
-import { JenkinsDefinitionService } from '../../Definition/JenkinsDefinitionService';
 import { JenkinsServiceId } from './JenkinsServiceId';
 
 /**
@@ -19,18 +19,15 @@ import { JenkinsServiceId } from './JenkinsServiceId';
  */
 @Injectable()
 export class JenkinsViewService implements IJenkinsService {
-    private proxy: Proxy;
     private complete: boolean = false;
     private completedSuccessfully: boolean = false;
     
-    constructor(private LOGGER:Logger, private http: Http, private url: string, private definition: JenkinsDefinitionService, 
-        private viewList: Array<IJenkinsView>, private jobList: Array<IJenkinsJob>) {
-        
-        this.proxy = new Proxy(this.LOGGER, this.http, this.definition);
+    constructor(private config: ConfigService, private proxy: ProxyService, private util: UtilService, private LOGGER:Logger, 
+        private url: string, private viewList: Array<IJenkinsView>, private jobList: Array<IJenkinsJob>) {
     }
     
     async execute() {
-        if (Util.isInvalid(this.viewList)) {
+        if (this.util.isInvalid(this.viewList)) {
             this.LOGGER.error("Empty or null view list received");
             this.completedSuccessfully = false;
             this.complete = true;
@@ -43,7 +40,7 @@ export class JenkinsViewService implements IJenkinsService {
         for (let view of this.viewList) {
             i++;
             this.LOGGER.debug("Retrieving view details for:", view.name, "(", i, "/", this.viewList.length, ")");
-            let viewUrl: string = this.getViewApiUrl(view, this.definition);
+            let viewUrl: string = this.getViewApiUrl(view, this.config);
             
             viewPromises.push(this.proxy.proxy(viewUrl)
                 .first()
@@ -66,9 +63,9 @@ export class JenkinsViewService implements IJenkinsService {
                         continue;
                     }
                     
-                    let view = Util.getViewByName(this.viewList, viewJson["name"]);
+                    let view = this.util.getViewByName(this.viewList, viewJson["name"]);
 
-                    if (Util.isInvalid(view)) {
+                    if (this.util.isInvalid(view)) {
                         this.LOGGER.warn("No view with name", viewJson["name"], "found");
                         continue;
                     }
@@ -109,8 +106,8 @@ export class JenkinsViewService implements IJenkinsService {
         return this.completedSuccessfully;
     }
     
-    private getViewApiUrl(view: IJenkinsView, jenkinsDefinition: JenkinsDefinitionService) {
-        let viewApiUrl = this.url.replace(/\/$/, "") + '/' + jenkinsDefinition.viewSuffix + encodeURI(view.name) + "/" + jenkinsDefinition.apiSuffix;
+    private getViewApiUrl(view: IJenkinsView, config: ConfigService) {
+        let viewApiUrl = this.url.replace(/\/$/, "") + '/' + config.viewSuffix + encodeURI(view.name) + "/" + config.apiSuffix;
         return viewApiUrl;
     }
     
@@ -123,7 +120,7 @@ export class JenkinsViewService implements IJenkinsService {
         }
         
         for(let viewJob of (viewJson["jobs"] as Array<JSON>)) {
-            let job: IJenkinsJob = Util.getJobByName(allJobs, viewJob["name"]);
+            let job: IJenkinsJob = this.util.getJobByName(allJobs, viewJob["name"]);
             
             if (job === undefined) {
                 continue;
