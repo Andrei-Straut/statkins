@@ -4,16 +4,16 @@ import { Logger } from 'angular2-logger/core';
 import { UtilService } from '../../Util/services/util.service';
 import { IJenkinsData } from 'jenkins-api-ts-typings';
 
-import { JenkinsBasicJobStatistics } from './services/JenkinsBasicJobStatistics';
-import { JenkinsBasicBuildStatistics } from './services/JenkinsBasicBuildStatistics';
-import { JenkinsChangeSetStatistics } from './services/JenkinsChangeSetStatistics';
-import { JenkinsNodeStatistics } from './services/JenkinsNodeStatistics';
+import { JenkinsBasicJobStatistics } from '../services/JenkinsBasicJobStatistics';
+import { JenkinsBasicBuildStatistics } from '../services/JenkinsBasicBuildStatistics';
+import { JenkinsChangeSetStatistics } from '../services/JenkinsChangeSetStatistics';
+import { JenkinsNodeStatistics } from '../services/JenkinsNodeStatistics';
 
-import { StatisticsCardEntry } from '../JenkinsDataAnalyzer/model/StatisticsCardEntry';
+import { StatisticsCardEntry } from '../services/StatisticsCardEntry';
     
 @Component({
     selector: 'jenkins-basic-statistics',
-    templateUrl: 'app/components/JenkinsDataAnalyzer_BasicStatistics/templates/jenkinsbasicstatistics.template.html',
+    templateUrl: 'app/JenkinsDataAnalyzer/templates/jenkins-basic-statistics.template.html',
     providers: [],
 })
 export class JenkinsBasicStatisticsComponent implements OnInit {

@@ -23,7 +23,7 @@ let options = new RequestOptions({
 @Injectable()
 export class ProxyService {
     private readonly _INSTANCE_ID: string;
-    
+
     readonly proxyEndpoint: string;
 
     constructor(private LOGGER: Logger, private http: Http, private config: ConfigService) {

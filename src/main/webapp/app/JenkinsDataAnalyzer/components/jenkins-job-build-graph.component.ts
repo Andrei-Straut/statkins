@@ -5,11 +5,11 @@ import { UtilService } from '../../Util/services/util.service';
 import { Logger } from 'angular2-logger/core';
 
 import { IJenkinsData } from 'jenkins-api-ts-typings';
-import { DataSetItem } from '../JenkinsDataAnalyzer/model/DataSetItem';
+import { DataSetItem } from '../services/DataSetItem';
     
 @Component({
     selector: 'jenkins-job-build-graph',
-    templateUrl: 'app/components/JenkinsDataAnalyzer_JenkinsJobBuildGraph/templates/jenkinsjobbuildgraph.template.html',
+    templateUrl: 'app/JenkinsDataAnalyzer/templates/jenkins-job-build-graph.template.html',
     providers: [],
 })
 export class JenkinsJobBuildGraphComponent implements OnInit {

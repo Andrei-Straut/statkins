@@ -9,11 +9,11 @@ import { IJenkinsBuild } from 'jenkins-api-ts-typings';
 import { IJenkinsChangeSet } from 'jenkins-api-ts-typings';
 import { IJenkinsJob } from 'jenkins-api-ts-typings';
 
-import { DataSetItem } from '../JenkinsDataAnalyzer/model/DataSetItem';
+import { DataSetItem } from '../services/DataSetItem';
     
 @Component({
     selector: 'jenkins-changeset-timeline',
-    templateUrl: 'app/components/JenkinsDataAnalyzer_JenkinsChangeSetTimeline/templates/jenkinschangesettimeline.template.html',
+    templateUrl: 'app/JenkinsDataAnalyzer/templates/jenkins-changeset-timeline.template.html',
     providers: [],
 })
 export class JenkinsChangeSetTimelineComponent implements OnInit {

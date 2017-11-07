@@ -6,11 +6,11 @@ import { UtilService } from '../../Util/services/util.service';
 import { Logger } from 'angular2-logger/core';
 
 import { IJenkinsData } from 'jenkins-api-ts-typings';
-import { DataSetItem } from '../JenkinsDataAnalyzer/model/DataSetItem';
+import { DataSetItem } from '../services/DataSetItem';
     
 @Component({
     selector: 'jenkins-average-build-duration',
-    templateUrl: 'app/components/JenkinsDataAnalyzer_JenkinsAverageBuildDurationGraph/templates/jenkinsaveragebuilddurationgraph.template.html',
+    templateUrl: 'app/JenkinsDataAnalyzer/templates/jenkins-average-build-duration-graph.template.html',
     providers: [],
 })
 export class JenkinsAverageBuildDurationGraphComponent implements OnInit {

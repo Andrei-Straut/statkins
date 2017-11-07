@@ -8,7 +8,7 @@ import { IJenkinsData } from 'jenkins-api-ts-typings';
 import { IJenkinsBuild } from 'jenkins-api-ts-typings';
 import { IJenkinsJob } from 'jenkins-api-ts-typings';
 
-import { DataSetItem } from '../JenkinsDataAnalyzer/model/DataSetItem';
+import { DataSetItem } from '../services/DataSetItem';
     
 class VisEventProperties {
     item: string;
@@ -16,7 +16,7 @@ class VisEventProperties {
 
 @Component({
     selector: 'jenkins-build-timeline',
-    templateUrl: 'app/components/JenkinsDataAnalyzer_JenkinsBuildTimeline/templates/jenkinsbuildtimeline.template.html',
+    templateUrl: 'app/JenkinsDataAnalyzer/templates/jenkins-build-timeline.template.html',
     providers: [],
 })
 export class JenkinsBuildTimelineComponent implements OnInit {

@@ -1,13 +1,13 @@
 import {Logger} from 'angular2-logger/core';
 import * as moment from 'moment';
-import { UtilService } from '../../../Util/services/util.service';
+import { UtilService } from '../../Util/services/util.service';
 
 import {IJenkinsData} from 'jenkins-api-ts-typings';
 import {IJenkinsNode} from 'jenkins-api-ts-typings';
 
-import {StatisticsEntryProvider} from '../../JenkinsDataAnalyzer/model/StatisticsEntryProvider';
-import {StatisticsCardEntry} from '../../JenkinsDataAnalyzer/model/StatisticsCardEntry';
-import {StatisticsEntry} from '../../JenkinsDataAnalyzer/model/StatisticsEntry';
+import {StatisticsEntryProvider} from './StatisticsEntryProvider';
+import {StatisticsCardEntry} from './StatisticsCardEntry';
+import {StatisticsEntry} from './StatisticsEntry';
 
 export class JenkinsNodeStatistics implements StatisticsEntryProvider {
 

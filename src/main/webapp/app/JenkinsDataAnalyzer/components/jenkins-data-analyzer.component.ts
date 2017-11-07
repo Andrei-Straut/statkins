@@ -1,6 +1,4 @@
-import { Component } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 import { UtilService } from '../../Util/services/util.service';
 import { Logger } from 'angular2-logger/core';
@@ -11,7 +9,7 @@ import { IJenkinsData } from 'jenkins-api-ts-typings';
  */
 @Component({
     selector: 'jenkins-data-analyzer',
-    templateUrl: 'app/components/JenkinsDataAnalyzer/templates/jenkinsdataanalyzer.template.html',
+    templateUrl: 'app/JenkinsDataAnalyzer/templates/jenkins-data-analyzer.template.html',
     providers: [ Logger ],
     entryComponents: [],
 })

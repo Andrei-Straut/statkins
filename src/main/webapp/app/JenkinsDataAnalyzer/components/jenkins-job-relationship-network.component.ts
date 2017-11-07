@@ -1,17 +1,16 @@
 import { Component, Input, SimpleChanges, OnInit } from '@angular/core';
-import {Options, Network} from 'vis';
+import { Options, Network } from 'vis';
+import { IJenkinsData } from 'jenkins-api-ts-typings';
 
 import { UtilService } from '../../Util/services/util.service';
-import {Logger} from 'angular2-logger/core';
+import { VisNetworkData } from '../services/VisNetworkData';
+import { Logger } from 'angular2-logger/core';
 
-import {VisNetworkData} from '../JenkinsDataAnalyzer/model/VisNetworkData';
-import {IJenkinsData} from 'jenkins-api-ts-typings';
-
-import { JobRelationshipNetworkService } from './services/JobRelationshipNetworkService';
+import { JobRelationshipNetworkService } from '../services/JobRelationshipNetworkService';
 
 @Component({
     selector: 'jenkins-job-relationship-network',
-    templateUrl: 'app/components/JenkinsDataAnalyzer_JobRelationshipNetwork/templates/jenkinsjobrelationshipnetwork.template.html',
+    templateUrl: 'app/JenkinsDataAnalyzer/templates/jenkins-job-relationship-network.template.html',
     providers: [],
 })
 export class JenkinsJobRelationshipNetworkComponent implements OnInit {

@@ -1,9 +1,9 @@
 import { IJenkinsData, IJenkinsJob } from 'jenkins-api-ts-typings';
 import { DataSet } from 'vis';
 
-import { UtilService } from '../../../Util/services/util.service';
+import { UtilService } from '../../Util/services/util.service';
 
-import { VisNetworkData } from '../../JenkinsDataAnalyzer/model/VisNetworkData';
+import { VisNetworkData } from './VisNetworkData';
 
 export class JobRelationshipNetworkService {
     

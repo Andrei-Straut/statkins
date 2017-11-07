@@ -1,9 +1,4 @@
-import { Component } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Input } from '@angular/core';
-import { Output } from '@angular/core';
-import { EventEmitter  } from '@angular/core';
-import { Http } from '@angular/http';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { ConfigService } from '../../Config/services/config.service';
 import { ProxyService } from '../../Proxy/services/proxy.service';
@@ -81,7 +76,7 @@ export class JenkinsDataRetrieverComponent implements OnInit {
     
     services: IJenkinsServices = <any>{};
     
-    constructor(private LOGGER:Logger, private http: Http) {}
+    constructor(private LOGGER:Logger) {}
     
     ngOnInit() {}
     

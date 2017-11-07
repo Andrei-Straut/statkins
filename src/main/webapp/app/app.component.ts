@@ -3,7 +3,7 @@ import { OnInit } from '@angular/core';
 
 import { IJenkinsData } from 'jenkins-api-ts-typings';
 import { JenkinsDataRetrieverComponent } from './JenkinsDataRetriever/components/jenkins-data-retriever.component';
-import { JenkinsDataAnalyzerComponent } from './components/JenkinsDataAnalyzer/jenkins-data-analyzer.component';
+import { JenkinsDataAnalyzerComponent } from './JenkinsDataAnalyzer/components/jenkins-data-analyzer.component';
 
 import { ConfigService } from './Config/services/config.service';
 import { ProxyService } from './Proxy/services/proxy.service';

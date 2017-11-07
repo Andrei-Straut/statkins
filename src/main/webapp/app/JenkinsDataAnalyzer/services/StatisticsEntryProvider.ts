@@ -1,5 +1,5 @@
 
-import { StatisticsCardEntry } from '../model/StatisticsCardEntry';
+import { StatisticsCardEntry } from './StatisticsCardEntry';
 
 export interface StatisticsEntryProvider {
     getStatistics(): StatisticsCardEntry;
