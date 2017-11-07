@@ -1,15 +1,14 @@
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
 
-import { Logger } from 'angular2-logger/core';
-
 import { IJenkinsData } from 'jenkins-api-ts-typings';
-import { JenkinsDataRetrieverComponent } from './components/JenkinsDataRetriever/jenkins-data-retriever.component';
+import { JenkinsDataRetrieverComponent } from './JenkinsDataRetriever/components/jenkins-data-retriever.component';
 import { JenkinsDataAnalyzerComponent } from './components/JenkinsDataAnalyzer/jenkins-data-analyzer.component';
 
 import { ConfigService } from './Config/services/config.service';
 import { ProxyService } from './Proxy/services/proxy.service';
 import { UtilService } from './Util/services/util.service';
+import { Logger } from 'angular2-logger/core';
 
 @Component({
     selector: 'jenkins-analyzer',

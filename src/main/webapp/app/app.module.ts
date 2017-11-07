@@ -1,17 +1,21 @@
+import {AppComponent} from './app.component';
+
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
 
 import {ConfigModule} from './Config/config.module';
+import {ConfigService} from './Config/services/config.service';
 import {ProxyModule} from './Proxy/proxy.module';
+import {ProxyService} from './Proxy/services/proxy.service';
 import {UtilModule} from './Util/util.module';
-
+import {UtilService} from './Util/services/util.service';
 import {Logger} from 'angular2-logger/core';
 
-import {AppComponent} from './app.component';
+import {JenkinsDataRetrieverModule} from './JenkinsDataRetriever/jenkins-data-retriever.module';
+import {JenkinsDataRetrieverComponent} from './JenkinsDataRetriever/components/jenkins-data-retriever.component';
 
-import {JenkinsDataRetrieverComponent} from './components/JenkinsDataRetriever/jenkins-data-retriever.component';
 import {JenkinsDataAnalyzerComponent} from './components/JenkinsDataAnalyzer/jenkins-data-analyzer.component';
 import {JenkinsBasicStatisticsComponent} from './components/JenkinsDataAnalyzer_BasicStatistics/jenkins-basic-statistics.component';
 import {JenkinsJobBuildGraphComponent} from './components/JenkinsDataAnalyzer_JenkinsJobBuildGraph/jenkins-job-build-graph.component';
@@ -24,11 +28,11 @@ import {JenkinsJobRelationshipNetworkComponent} from './components/JenkinsDataAn
 @NgModule({
     imports: [
         BrowserModule, FormsModule, HttpModule,
-        ConfigModule, ProxyModule, UtilModule
+        ConfigModule, ProxyModule, UtilModule, JenkinsDataRetrieverModule
     ],
     declarations: [
         AppComponent,
-        JenkinsDataRetrieverComponent,
+        
         JenkinsDataAnalyzerComponent,
         JenkinsBasicStatisticsComponent,
         JenkinsJobBuildGraphComponent,
@@ -37,7 +41,7 @@ import {JenkinsJobRelationshipNetworkComponent} from './components/JenkinsDataAn
         JenkinsBuildTimelineComponent,
         JenkinsChangeSetTimelineComponent,
         JenkinsJobRelationshipNetworkComponent,],
-    bootstrap: [AppComponent],
-    providers: [Logger]
+    bootstrap: [ AppComponent ],
+    providers: [ ConfigService, ProxyService, UtilService, Logger ]
 })
 export class AppModule {}
