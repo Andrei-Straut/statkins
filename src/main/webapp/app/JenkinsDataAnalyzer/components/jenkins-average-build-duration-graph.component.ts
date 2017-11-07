@@ -6,7 +6,7 @@ import { UtilService } from '../../Util/services/util.service';
 import { Logger } from 'angular2-logger/core';
 
 import { IJenkinsData } from 'jenkins-api-ts-typings';
-import { DataSetItem } from '../services/DataSetItem';
+import { VisDataSetItem } from '../services/VisDataSetItem';
     
 @Component({
     selector: 'jenkins-average-build-duration',
@@ -41,7 +41,7 @@ export class JenkinsAverageBuildDurationGraphComponent implements OnInit {
     private visGraphOptions: Graph2dOptions;
     private visGraph: Graph2d;
     private visGroups: DataSet<any> = new DataSet<any>();
-    private visJobsData: DataSet<DataSetItem> = new DataSet<DataSetItem>();
+    private visJobsData: DataSet<VisDataSetItem> = new DataSet<VisDataSetItem>();
     
     constructor(private LOGGER: Logger) {}
     

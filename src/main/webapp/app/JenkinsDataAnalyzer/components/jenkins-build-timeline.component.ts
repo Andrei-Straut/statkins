@@ -8,11 +8,8 @@ import { IJenkinsData } from 'jenkins-api-ts-typings';
 import { IJenkinsBuild } from 'jenkins-api-ts-typings';
 import { IJenkinsJob } from 'jenkins-api-ts-typings';
 
-import { DataSetItem } from '../services/DataSetItem';
-    
-class VisEventProperties {
-    item: string;
-}
+import { VisDataSetItem } from '../services/VisDataSetItem';
+import { VisEventProperties } from '../services/VisEventProperties';
 
 @Component({
     selector: 'jenkins-build-timeline',
@@ -42,7 +39,7 @@ export class JenkinsBuildTimelineComponent implements OnInit {
     private readonly visTimelineElementId = "buildTimeline";
     private visTimelineContainer: HTMLElement;
     private visTimelineOptions: TimelineOptions;
-    private visJobsData: DataSet<DataSetItem> = new DataSet<DataSetItem>();
+    private visJobsData: DataSet<VisDataSetItem> = new DataSet<VisDataSetItem>();
     private visGroups = new DataSet<any>();
     private visTimeline: Timeline;
     
@@ -121,13 +118,13 @@ export class JenkinsBuildTimelineComponent implements OnInit {
         }
         
         let parent = this;
-        let visDataSet: DataSet<DataSetItem> = this.visJobsData;
+        let visDataSet: DataSet<VisDataSetItem> = this.visJobsData;
         this.visTimeline.on('doubleClick', function(properties:VisEventProperties) {
             if (parent.utilService.isInvalid(properties) || parent.utilService.isInvalid(properties.item)) {
                 return;
             }
             
-            let item:DataSetItem = visDataSet.get(properties.item);
+            let item:VisDataSetItem = visDataSet.get(properties.item);
             if (parent.utilService.isInvalid(item)) {
                 return;
             }
@@ -172,8 +169,8 @@ export class JenkinsBuildTimelineComponent implements OnInit {
         this.visGroups.update({id: group, visible: visibility});
     }
     
-    private getJobsData(data: IJenkinsData):DataSet<DataSetItem> {
-        let buildsData: DataSet<DataSetItem> = new DataSet<DataSetItem>();
+    private getJobsData(data: IJenkinsData):DataSet<VisDataSetItem> {
+        let buildsData: DataSet<VisDataSetItem> = new DataSet<VisDataSetItem>();
         let parent = this;
         
         if (this.utilService.isInvalid(data) || this.utilService.isInvalid(data.jobs)) {
@@ -190,7 +187,7 @@ export class JenkinsBuildTimelineComponent implements OnInit {
                 let endDateTime = new Date(build.timestamp + build.duration);
                 let visClass = parent.getBuildClass(build);
                 
-                let buildData:DataSetItem = {
+                let buildData:VisDataSetItem = {
                         id: job.name + "_#" + build.number,
                         title: parent.getItemTitle(job, build),
                         content: job.name + " #" + build.number,

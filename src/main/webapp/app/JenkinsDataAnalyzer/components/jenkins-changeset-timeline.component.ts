@@ -9,7 +9,7 @@ import { IJenkinsBuild } from 'jenkins-api-ts-typings';
 import { IJenkinsChangeSet } from 'jenkins-api-ts-typings';
 import { IJenkinsJob } from 'jenkins-api-ts-typings';
 
-import { DataSetItem } from '../services/DataSetItem';
+import { VisDataSetItem } from '../services/VisDataSetItem';
     
 @Component({
     selector: 'jenkins-changeset-timeline',
@@ -39,7 +39,7 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
     private readonly visTimelineElementId = "changeSetTimeline";
     private visTimelineContainer: HTMLElement;
     private visTimelineOptions: TimelineOptions;
-    private visChangeSetData: DataSet<DataSetItem> = new DataSet<DataSetItem>();
+    private visChangeSetData: DataSet<VisDataSetItem> = new DataSet<VisDataSetItem>();
     private visGroups = new DataSet<any>();
     private visTimeline: Timeline;
     
@@ -153,8 +153,8 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
         this.visGroups.update({id: group, visible: visibility});
     }
     
-    private getChangeSetData(data: IJenkinsData):DataSet<DataSetItem> {
-        let changeSetsData: DataSet<DataSetItem> = new DataSet<DataSetItem>();
+    private getChangeSetData(data: IJenkinsData):DataSet<VisDataSetItem> {
+        let changeSetsData: DataSet<VisDataSetItem> = new DataSet<VisDataSetItem>();
         let parent = this;
         let counter = 0;
         
@@ -173,7 +173,7 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
                     counter++;
                     let startDateTime = new Date(changeSet.timestamp);
                     
-                    let changeSetData:DataSetItem = undefined;
+                    let changeSetData:VisDataSetItem = undefined;
                     if (!parent.utilService.isInvalid(changeSetsData.get(changeSet.commitId))) {
                         return;
                     } else {

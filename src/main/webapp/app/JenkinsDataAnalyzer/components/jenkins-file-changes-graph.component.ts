@@ -5,7 +5,7 @@ import { UtilService } from '../../Util/services/util.service';
 import { Logger } from 'angular2-logger/core';
 
 import { IJenkinsData } from 'jenkins-api-ts-typings';
-import { DataSetItem } from '../services/DataSetItem';
+import { VisDataSetItem } from '../services/VisDataSetItem';
     
 @Component({
     selector: 'jenkins-file-changes-graph',
@@ -37,7 +37,7 @@ export class JenkinsFileChangesGraphComponent implements OnInit {
     private visGraphOptions: TimelineOptions;
     private visGraph: Timeline;
     private visGroups: DataSet<any> = new DataSet<any>();
-    private visFilesData: DataSet<DataSetItem> = new DataSet<DataSetItem>();
+    private visFilesData: DataSet<VisDataSetItem> = new DataSet<VisDataSetItem>();
     
     private maxNumberOfElements = 10;
     
@@ -113,8 +113,8 @@ export class JenkinsFileChangesGraphComponent implements OnInit {
                 };
             } else {
                 fileData = filesData.get(changeNamesMapSorted.get(affectedPath));
-                let currentTitle = (fileData as DataSetItem).title;
-                (fileData as DataSetItem).title = currentTitle + affectedPath + "<br/><br/>";
+                let currentTitle = (fileData as VisDataSetItem).title;
+                (fileData as VisDataSetItem).title = currentTitle + affectedPath + "<br/><br/>";
             }
             filesData.update(fileData);
         });

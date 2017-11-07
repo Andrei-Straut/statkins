@@ -141,7 +141,7 @@ export class JenkinsDataRetrieverComponent implements OnInit {
         this.services.viewService = new JenkinsViewService(this.configService, this.proxyService, this.utilService, this.LOGGER, this.jenkinsUrl, this.data.views, this.data.jobs);
         await this.services.viewService.execute();
         
-        this.services.buildListService = new JenkinsBuildListService(this.utilService, this.LOGGER, this.data.jobs);
+        this.services.buildListService = new JenkinsBuildListService(this.configService, this.utilService, this.LOGGER, this.data.jobs);
         await this.services.buildListService.execute();
         this.data.builds = this.services.buildListService.getData();
         

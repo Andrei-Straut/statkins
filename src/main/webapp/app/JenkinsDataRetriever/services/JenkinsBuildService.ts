@@ -83,12 +83,11 @@ export class JenkinsBuildService implements IJenkinsService {
     }
     
     private getBuildApiUrl(build: IJenkinsBuild, config: ConfigService) {
-        let buildApiUrl = build.url.replace(/\/$/, "") + '/' + config.apiSuffix;
+        let buildApiUrl = build.url.replace(/\/$/, "") + '/' + config.apiSuffix + config.defaultDepth;
         return buildApiUrl;
     }
     
     private createPromises(builds: Map<IJenkinsJob, Array<IJenkinsBuild>>):Map<IJenkinsJob, Array<Promise<JSON>>> {
-        let i = 0;
         let promises:Map<IJenkinsJob, Array<Promise<JSON>>> = new Map<IJenkinsJob, Array<Promise<JSON>>>();
         
         for (let job of builds.keys()) {

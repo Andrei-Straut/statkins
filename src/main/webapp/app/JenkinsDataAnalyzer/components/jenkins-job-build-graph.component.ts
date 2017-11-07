@@ -5,7 +5,7 @@ import { UtilService } from '../../Util/services/util.service';
 import { Logger } from 'angular2-logger/core';
 
 import { IJenkinsData } from 'jenkins-api-ts-typings';
-import { DataSetItem } from '../services/DataSetItem';
+import { VisDataSetItem } from '../services/VisDataSetItem';
     
 @Component({
     selector: 'jenkins-job-build-graph',
@@ -37,7 +37,7 @@ export class JenkinsJobBuildGraphComponent implements OnInit {
     private visGraphOptions: TimelineOptions;
     private visGraph: Timeline;
     private visGroups: DataSet<any> = new DataSet<any>();
-    private visJobsData: DataSet<DataSetItem> = new DataSet<DataSetItem>();
+    private visJobsData: DataSet<VisDataSetItem> = new DataSet<VisDataSetItem>();
     
     private maxNumberOfElements = 10;
     
@@ -112,8 +112,8 @@ export class JenkinsJobBuildGraphComponent implements OnInit {
                     };
                 } else {
                     jobData = jobsData.get(job.builds.length);
-                    let currentTitle = (jobData as DataSetItem).title;
-                    (jobData as DataSetItem).title = currentTitle + job.name + "<br/>";
+                    let currentTitle = (jobData as VisDataSetItem).title;
+                    (jobData as VisDataSetItem).title = currentTitle + job.name + "<br/>";
                 }
                 jobsData.update(jobData);
             }

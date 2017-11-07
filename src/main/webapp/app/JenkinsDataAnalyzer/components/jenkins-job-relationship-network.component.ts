@@ -4,6 +4,8 @@ import { IJenkinsData } from 'jenkins-api-ts-typings';
 
 import { UtilService } from '../../Util/services/util.service';
 import { VisNetworkData } from '../services/VisNetworkData';
+import { VisDataSetItem } from '../services/VisDataSetItem';
+import { VisEventNetworkProperties } from '../services/VisEventNetworkProperties';
 import { Logger } from 'angular2-logger/core';
 
 import { JobRelationshipNetworkService } from '../services/JobRelationshipNetworkService';
@@ -60,19 +62,33 @@ export class JenkinsJobRelationshipNetworkComponent implements OnInit {
     analyze(data: IJenkinsData): Network {
         let jobService: JobRelationshipNetworkService = new JobRelationshipNetworkService(
             this.utilService,
-            this.jenkinsData, 
+            data, 
             this.verticalMultiplier, 
             this.verticalSubMultiplier, 
             this.horizontalMultiplier, 
             this.maxHorizontalItemsPerLevel);
+        let parent = this;
         
         this.visJobNetworkData = jobService.getDataSet(this.showNodesWithoutEdges, this.showNodesWithEdges);
         this.visNetwork = new Network(this.visNetworkContainer, this.visJobNetworkData, this.visNetworkOptions);
         this.visNetwork.fit();
-
-        if (this.utilService.isInvalid(data) || this.utilService.isInvalid(data.jobs)) {
-            return;
-        }
+        
+        this.visNetwork.on('doubleClick', function(properties:VisEventNetworkProperties) {
+            if (parent.utilService.isInvalid(parent.visJobNetworkData) || parent.utilService.isInvalid(parent.visJobNetworkData.nodes)) {
+                return;
+            }
+            
+            if (parent.utilService.isInvalid(properties) || parent.utilService.isInvalid(properties.nodes)) {
+                return;
+            }
+            
+            let item:VisDataSetItem = parent.visJobNetworkData.nodes.get(properties.nodes[0]);
+            if (parent.utilService.isInvalid(item) || parent.utilService.isInvalid(item.url)) {
+                return;
+            }
+            
+            window.open(item.url, '_blank');
+        });
 
         this.LOGGER.debug("Job Build Data", this.visJobNetworkData);
         

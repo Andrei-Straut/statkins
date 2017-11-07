@@ -108,6 +108,7 @@ export class JobRelationshipNetworkService {
             label: (job as IJenkinsJob).name,
             x: xPosition,
             y: yPosition,
+            url: job.url,
             hidden: !visible
         };
     }

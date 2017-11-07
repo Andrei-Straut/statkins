@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/first';
 
+import { ConfigService } from '../../Config/services/config.service';
 import { UtilService } from '../../Util/services/util.service';
 import { Logger } from 'angular2-logger/core';
 
@@ -23,7 +24,7 @@ export class JenkinsBuildListService implements IJenkinsService {
     private complete: boolean = false;
     private completedSuccessfully: boolean = false;
     
-    constructor(private util: UtilService, private LOGGER:Logger, private jobList: Array<IJenkinsJob>) {
+    constructor(private config: ConfigService, private util: UtilService, private LOGGER:Logger, private jobList: Array<IJenkinsJob>) {
         this.buildList = new Map<IJenkinsJob, Array<IJenkinsBuild>>();
     }
     

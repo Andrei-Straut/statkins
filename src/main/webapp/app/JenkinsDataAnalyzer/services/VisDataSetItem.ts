@@ -1,6 +1,6 @@
 
     
-export class DataSetItem {
+export class VisDataSetItem {
     id: string;
     title: string;
     content: string;
