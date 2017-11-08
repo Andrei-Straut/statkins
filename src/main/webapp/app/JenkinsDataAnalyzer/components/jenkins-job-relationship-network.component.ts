@@ -72,6 +72,7 @@ export class JenkinsJobRelationshipNetworkComponent implements OnInit {
         this.visJobNetworkData = jobService.getDataSet(this.showNodesWithoutEdges, this.showNodesWithEdges);
         this.visNetwork = new Network(this.visNetworkContainer, this.visJobNetworkData, this.visNetworkOptions);
         this.visNetwork.fit();
+        this.visNetwork.setOptions({physics:{enabled: false}});
 
         this.visNetwork.on('doubleClick', function (properties: VisEventNetworkProperties) {
             if (parent.utilService.isInvalid(parent.visJobNetworkData) || parent.utilService.isInvalid(parent.visJobNetworkData.nodes)) {
@@ -165,7 +166,7 @@ export class JenkinsJobRelationshipNetworkComponent implements OnInit {
                 }
             },
             physics: {
-                enabled: false,
+                enabled: true,
             }
         };
     }
