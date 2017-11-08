@@ -133,7 +133,9 @@ export class JenkinsJobRelationshipNetworkComponent implements OnInit {
             clickToUse: true,
             interaction: {
                 tooltipDelay: this.tooltipDelay * 1000, // milliseconds
-                hover: true
+                hover: true,
+                navigationButtons: true,
+                keyboard: true,
             },
             nodes: {
                 shape: 'box',
@@ -164,7 +166,7 @@ export class JenkinsJobRelationshipNetworkComponent implements OnInit {
             },
             physics: {
                 enabled: false,
-            },
+            }
         };
     }
 }

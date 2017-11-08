@@ -53,8 +53,6 @@
                         **/node_modules/**/src/**,
                         **/node_modules/**/docs/**,
                         **/node_modules/**/*.json,
-                        **/node_modules/**/*.jpg,
-                        **/node_modules/**/*.png,
                         **/node_modules/**/.*,
                         **/node_modules/**/licence
                     </warSourceExcludes>
