@@ -18,6 +18,7 @@ import {JenkinsViewService} from '../services/jenkins-view.service';
 import {JenkinsBuildListService} from '../services/jenkins-build-list.service';
 import {JenkinsBuildService} from '../services/jenkins-build.service';
 import {JenkinsChangeSetService} from '../services/jenkins-change-set.service';
+import {JenkinsActionService} from '../services/jenkins-action-service';
 
 interface IJenkinsServices {
     nodeService: IJenkinsService,
@@ -30,6 +31,7 @@ interface IJenkinsServices {
     buildListService: IJenkinsService,
     buildService: IJenkinsService,
     changeSetService: IJenkinsService,
+    actionService: IJenkinsService,
 };
 
 interface ResponseWithBody {
@@ -71,7 +73,8 @@ export class JenkinsDataRetrieverComponent implements OnInit {
         jobs: null,
         builds: null,
         views: null,
-        changeSets: null
+        changeSets: null,
+        actions: null,
     };
 
     services: IJenkinsServices = <any> {};
@@ -151,6 +154,10 @@ export class JenkinsDataRetrieverComponent implements OnInit {
         this.services.changeSetService = new JenkinsChangeSetService(this.utilService, this.LOGGER, this.data.builds, this.data.users);
         await this.services.changeSetService.execute();
         this.data.changeSets = this.services.changeSetService.getData();
+
+        this.services.actionService = new JenkinsActionService(this.configService, this.utilService, this.LOGGER, this.data.builds);
+        await this.services.actionService.execute();
+        this.data.actions = this.services.actionService.getData();
 
         this.LOGGER.info("Data retrieval ended");
         this.dataRetrieved.emit(this.data);

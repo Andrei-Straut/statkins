@@ -135,6 +135,7 @@ export class JenkinsBuildService implements IJenkinsService {
             }
 
             build.fromJson(buildJson);
+            
             this.LOGGER.debug("Updated build:", buildJson);
         }
     }
@@ -155,6 +156,5 @@ export class JenkinsBuildService implements IJenkinsService {
         }
         
         return this.util.getBuildByBuildNumber(builds, buildData["number"]);
-        
     }
 }

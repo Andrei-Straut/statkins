@@ -7,6 +7,8 @@ import {IJenkinsView} from 'jenkins-api-ts-typings';
 import {IJenkinsBuild} from 'jenkins-api-ts-typings';
 import {IJenkinsChangeSet} from 'jenkins-api-ts-typings';
 import {IJenkinsNode} from 'jenkins-api-ts-typings';
+import {IJenkinsAction} from 'jenkins-api-ts-typings';
+import {JenkinsTimeInQueueAction} from 'jenkins-api-ts-typings';
 
 @Injectable()
 export class UtilService {
@@ -35,7 +37,7 @@ export class UtilService {
         if (objectToCheck instanceof Map) {
             return (objectToCheck as Map<any, any>).size === 0;
         }
-
+        
         return false;
     }
 
@@ -247,7 +249,6 @@ export class UtilService {
     }
 
     getBuildAverageWeightedDuration(builds: Array<IJenkinsBuild>): number {
-        let parent = this;
 
         if (this.isInvalid(builds)) {
             return 0;
@@ -276,6 +277,34 @@ export class UtilService {
         }
         
         return Math.ceil(weightedDuration);
+    }
+    
+    public getBuildTimeInQueue(build: IJenkinsBuild):number {
+        let timeInQueueArray: Array<IJenkinsAction> = build.actions.filter(action => (action as IJenkinsAction).isTimeInQueueActionClass());
+        
+        if (!this.isInvalid(timeInQueueArray)) {
+            let timeInQueue = ((timeInQueueArray[0]) as JenkinsTimeInQueueAction).getQueuingDurationMillis();
+            
+            if (!this.isInvalid(timeInQueue) && !isNaN(timeInQueue) && timeInQueue > 0) {
+                return timeInQueue;
+            }
+        }
+        
+        return 0;
+    }
+    
+    public getBuildTotalTime(build: IJenkinsBuild):number {
+        let totalTimeArray: Array<IJenkinsAction> = build.actions.filter(action => (action as IJenkinsAction).isTimeInQueueActionClass());
+        
+        if (!this.isInvalid(totalTimeArray)) {
+            let totalTime = ((totalTimeArray[0]) as JenkinsTimeInQueueAction).getTotalDurationMillis();
+            
+            if (!this.isInvalid(totalTime) && !isNaN(totalTime) && totalTime > 0) {
+                return totalTime;
+            }
+        }
+        
+        return build.duration;
     }
 
     getNumberOfBuilds(job: IJenkinsJob): number {

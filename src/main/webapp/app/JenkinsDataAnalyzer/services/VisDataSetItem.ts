@@ -10,4 +10,5 @@ export class VisDataSetItem {
     url: string;
     group: number;
     className: string;
+    visibleFrameTemplate: any;
 }

@@ -86,7 +86,7 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
             showMajorLabels: true,
             showMinorLabels: true,
             zoomMin: 1000 * 60 * 60,             // 1h in milliseconds
-            zoomMax: 1000 * 60 * 60 * 24 * 3     // 3d in milliseconds
+            zoomMax: 1000 * 60 * 60 * 24 * 3,    // 3d in milliseconds
         };
         
         this.visGroups.add({
@@ -189,7 +189,8 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
                             result: build.result,
                             url: build.url,
                             group: parent.getGroupForBuilds(buildsContainingCommit),
-                            className: parent.getChangeSetTimelineClass(buildsContainingCommit)
+                            className: parent.getChangeSetTimelineClass(buildsContainingCommit),
+                            visibleFrameTemplate: undefined,
                         };
                     }
                     

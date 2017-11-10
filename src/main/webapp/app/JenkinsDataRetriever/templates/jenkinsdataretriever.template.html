@@ -127,6 +127,23 @@
             </span>
         </div>
     </div>
+
+    <div class="row" [hidden]="!retrievalStarted">
+        <div class="col-sm-2">
+            Actions:
+        </div>
+        <div class="col-sm-4 box-content-box">
+            <span [hidden]="isHideLoadingLabel(services.actionService)">
+                <i class="fa fa-spinner fa-spin fa-icon-green" aria-hidden="true"></i> Loading
+            </span>
+            <span [hidden]="isHideSuccessfulLabel(services.actionService)">
+                <i class="fa fa-check-circle fa-icon-green" aria-hidden="true"></i> Successful
+            </span>
+            <span [hidden]="isHideErrorLabel(services.actionService)">
+                <i class="fa fa-times-circle fa-icon-red" aria-hidden="true"></i> Error occurred
+            </span>
+        </div>
+    </div>
     
     <div class="row">
         <div class="col-sm-8" [hidden]="!retrievalFinished">

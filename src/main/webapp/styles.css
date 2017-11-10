@@ -80,7 +80,7 @@ body {
     margin-bottom: 0px;
 }
 .navbar-brand {
-     float: left;
+    float: left;
 }
 a.btn-navbar {
     color: #9d9d9d;
@@ -346,4 +346,42 @@ div.vis-tooltip {
 .vis-build-result-span.red {
     background-color: red;
     color: black;
+}
+.progress-wrapper {
+    background: white;
+    width: 100%;
+    height: 18px;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+    border-top: 1px solid black;
+}
+.progress {
+    height: 100%;
+    width: 60%;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    color: white;
+    border-radius: initial
+}
+.progress-yellow {
+    background: #ffff0040;
+}
+.progress-green {
+    background: #00ce6f40;
+    text-align: right;
+}
+.progress-label {
+    position: absolute;
+    padding-left: 2px;
+    padding-right: 2px;
+    color: black;
+    font-weight: initial;
+    z-index: 1;
+}
+.progress-label-yellow {
+}
+.progress-label-green {
+    right: 0px;
 }

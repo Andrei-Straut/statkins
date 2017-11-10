@@ -14,7 +14,14 @@
                 <input id="stackToggle" name="stackToggle" type="checkbox" checked
                        [ngModel]="groupVisibility.stack"
                        (ngModelChange)="toggleOverlap()"> Stack Items
-            </label><br/>
+            </label>
+            |
+            <label class="checkbox-inline">
+                <input id="queueToggle" name="queueToggle" type="checkbox" checked
+                       [ngModel]="groupVisibility.queue"
+                       (ngModelChange)="toggleQueue()"> Show queue times
+            </label>
+            <br/>
             <label class="checkbox-inline">
                 <input id="successfulToggle" name="successfulToggle" type="checkbox" checked
                        [ngModel]="groupVisibility.success"
