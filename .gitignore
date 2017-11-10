@@ -4,6 +4,7 @@
 /src/main/webapp/aot/
 /src/main/webapp/dist/
 /target/
+/target/**/
 /nb-configuration.xml
 /nbactions.xml
 /npmProxyDisable.cmd
