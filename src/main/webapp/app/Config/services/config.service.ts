@@ -3,6 +3,9 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class ConfigService {
     private readonly _INSTANCE_ID: string;
+    private readonly _configuration:string = "DEV";
+//    private readonly _configuration:string = "STAGING";
+//    private readonly _configuration:string = "LIVE";
     
     readonly appName = 'Statkins';
     readonly developerName = 'Andrei Straut';
@@ -16,9 +19,7 @@ export class ConfigService {
     readonly loggerLevel = 3;
     readonly defaultDepth = "?depth=1";
     
-//    private readonly _configuration:string = "DEV";
-//    private readonly _configuration:string = "STAGING";
-    private readonly _configuration:string = "LIVE";
+    readonly jenkinsTimeInQueueActionId = "jenkins.metrics.impl.TimeInQueueAction";
     
     get proxyUrl() {
         if(this._configuration === "DEV") {
