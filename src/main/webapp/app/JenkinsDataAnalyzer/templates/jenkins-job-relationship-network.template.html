@@ -6,6 +6,7 @@
         <i title="Click to expand / collapse" 
             (click)="toggleFullscreen()" 
             class="fa fa-arrows-alt fa-lg btn-fullscreen-toggle" 
+            [class.btn-fullscreen-toggle-highlight]="isFullscreen"
             aria-hidden="true"></i>
         <br/>
         <span><small><i>Click and drag to pan, or click and scroll to zoom. Hover for {{tooltipDelay}} {{timeLimitUnit}} for tooltip</i></small></span><br/>
