@@ -139,7 +139,6 @@ export class JenkinsJobRelationshipNetworkComponent implements OnInit {
         this.visNetworkOptions.height = height + 'px';
         this.visNetwork.setOptions(this.visNetworkOptions);
         this.visNetwork.setOptions({physics:{enabled: true}});
-        this.visNetwork.redraw();
         this.visNetwork.fit();
         this.visNetwork.setOptions({physics:{enabled: false}});
         this.isFullscreen = !this.isFullscreen;
