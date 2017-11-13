@@ -339,18 +339,36 @@ export class JenkinsBuildTimelineComponent implements OnInit {
     }
 
     private getItemTitle(job: IJenkinsJob, build: IJenkinsBuild) {
-        let queuedDateTime = new Date(build.timestamp - this.utilService.getBuildTimeInQueue(build));
-        let startDateTime = new Date(build.timestamp);
-        let endDateTime = new Date(build.timestamp + build.duration);
         let running = this.utilService.isRunning(build) ? " <b><i>(Running)</i></b>" : "";
         let aborted = this.utilService.isAborted(build) ? " <b><i>(Aborted)</i></b>" : "";
         let timeSpentInQueue = Math.round(moment.duration((this.utilService.getBuildTimeInQueue(build)), "milliseconds").asMinutes());
-
+        
+        let queuedDateTime = new Date(build.timestamp - this.utilService.getBuildTimeInQueue(build));
+        let startDateTime = new Date(build.timestamp);
+        let endDateTime = new Date(build.timestamp + build.duration);
+        
         return "<b>" + job.name + " #" + build.number + "</b><br/>"
             + (!this.utilService.isInvalid(build.displayName) ? "<b>Name</b>: " + build.displayName + "<br/>" : "")
             + (!this.utilService.isInvalid(build.description) ? "<b>Description</b>: " + build.description + "<br/>" : "")
-            + "<b>Triggered</b>: " + this.utilService.padTime(queuedDateTime) + ", " + "<b>Started</b>: " + this.utilService.padTime(startDateTime) + ", " + "<b>Ended</b>: " + this.utilService.padTime(endDateTime) + running + aborted + "<br/>"
+            + (this.getItemDateTimes(queuedDateTime, startDateTime, endDateTime) + running + aborted + "<br/>")
             + ((timeSpentInQueue > 0) ? ("This build spent " + timeSpentInQueue + " minutes in queue<br/>") : "")
             + "<i>Double-click to open in Jenkins</i>";
+    }
+    
+    private getItemDateTimes(queuedDateTime: Date, startDateTime: Date, endDateTime: Date): string {
+        let queuedInfo = this.utilService.padTime(queuedDateTime);
+        let startedInfo = this.utilService.padTime(startDateTime);
+        let endedInfo = this.utilService.padTime(endDateTime);
+        
+        if (!this.utilService.isSameDate(queuedDateTime, startDateTime) 
+            || !this.utilService.isSameDate(queuedDateTime, endDateTime) 
+            || !this.utilService.isSameDate(startDateTime, endDateTime)) {
+            
+            queuedInfo = this.utilService.padDate(queuedDateTime) + " " + this.utilService.padTime(queuedDateTime);
+            startedInfo = this.utilService.padDate(startDateTime) + " " + this.utilService.padTime(startDateTime);
+            endedInfo = this.utilService.padDate(endDateTime) + " " + this.utilService.padTime(endDateTime);
+        }
+        
+        return "<b>Triggered</b>: " + queuedInfo + ", " + "<b>Started</b>: " + startedInfo + ", " + "<b>Ended</b>: " + endedInfo;
     }
 }

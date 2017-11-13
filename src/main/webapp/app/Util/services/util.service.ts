@@ -346,11 +346,7 @@ export class UtilService {
     }
 
     padDate(dateTime: Date): string {
-        let year = dateTime.getFullYear();
-        let month: string = ('0' + dateTime.getMonth()).slice(-2);
-        let day: string = ('0' + dateTime.getDay()).slice(-2);
-
-        return year + "/" + month + "/" + day;
+        return dateTime.toISOString().slice(0,10);
     }
 
     padTime(dateTime: Date): string {
