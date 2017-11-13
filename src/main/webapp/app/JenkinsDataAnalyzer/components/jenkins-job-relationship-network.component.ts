@@ -45,6 +45,8 @@ export class JenkinsJobRelationshipNetworkComponent implements OnInit {
     private readonly verticalSubMultiplier = 50;
     private readonly horizontalMultiplier = 350;
     private readonly maxHorizontalItemsPerLevel = 20;
+    private readonly defaultGraphHeightPx = 500;
+    private isFullscreen: boolean = false;
 
     private tooltipDelay = 1;
     private timeLimitUnit = "seconds";
@@ -126,6 +128,21 @@ export class JenkinsJobRelationshipNetworkComponent implements OnInit {
         let jobsData = jobService.getDataSet(this.showNodesWithoutEdges, this.showNodesWithEdges);
         this.visNetwork.setData(jobsData);
         this.visNetwork.fit();
+    }
+    
+    toggleFullscreen() {
+        let height = this.defaultGraphHeightPx;
+        if(!this.isFullscreen) {
+            height = document.documentElement.clientHeight - Math.round(document.documentElement.clientHeight / 10);
+        }
+        
+        this.visNetworkOptions.height = height + 'px';
+        this.visNetwork.setOptions(this.visNetworkOptions);
+        this.visNetwork.setOptions({physics:{enabled: true}});
+        this.visNetwork.redraw();
+        this.visNetwork.fit();
+        this.visNetwork.setOptions({physics:{enabled: false}});
+        this.isFullscreen = !this.isFullscreen;
     }
 
     private getSettings() {

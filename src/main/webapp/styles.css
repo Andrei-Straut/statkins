@@ -388,3 +388,7 @@ div.vis-tooltip {
 .progress-label-green {
     right: 0px;
 }
+.btn-fullscreen-toggle {
+    float: right;
+    cursor: pointer;
+}

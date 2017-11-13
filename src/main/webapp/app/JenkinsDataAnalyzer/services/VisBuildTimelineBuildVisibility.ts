@@ -1,6 +1,7 @@
 
 
 export interface VisBuildTimelineBuildVisibility {
+    isFullscreen: boolean,
     stack: boolean,
     queueTimes: boolean,
     buildWithQTime: boolean,

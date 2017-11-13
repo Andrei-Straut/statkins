@@ -1,7 +1,12 @@
 
 <div class="bg-color-white panel panel-primary text-center no-border">
     <div class="panel-footer back-footer-green panel-title">
-        Change Sets Timeline (Last {{startTimeLimit}} {{timeLimitUnit}})<br/>
+        Change Sets Timeline (Last {{startTimeLimit}} {{timeLimitUnit}})
+        <i title="Click to expand / collapse" 
+            (click)="toggleFullscreen()" 
+            class="fa fa-arrows-alt fa-lg btn-fullscreen-toggle" 
+            aria-hidden="true"></i>
+        <br/>
         <span><small><i>Click and drag to pan, or click and scroll to zoom</i></small></span>
     </div>
     <div>

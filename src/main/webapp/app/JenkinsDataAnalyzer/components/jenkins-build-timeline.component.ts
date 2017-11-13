@@ -48,6 +48,7 @@ export class JenkinsBuildTimelineComponent implements OnInit {
     private startTimeLimit: number = 8;
     private endTimeLimit: number = 1;
     private timeLimitUnit = "days";
+    private readonly defaultGraphHeightPx = 600;
 
     private static readonly DEFAULT_GROUP = 0;
     private static readonly SUCCESS_GROUP = 1;
@@ -55,6 +56,7 @@ export class JenkinsBuildTimelineComponent implements OnInit {
     private static readonly FAILED_GROUP = 3;
 
     private buildVisibility:VisBuildTimelineBuildVisibility = {
+        isFullscreen: false,
         stack: true,
         queueTimes: true,
         buildWithQTime: true,
@@ -78,7 +80,7 @@ export class JenkinsBuildTimelineComponent implements OnInit {
 
         this.visTimelineContainer = document.getElementById(this.visTimelineElementId);
         this.visTimelineOptions = {
-            height: '600px',
+            height: this.defaultGraphHeightPx + 'px',
             autoResize: true,
             clickToUse: true,
             start: yesterday,
@@ -192,6 +194,18 @@ export class JenkinsBuildTimelineComponent implements OnInit {
     toggleDefault() {
         this.buildVisibility.defaultGroup = !this.buildVisibility.defaultGroup;
         this.setGroupVisibility(JenkinsBuildTimelineComponent.DEFAULT_GROUP, this.buildVisibility.defaultGroup);
+    }
+    
+    toggleFullscreen() {
+        let height = this.defaultGraphHeightPx;
+        if(!this.buildVisibility.isFullscreen) {
+            height = document.documentElement.clientHeight - Math.round(document.documentElement.clientHeight / 10);
+        }
+        
+        this.visTimelineOptions.height = height + 'px'
+        this.visTimeline.setOptions(this.visTimelineOptions);
+        this.visTimeline.redraw();
+        this.buildVisibility.isFullscreen = !this.buildVisibility.isFullscreen;
     }
 
     setGroupVisibility(group: number, visibility: boolean): void {
