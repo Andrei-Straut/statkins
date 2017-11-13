@@ -11,6 +11,7 @@ import {IJenkinsJob} from 'jenkins-api-ts-typings';
 
 import {VisDataSetItem} from '../services/VisDataSetItem';
 import {VisEventProperties} from '../services/VisEventProperties';
+import {VisBuildTimelineBuildVisibility} from '../services/VisBuildTimelineBuildVisibility';
 
 @Component({
     selector: 'jenkins-build-timeline',
@@ -53,9 +54,11 @@ export class JenkinsBuildTimelineComponent implements OnInit {
     private static readonly UNSTABLE_GROUP = 2;
     private static readonly FAILED_GROUP = 3;
 
-    private groupVisibility = {
+    private buildVisibility:VisBuildTimelineBuildVisibility = {
         stack: true,
-        queue: true,
+        queueTimes: true,
+        buildWithQTime: true,
+        buildWithoutQTime: true,
         success: true,
         unstable: true,
         failed: true,
@@ -82,7 +85,7 @@ export class JenkinsBuildTimelineComponent implements OnInit {
             end: today,
             min: startDate,
             max: endDate,
-            stack: this.groupVisibility.stack,
+            stack: this.buildVisibility.stack,
             showCurrentTime: true,
             showMajorLabels: true,
             showMinorLabels: true,
@@ -120,7 +123,7 @@ export class JenkinsBuildTimelineComponent implements OnInit {
 
     analyze(jenkinsData: IJenkinsData): Timeline {
 
-        this.visJobsData = this.getJobsData(jenkinsData, this.groupVisibility.queue);
+        this.visJobsData = this.getJobsData(jenkinsData, this.buildVisibility);
         this.visTimeline = new Timeline(this.visTimelineContainer, this.visJobsData, this.visGroups, this.visTimelineOptions);
 
         this.LOGGER.debug("Build Timeline Data", this.visJobsData);
@@ -148,35 +151,47 @@ export class JenkinsBuildTimelineComponent implements OnInit {
     }
 
     toggleOverlap() {
-        this.groupVisibility.stack = !this.groupVisibility.stack;
-        this.visTimelineOptions.stack = this.groupVisibility.stack;
+        this.buildVisibility.stack = !this.buildVisibility.stack;
+        this.visTimelineOptions.stack = this.buildVisibility.stack;
         this.visTimeline.setOptions(this.visTimelineOptions);
     }
 
-    toggleQueue() {
-        this.groupVisibility.queue = !this.groupVisibility.queue;
-        this.visJobsData = this.getJobsData(this.jenkinsData, this.groupVisibility.queue);
+    toggleQueueTimes() {
+        this.buildVisibility.queueTimes = !this.buildVisibility.queueTimes;
+        this.visJobsData = this.getJobsData(this.jenkinsData, this.buildVisibility);
+        this.visTimeline.setData({groups: this.visGroups, items: this.visJobsData});
+    }
+
+    toggleBuildWithQTime() {
+        this.buildVisibility.buildWithQTime = !this.buildVisibility.buildWithQTime;
+        this.visJobsData = this.getJobsData(this.jenkinsData, this.buildVisibility);
+        this.visTimeline.setData({groups: this.visGroups, items: this.visJobsData});
+    }
+
+    toggleBuildWithoutQTime() {
+        this.buildVisibility.buildWithoutQTime = !this.buildVisibility.buildWithoutQTime;
+        this.visJobsData = this.getJobsData(this.jenkinsData, this.buildVisibility);
         this.visTimeline.setData({groups: this.visGroups, items: this.visJobsData});
     }
 
     toggleSuccessful() {
-        this.groupVisibility.success = !this.groupVisibility.success;
-        this.setGroupVisibility(JenkinsBuildTimelineComponent.SUCCESS_GROUP, this.groupVisibility.success);
+        this.buildVisibility.success = !this.buildVisibility.success;
+        this.setGroupVisibility(JenkinsBuildTimelineComponent.SUCCESS_GROUP, this.buildVisibility.success);
     }
 
     toggleUnstable() {
-        this.groupVisibility.unstable = !this.groupVisibility.unstable;
-        this.setGroupVisibility(JenkinsBuildTimelineComponent.UNSTABLE_GROUP, this.groupVisibility.unstable);
+        this.buildVisibility.unstable = !this.buildVisibility.unstable;
+        this.setGroupVisibility(JenkinsBuildTimelineComponent.UNSTABLE_GROUP, this.buildVisibility.unstable);
     }
 
     toggleFailed() {
-        this.groupVisibility.failed = !this.groupVisibility.failed;
-        this.setGroupVisibility(JenkinsBuildTimelineComponent.FAILED_GROUP, this.groupVisibility.failed);
+        this.buildVisibility.failed = !this.buildVisibility.failed;
+        this.setGroupVisibility(JenkinsBuildTimelineComponent.FAILED_GROUP, this.buildVisibility.failed);
     }
 
     toggleDefault() {
-        this.groupVisibility.defaultGroup = !this.groupVisibility.defaultGroup;
-        this.setGroupVisibility(JenkinsBuildTimelineComponent.DEFAULT_GROUP, this.groupVisibility.defaultGroup);
+        this.buildVisibility.defaultGroup = !this.buildVisibility.defaultGroup;
+        this.setGroupVisibility(JenkinsBuildTimelineComponent.DEFAULT_GROUP, this.buildVisibility.defaultGroup);
     }
 
     setGroupVisibility(group: number, visibility: boolean): void {
@@ -187,7 +202,7 @@ export class JenkinsBuildTimelineComponent implements OnInit {
         this.visGroups.update({id: group, visible: visibility});
     }
 
-    private getJobsData(data: IJenkinsData, showQueue:boolean): DataSet<VisDataSetItem> {
+    private getJobsData(data: IJenkinsData, visibility:VisBuildTimelineBuildVisibility): DataSet<VisDataSetItem> {
         let buildsData: DataSet<VisDataSetItem> = new DataSet<VisDataSetItem>();
         let parent = this;
 
@@ -197,13 +212,13 @@ export class JenkinsBuildTimelineComponent implements OnInit {
 
         data.jobs.forEach(function (job) {
             job.builds.forEach(function (build) {
-                if (!parent.isToBeIncluded(build)) {
+                if (!parent.isToBeIncluded(build, parent.buildVisibility)) {
                     return;
                 }
 
                 let startDateTime: Date = undefined;
                 let visibleFrameTemplate: string = undefined;
-                if(showQueue) {
+                if (visibility.queueTimes) {
                     startDateTime = new Date(build.timestamp - parent.utilService.getBuildTimeInQueue(build));
                     visibleFrameTemplate = parent.getQueueTemplate(build);
                 } else {
@@ -256,7 +271,7 @@ export class JenkinsBuildTimelineComponent implements OnInit {
             +'</div>';
     }
 
-    private isToBeIncluded(build: IJenkinsBuild): boolean {
+    private isToBeIncluded(build: IJenkinsBuild, visibility: VisBuildTimelineBuildVisibility): boolean {
         if (this.utilService.isInvalid(build) || this.utilService.isInvalid(build.duration)) {
             return false;
         }
@@ -266,6 +281,15 @@ export class JenkinsBuildTimelineComponent implements OnInit {
         let lastWeek = new Date(today);
         lastWeek.setDate(today.getDate() - 7);
         if (!this.utilService.isAfterDate(new Date(build.timestamp), lastWeek)) {
+            return false;
+        }
+        
+        let timeInQueueMinutes = Math.round(moment.duration(this.utilService.getBuildTimeInQueue(build), "milliseconds").asMinutes());
+        if (timeInQueueMinutes > 0 && !visibility.buildWithQTime) {
+            return false;
+        }
+        
+        if (timeInQueueMinutes === 0 && !visibility.buildWithoutQTime) {
             return false;
         }
 
