@@ -10,3 +10,4 @@
 /npmProxyDisable.cmd
 /npmProxyEnable.cmd
 /*.log
+node
