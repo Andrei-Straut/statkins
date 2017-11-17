@@ -19,12 +19,15 @@
             "testTsconfig": "tsconfig.spec.json",
             "prefix": "app",
             "styles": [
+                "../node_modules/bootstrap/dist/css/bootstrap.min.css",
+                "../node_modules/vis/dist/vis.css",
                 "styles.css"
             ],
             "scripts": [
+                "../node_modules/bootstrap/dist/js/bootstrap.min.js",
                 "../node_modules/moment/moment.js",
-                "../node_modules/jenkins-api-ts-typings/dist/jenkins-api-ts-typings.umd.js",
-                "../node_modules/angular2-logger/core.js"
+                "../node_modules/vis/dist/vis.js",
+                "../node_modules/jenkins-api-ts-typings/dist/jenkins-api-ts-typings.umd.js"
             ],
             "environmentSource": "environments/environment.ts",
             "environments": {

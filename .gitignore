@@ -11,3 +11,4 @@
 /npmProxyEnable.cmd
 /*.log
 node
+npm-debug.log
