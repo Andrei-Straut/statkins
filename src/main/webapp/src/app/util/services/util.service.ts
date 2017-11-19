@@ -34,21 +34,79 @@ export class UtilService {
         return false;
     }
 
-    getBuildArray(builds: Map<any, Array<IJenkinsBuild>>): Array<IJenkinsBuild> {
-
-        if (this.isInvalid(builds)) {
-            return new Array<IJenkinsBuild>();
-        }
-
-        return Array.from(builds.values()).reduce((a, b) => a.concat(b), []);
+    padDate(dateTime: Date): string {
+        return dateTime.toISOString().slice(0, 10);
     }
 
-    getChangeSetArray(builds: Map<any, Array<IJenkinsChangeSet>>): Array<IJenkinsChangeSet> {
-        return Array.from(builds.values()).reduce((a, b) => a.concat(b), []);
+    padTime(dateTime: Date): string {
+        let hours: string = ('0' + dateTime.getHours()).slice(-2);
+        let minutes: string = ('0' + dateTime.getMinutes()).slice(-2);
+
+        return hours + ":" + minutes;
+    }
+
+    padTimestamp(timestamp: number): number {
+
+        if (timestamp === 0) {
+            return 0;
+        }
+
+        if (timestamp < 0) {
+            timestamp = timestamp * -1;
+        }
+
+        let lowerMargin = 999999999999;
+        let upperMargin = lowerMargin * 10;
+
+        let maxIterations: number = 10;
+        while (timestamp < lowerMargin && maxIterations > 0) {
+            timestamp = timestamp * 10;
+            maxIterations--;
+        }
+
+        maxIterations = 10;
+        while (timestamp > upperMargin && maxIterations > 0) {
+            timestamp = timestamp / 10;
+            maxIterations--;
+        }
+
+        return timestamp;
+    }
+
+    isSameDate(dateTimeA: Date, dateTimeB: Date): boolean {
+        var format: string = "DD/MM/YYYY";
+        var momentA = moment(dateTimeA, format);
+        var momentB = moment(dateTimeB, format);
+
+        return momentA.isSame(momentB, "day") || momentA.format(format) === momentB.format(format);
+    }
+
+    isSameOrAfterDate(dateTimeA: Date, dateTimeB: Date): boolean {
+        var format: string = "DD/MM/YYYY";
+        var momentA = moment(dateTimeA, format);
+        var momentB = moment(dateTimeB, format);
+
+        return momentA.isSameOrAfter(momentB, "day");
+    }
+
+    isAfter(dateTimeA: Date, dateTimeB: Date): boolean {
+        var momentA = moment(dateTimeA);
+        var momentB = moment(dateTimeB);
+
+        return momentA.isAfter(momentB);
+    }
+    
+    mapToArray<T>(values: Map<any, Array<T>>): Array<T> {
+
+        if (this.isInvalid(values)) {
+            return new Array<T>();
+        }
+        
+        return Array.from(values.values()).reduce((a, b) => a.concat(b), []);
     }
 
     getAffectedPathsArray(builds: Map<any, Array<IJenkinsChangeSet>>): Array<string> {
-        return this.getChangeSetArray(builds).map(changeSet => changeSet.affectedPaths).reduce((a, b) => a.concat(b), []);
+        return this.mapToArray(builds).map(changeSet => changeSet.affectedPaths).reduce((a, b) => a.concat(b), []);
     }
 
     getJobByName(jobList: Array<IJenkinsJob>, name: string): IJenkinsJob {
@@ -86,44 +144,21 @@ export class UtilService {
 
         return builds.length > 0 ? builds[0] as IJenkinsBuild : undefined;
     }
+    
+    buildResultIs(build: IJenkinsBuild, status: string) {
 
-    isSuccessful(build: IJenkinsBuild): boolean {
+        if (this.isInvalid(status)) {
+            return false;
+        }
 
         if (this.isInvalid(build) || this.isInvalid(build.result)) {
             return false;
         }
-
-        return build.result.toUpperCase().trim().replace(" ", "") === "SUCCESS";
+        
+        return build.result.toUpperCase().trim().replace(" ", "") === status.toUpperCase().trim().replace(" ", "");
     }
 
-    isUnstable(build: IJenkinsBuild): boolean {
-
-        if (this.isInvalid(build) || this.isInvalid(build.result)) {
-            return false;
-        }
-
-        return build.result.toUpperCase().trim().replace(" ", "") === "UNSTABLE";
-    }
-
-    isFailed(build: IJenkinsBuild): boolean {
-
-        if (this.isInvalid(build) || this.isInvalid(build.result)) {
-            return false;
-        }
-
-        return build.result.toUpperCase().trim().replace(" ", "") === "FAILURE";
-    }
-
-    isAborted(build: IJenkinsBuild): boolean {
-
-        if (this.isInvalid(build) || this.isInvalid(build.result)) {
-            return false;
-        }
-
-        return build.result.toUpperCase().trim().replace(" ", "") === "ABORTED";
-    }
-
-    isRunning(build: IJenkinsBuild): boolean {
+    buildIsRunning(build: IJenkinsBuild): boolean {
 
         if (this.isInvalid(build) || this.isInvalid(build.building)) {
             return false;
@@ -336,68 +371,6 @@ export class UtilService {
         }
 
         return job.lastFailedBuild.timestamp;
-    }
-
-    padDate(dateTime: Date): string {
-        return dateTime.toISOString().slice(0, 10);
-    }
-
-    padTime(dateTime: Date): string {
-        let hours: string = ('0' + dateTime.getHours()).slice(-2);
-        let minutes: string = ('0' + dateTime.getMinutes()).slice(-2);
-
-        return hours + ":" + minutes;
-    }
-
-    padTimestamp(timestamp: number): number {
-
-        if (timestamp === 0) {
-            return 0;
-        }
-
-        if (timestamp < 0) {
-            timestamp = timestamp * -1;
-        }
-
-        let lowerMargin = 999999999999;
-        let upperMargin = lowerMargin * 10;
-
-        let maxIterations: number = 10;
-        while (timestamp < lowerMargin && maxIterations > 0) {
-            timestamp = timestamp * 10;
-            maxIterations--;
-        }
-
-        maxIterations = 10;
-        while (timestamp > upperMargin && maxIterations > 0) {
-            timestamp = timestamp / 10;
-            maxIterations--;
-        }
-
-        return timestamp;
-    }
-
-    isSameDate(dateTimeA: Date, dateTimeB: Date): boolean {
-        var format: string = "DD/MM/YYYY";
-        var momentA = moment(dateTimeA, format);
-        var momentB = moment(dateTimeB, format);
-
-        return momentA.isSame(momentB, "day") || momentA.format(format) === momentB.format(format);
-    }
-
-    isAfterDate(dateTimeA: Date, dateTimeB: Date): boolean {
-        var format: string = "DD/MM/YYYY";
-        var momentA = moment(dateTimeA, format);
-        var momentB = moment(dateTimeB, format);
-
-        return momentA.isSameOrAfter(momentB, "day");
-    }
-
-    isAfter(dateTimeA: Date, dateTimeB: Date): boolean {
-        var momentA = moment(dateTimeA);
-        var momentB = moment(dateTimeB);
-
-        return momentA.isAfter(momentB);
     }
 
     private uuidv4() {

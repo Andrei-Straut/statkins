@@ -33,7 +33,7 @@ export class AppComponent {
     ngOnInit() {
         this.LOGGER.level = this.configService.loggerLevel;
         this.LOGGER.store();
-        console.info("Logger Level set to", this.configService.loggerLevel, ". Possible level values", this.LOGGER.Level); 
+        // console.info("Logger Level set to", this.configService.loggerLevel, ". Possible level values", this.LOGGER.Level); 
     }
     
     start(event: Event) {
