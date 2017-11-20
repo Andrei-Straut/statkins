@@ -42,8 +42,8 @@ interface ResponseWithBody {
 
 @Component({
     selector: 'jenkins-data-retriever',
-    templateUrl: './jenkins-data-retriever.component.html',
-    styleUrls: ['./jenkins-data-retriever.component.css'],
+    templateUrl: '../../templates/jenkins-data-retriever.component.html',
+    styleUrls: ['../../templates/jenkins-data-retriever.component.css'],
     providers: [
         ConfigService, ProxyService, Logger
     ],
@@ -266,6 +266,10 @@ export class JenkinsDataRetrieverComponent implements OnInit {
         }
 
         if (this.serviceEndedWithErrors(this.services.changeSetService)) {
+            return true;
+        }
+
+        if (this.serviceEndedWithErrors(this.services.actionService)) {
             return true;
         }
 
