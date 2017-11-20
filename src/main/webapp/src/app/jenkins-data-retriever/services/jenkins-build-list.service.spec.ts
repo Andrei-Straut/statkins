@@ -1,15 +1,26 @@
-import { TestBed, inject } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
+import {Logger} from '../../../../node_modules/angular2-logger/core';
 
-import { JenkinsBuildListService } from './jenkins-build-list.service';
+import {JenkinsBuildListService} from './jenkins-build-list.service';
+
+import {TestMockModule} from '../../test-mock/test-mock.module';
+import {UtilMockService} from '../../test-mock/services/util.mock.service';
 
 describe('JenkinsBuildListService', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [JenkinsBuildListService]
+    
+    let loggerService: Logger = undefined;
+    
+    beforeEach(async () => {
+        TestBed.configureTestingModule({
+            imports: [TestMockModule],
+            providers: [Logger]
+        });
+        
+        loggerService = TestBed.get(Logger);
     });
-  });
 
-  it('should be created', inject([JenkinsBuildListService], (service: JenkinsBuildListService) => {
-    expect(service).toBeTruthy();
-  }));
+    it('should be created', () => {
+        let service: JenkinsBuildListService = new JenkinsBuildListService(new UtilMockService(), loggerService, new Array<any>());
+        expect(service).toBeTruthy();
+    });
 });

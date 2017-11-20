@@ -13,18 +13,18 @@ import {IJenkinsAction} from 'jenkins-api-ts-typings';
 import {JenkinsAction} from 'jenkins-api-ts-typings';
 import {JenkinsTimeInQueueAction} from 'jenkins-api-ts-typings';
 
-import {IJenkinsService} from './IJenkinsService';
+import {JenkinsService} from './JenkinsService';
 import {JenkinsServiceId} from './JenkinsServiceId';
 
 /**
  * Retrieve the jenkins actions details from each build
  */
-export class JenkinsActionService implements IJenkinsService {
+export class JenkinsActionService extends JenkinsService {
     private actions: Map<IJenkinsBuild, Array<IJenkinsAction>>;
-    private complete: boolean = false;
-    private completedSuccessfully: boolean = false;
 
     constructor(private config: ConfigService, private util: UtilService, private LOGGER: Logger, private buildList: Map<IJenkinsJob, Array<IJenkinsBuild>>) {
+        super();
+        
         this.actions = new Map<IJenkinsBuild, Array<IJenkinsAction>>();
     }
 
@@ -85,14 +85,6 @@ export class JenkinsActionService implements IJenkinsService {
 
     getServiceId() {
         return JenkinsServiceId.Actions;
-    }
-
-    isComplete(): boolean {
-        return this.complete;
-    }
-
-    isSuccessful(): boolean {
-        return this.completedSuccessfully;
     }
 
     private hasActions(build: IJenkinsBuild): boolean {

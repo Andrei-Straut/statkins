@@ -10,18 +10,18 @@ import {IJenkinsChangeSet} from 'jenkins-api-ts-typings';
 import {JenkinsChangeSet} from 'jenkins-api-ts-typings';
 import {IJenkinsUser} from 'jenkins-api-ts-typings';
 
-import {IJenkinsService} from './IJenkinsService';
+import {JenkinsService} from './JenkinsService';
 import {JenkinsServiceId} from './JenkinsServiceId';
 
 /**
  * Retrieve the jenkins changeset's details from each build url
  */
-export class JenkinsChangeSetService implements IJenkinsService {
+export class JenkinsChangeSetService extends JenkinsService {
     private changeSets: Map<IJenkinsBuild, Array<IJenkinsChangeSet>>;
-    private complete: boolean = false;
-    private completedSuccessfully: boolean = false;
 
     constructor(private util: UtilService, private LOGGER: Logger, private buildList: Map<IJenkinsJob, Array<IJenkinsBuild>>, private userList: Array<IJenkinsUser>) {
+        super();
+        
         this.changeSets = new Map<IJenkinsBuild, Array<IJenkinsChangeSet>>();
     }
 
@@ -88,14 +88,6 @@ export class JenkinsChangeSetService implements IJenkinsService {
 
     getServiceId() {
         return JenkinsServiceId.Changesets;
-    }
-
-    isComplete(): boolean {
-        return this.complete;
-    }
-
-    isSuccessful(): boolean {
-        return this.completedSuccessfully;
     }
 
     private hasChangeSets(build: IJenkinsBuild): boolean {

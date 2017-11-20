@@ -9,21 +9,20 @@ import {Logger} from 'angular2-logger/core';
 import {IJenkinsView} from 'jenkins-api-ts-typings';
 import {JenkinsView} from 'jenkins-api-ts-typings';
 
-import {IJenkinsService} from './IJenkinsService';
+import {JenkinsService} from './JenkinsService';
 import {JenkinsServiceId} from './JenkinsServiceId';
 
 /**
  * Retrieve the list of jenkins views from the root url. Each view only contains the name and the view url. 
  * This list will be used later to retrieve mode detailed information for each views
  */
-export class JenkinsViewListService implements IJenkinsService {
+export class JenkinsViewListService extends JenkinsService {
     readonly jenkinsViewListUrl: string;
-
     private viewList: Array<IJenkinsView>;
-    private complete: boolean = false;
-    private completedSuccessfully: boolean = false;
 
     constructor(private config: ConfigService, private proxy: ProxyService, private util: UtilService, private LOGGER: Logger, private url: string) {
+        super();
+        
         this.jenkinsViewListUrl = this.getJenkinsViewJobListUrl(this.url, this.config);
         this.viewList = new Array<IJenkinsView>();
     }
@@ -72,14 +71,6 @@ export class JenkinsViewListService implements IJenkinsService {
 
     getServiceId() {
         return JenkinsServiceId.ViewList;
-    }
-
-    isComplete(): boolean {
-        return this.complete;
-    }
-
-    isSuccessful(): boolean {
-        return this.completedSuccessfully;
     }
 
     private getJenkinsViewJobListUrl(jenkinsUrl: string, config: ConfigService) {

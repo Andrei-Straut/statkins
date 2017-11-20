@@ -8,23 +8,21 @@ import {ProxyService} from '../../proxy/services/proxy.service';
 import {IJenkinsJob} from 'jenkins-api-ts-typings';
 import {JenkinsJob} from 'jenkins-api-ts-typings';
 
-import {IJenkinsService} from './IJenkinsService';
+import {JenkinsService} from './JenkinsService';
 import {JenkinsServiceId} from './JenkinsServiceId';
 
 /**
  * Retrieve the list of jenkins jobs from the root url. Each job only contains the name and the job url. 
  * This list will be used later to retrieve mode detailed information for each job
  */
-export class JenkinsJobListService implements IJenkinsService {
+export class JenkinsJobListService extends JenkinsService {
     readonly jenkinsJobListUrl: string;
-
     private jobList: Array<IJenkinsJob>;
-    private complete: boolean = false;
-    private completedSuccessfully: boolean = false;
 
     constructor(private config: ConfigService, private proxy: ProxyService, private LOGGER: Logger, private url: string) {
+        super();
+        
         this.jenkinsJobListUrl = this.getJenkinsApiJobListUrl(this.url, this.config);
-
         this.jobList = new Array<IJenkinsJob>();
     }
 
@@ -72,14 +70,6 @@ export class JenkinsJobListService implements IJenkinsService {
 
     getServiceId() {
         return JenkinsServiceId.JobList;
-    }
-
-    isComplete(): boolean {
-        return this.complete;
-    }
-
-    isSuccessful(): boolean {
-        return this.completedSuccessfully;
     }
 
     private getJenkinsApiJobListUrl(jenkinsUrl: string, config: ConfigService) {

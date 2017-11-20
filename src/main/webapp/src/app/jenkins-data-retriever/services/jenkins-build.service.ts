@@ -9,18 +9,19 @@ import {Logger} from 'angular2-logger/core';
 import {IJenkinsBuild} from 'jenkins-api-ts-typings';
 import {IJenkinsJob} from 'jenkins-api-ts-typings';
 
-import {IJenkinsService} from './IJenkinsService';
+import {JenkinsService} from './JenkinsService';
 import {JenkinsServiceId} from './JenkinsServiceId';
 
 /**
  * Retrieve the jenkins build's details from each build url
  */
-export class JenkinsBuildService implements IJenkinsService {
-    private complete: boolean = false;
-    private completedSuccessfully: boolean = false;
+export class JenkinsBuildService extends JenkinsService {
 
     constructor(private config: ConfigService, private proxy: ProxyService, private util: UtilService, private LOGGER: Logger,
-        private buildList: Map<IJenkinsJob, Array<IJenkinsBuild>>) {}
+        private buildList: Map<IJenkinsJob, Array<IJenkinsBuild>>) {
+
+        super();
+    }
 
     async execute() {
 
@@ -70,14 +71,6 @@ export class JenkinsBuildService implements IJenkinsService {
 
     getServiceId() {
         return JenkinsServiceId.Builds;
-    }
-
-    isComplete(): boolean {
-        return this.complete;
-    }
-
-    isSuccessful(): boolean {
-        return this.completedSuccessfully;
     }
 
     private getBuildApiUrl(build: IJenkinsBuild, config: ConfigService) {

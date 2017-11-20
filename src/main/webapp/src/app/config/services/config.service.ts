@@ -22,7 +22,7 @@ export class ConfigService {
     
     readonly jenkinsTimeInQueueActionId = "jenkins.metrics.impl.TimeInQueueAction";
     
-    get proxyUrl() {
+    get proxyUrl():string {
         if(this._configuration === "DEV") {
             return "http://localhost:8089";
         } else if(this._configuration === "STAGING") {
@@ -34,7 +34,7 @@ export class ConfigService {
         return undefined;
     }
     
-    get jenkinsUrl() {
+    get jenkinsUrl():string {
         if(this._configuration === "DEV") {
             return "http://ptlisvltnet016.dci.co-int.net/";
         } else if(this._configuration === "STAGING") {

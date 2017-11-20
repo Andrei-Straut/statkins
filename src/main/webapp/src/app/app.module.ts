@@ -26,6 +26,7 @@ import {ProxyModule} from './proxy/proxy.module';
 import {ProxyService} from './proxy/services/proxy.service';
 import {UtilModule} from './util/util.module';
 import {UtilService} from './util/services/util.service';
+import {TestMockModule} from './test-mock/test-mock.module';
 
 import {JenkinsDataRetrieverModule} from './jenkins-data-retriever/jenkins-data-retriever.module';
 
@@ -33,7 +34,8 @@ import {JenkinsDataRetrieverModule} from './jenkins-data-retriever/jenkins-data-
     imports: [
         BrowserModule, FormsModule, HttpModule,
         ConfigModule, ProxyModule, UtilModule,
-        JenkinsDataRetrieverModule
+        JenkinsDataRetrieverModule,
+        TestMockModule
     ],
     declarations: [
         AppComponent

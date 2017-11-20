@@ -8,17 +8,17 @@ import {Logger} from 'angular2-logger/core';
 
 import {IJenkinsJob} from 'jenkins-api-ts-typings';
 
-import {IJenkinsService} from './IJenkinsService';
+import {JenkinsService} from './JenkinsService';
 import {JenkinsServiceId} from './JenkinsServiceId';
 
 /**
  * Retrieve the jenkins job's details from each job url
  */
-export class JenkinsJobService implements IJenkinsService {
-    private complete: boolean = false;
-    private completedSuccessfully: boolean = false;
+export class JenkinsJobService extends JenkinsService {
 
-    constructor(private config: ConfigService, private proxy: ProxyService, private util: UtilService, private LOGGER: Logger, private jobList: Array<IJenkinsJob>) {}
+    constructor(private config: ConfigService, private proxy: ProxyService, private util: UtilService, private LOGGER: Logger, private jobList: Array<IJenkinsJob>) {
+        super();
+    }
 
     async execute() {
         if (this.util.isInvalid(this.jobList)) {
@@ -81,14 +81,6 @@ export class JenkinsJobService implements IJenkinsService {
 
     getServiceId() {
         return JenkinsServiceId.Jobs;
-    }
-
-    isComplete(): boolean {
-        return this.complete;
-    }
-
-    isSuccessful(): boolean {
-        return this.completedSuccessfully;
     }
 
     private getUpstreamProjects(jobJson: JSON, job: IJenkinsJob): Array<IJenkinsJob> {

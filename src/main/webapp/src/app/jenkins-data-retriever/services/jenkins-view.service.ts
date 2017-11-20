@@ -9,18 +9,17 @@ import {Logger} from 'angular2-logger/core';
 import {IJenkinsJob} from 'jenkins-api-ts-typings';
 import {IJenkinsView} from 'jenkins-api-ts-typings';
 
-import {IJenkinsService} from './IJenkinsService';
+import {JenkinsService} from './JenkinsService';
 import {JenkinsServiceId} from './JenkinsServiceId';
 
 /**
  * Retrieve the jenkins view's details from each view url
  */
-export class JenkinsViewService implements IJenkinsService {
-    private complete: boolean = false;
-    private completedSuccessfully: boolean = false;
-
+export class JenkinsViewService extends JenkinsService {
     constructor(private config: ConfigService, private proxy: ProxyService, private util: UtilService, private LOGGER: Logger,
         private url: string, private viewList: Array<IJenkinsView>, private jobList: Array<IJenkinsJob>) {
+        
+        super();
     }
 
     async execute() {
@@ -93,14 +92,6 @@ export class JenkinsViewService implements IJenkinsService {
 
     getServiceId() {
         return JenkinsServiceId.Views;
-    }
-
-    isComplete(): boolean {
-        return this.complete;
-    }
-
-    isSuccessful(): boolean {
-        return this.completedSuccessfully;
     }
 
     private getViewApiUrl(view: IJenkinsView, config: ConfigService) {

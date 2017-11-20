@@ -21,7 +21,6 @@ import {JenkinsBuildService} from '../../services/jenkins-build.service';
 import {JenkinsChangeSetService} from '../../services/jenkins-change-set.service';
 import {JenkinsActionService} from '../../services/jenkins-action.service';
 
-
 interface IJenkinsServices {
     nodeService: IJenkinsService,
     userListService: IJenkinsService,
@@ -97,7 +96,6 @@ export class JenkinsDataRetrieverComponent implements OnInit {
         this.retrievalSuccessful = true;
 
         this.urlCheckStarted = true;
-        console.log(this.proxyService);
         await this.proxyService.proxyRaw(this.jenkinsUrl)
             .first()
             .toPromise()
@@ -147,7 +145,7 @@ export class JenkinsDataRetrieverComponent implements OnInit {
         this.services.viewService = new JenkinsViewService(this.configService, this.proxyService, this.utilService, this.LOGGER, this.jenkinsUrl, this.data.views, this.data.jobs);
         await this.services.viewService.execute();
 
-        this.services.buildListService = new JenkinsBuildListService(this.configService, this.utilService, this.LOGGER, this.data.jobs);
+        this.services.buildListService = new JenkinsBuildListService(this.utilService, this.LOGGER, this.data.jobs);
         await this.services.buildListService.execute();
         this.data.builds = this.services.buildListService.getData();
 

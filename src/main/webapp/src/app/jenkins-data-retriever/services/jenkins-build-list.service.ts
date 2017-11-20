@@ -1,7 +1,6 @@
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/first';
 
-import {ConfigService} from '../../config/services/config.service';
 import {UtilService} from '../../util/services/util.service';
 import {Logger} from 'angular2-logger/core';
 
@@ -9,19 +8,19 @@ import {IJenkinsBuild} from 'jenkins-api-ts-typings';
 import {JenkinsBuild} from 'jenkins-api-ts-typings';
 import {IJenkinsJob} from 'jenkins-api-ts-typings';
 
-import {IJenkinsService} from './IJenkinsService';
+import {JenkinsService} from './JenkinsService';
 import {JenkinsServiceId} from './JenkinsServiceId';
 
 /**
  * Retrieve the list of jenkins build from each job's data. Each build only contains the number and the build url. 
  * This list will be used later to retrieve mode detailed information for each build
  */
-export class JenkinsBuildListService implements IJenkinsService {
+export class JenkinsBuildListService extends JenkinsService {
     private buildList: Map<IJenkinsJob, Array<IJenkinsBuild>>;
-    private complete: boolean = false;
-    private completedSuccessfully: boolean = false;
 
-    constructor(private config: ConfigService, private util: UtilService, private LOGGER: Logger, private jobList: Array<IJenkinsJob>) {
+    constructor(private util: UtilService, private LOGGER: Logger, private jobList: Array<IJenkinsJob>) {
+        super();
+        
         this.buildList = new Map<IJenkinsJob, Array<IJenkinsBuild>>();
     }
 
@@ -70,13 +69,5 @@ export class JenkinsBuildListService implements IJenkinsService {
 
     getServiceId() {
         return JenkinsServiceId.BuildList;
-    }
-
-    isComplete(): boolean {
-        return this.complete;
-    }
-
-    isSuccessful(): boolean {
-        return this.completedSuccessfully;
     }
 }

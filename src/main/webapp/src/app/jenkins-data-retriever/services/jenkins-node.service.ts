@@ -9,22 +9,20 @@ import {Logger} from 'angular2-logger/core';
 import {IJenkinsNode} from 'jenkins-api-ts-typings';
 import {JenkinsNode} from 'jenkins-api-ts-typings';
 
-import {IJenkinsService} from './IJenkinsService';
+import {JenkinsService} from './JenkinsService';
 import {JenkinsServiceId} from './JenkinsServiceId';
 
 /**
  * Retrieve the jenkins nodes from the root url
  */
-export class JenkinsNodeService implements IJenkinsService {
+export class JenkinsNodeService extends JenkinsService {
     readonly jenkinsNodeUrl: string;
-
     private nodeList: Array<IJenkinsNode>;
-    private complete: boolean = false;
-    private completedSuccessfully: boolean = false;
 
     constructor(private config: ConfigService, private proxy: ProxyService, private util: UtilService, private LOGGER: Logger, private url: string) {
+        super();
+        
         this.jenkinsNodeUrl = this.getJenkinsApiNodeUrl(this.url, this.config);
-
         this.nodeList = new Array<IJenkinsNode>();
     }
 
@@ -77,14 +75,6 @@ export class JenkinsNodeService implements IJenkinsService {
 
     getServiceId(): JenkinsServiceId {
         return JenkinsServiceId.Nodes;
-    }
-
-    isComplete(): boolean {
-        return this.complete;
-    }
-
-    isSuccessful(): boolean {
-        return this.completedSuccessfully;
     }
 
     private getJenkinsApiNodeUrl(jenkinsUrl: string, config: ConfigService) {

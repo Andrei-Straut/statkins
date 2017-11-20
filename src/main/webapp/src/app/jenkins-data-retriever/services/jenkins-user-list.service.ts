@@ -9,23 +9,21 @@ import {Logger} from 'angular2-logger/core';
 import {IJenkinsUser} from 'jenkins-api-ts-typings';
 import {JenkinsUser} from 'jenkins-api-ts-typings';
 
-import {IJenkinsService} from './IJenkinsService';
+import {JenkinsService} from './JenkinsService';
 import {JenkinsServiceId} from './JenkinsServiceId';
 
 /**
  * Retrieve the jenkins users from the root url. Each user only contains the name and the user url. 
  * This list will be used later to retrieve mode detailed information for each user
  */
-export class JenkinsUserListService implements IJenkinsService {
+export class JenkinsUserListService extends JenkinsService {
     readonly jenkinsUserUrl: string;
-
     private userList: Array<IJenkinsUser>;
-    private complete: boolean = false;
-    private completedSuccessfully: boolean = false;
 
     constructor(private config: ConfigService, private proxy: ProxyService, private util: UtilService, private LOGGER: Logger, private url: string) {
+        super();
+        
         this.jenkinsUserUrl = this.getJenkinsApiUserUrl(this.url, this.config);
-
         this.userList = new Array<IJenkinsUser>();
     }
 
@@ -81,14 +79,6 @@ export class JenkinsUserListService implements IJenkinsService {
 
     getServiceId() {
         return JenkinsServiceId.UserList;
-    }
-
-    isComplete(): boolean {
-        return this.complete;
-    }
-
-    isSuccessful(): boolean {
-        return this.completedSuccessfully;
     }
 
     private getJenkinsApiUserUrl(jenkinsUrl: string, config: ConfigService) {
