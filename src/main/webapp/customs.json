@@ -1,1 +1,8 @@
-{"elements":{"statkins":{}},"attributes":{}}
+{
+    "elements": {
+        "statkins": {}
+    },
+    "attributes": {
+        "[hidden]": {}
+    }
+}

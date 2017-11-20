@@ -5,11 +5,14 @@ import {ConfigService } from './config/services/config.service';
 import {ProxyService } from './proxy/services/proxy.service';
 import {UtilService } from './util/services/util.service';
 
+import {JenkinsDataRetrieverComponent} from './jenkins-data-retriever/components/jenkins-data-retriever/jenkins-data-retriever.component';
+
 @Component({
     selector: 'statkins',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
-    providers: [ConfigService, ProxyService, UtilService, Logger]
+    providers: [ConfigService, ProxyService, UtilService, Logger],
+    entryComponents: [ JenkinsDataRetrieverComponent ]
 })
 export class AppComponent {
     name: string;

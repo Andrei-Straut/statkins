@@ -4,12 +4,14 @@ import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
 
+import {JenkinsDataRetrieverModule} from './jenkins-data-retriever/jenkins-data-retriever.module';
+
 describe('AppComponent', () => {
     
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [
-                BrowserModule, FormsModule, HttpModule
+                BrowserModule, FormsModule, HttpModule, JenkinsDataRetrieverModule
             ],
             declarations: [
                 AppComponent

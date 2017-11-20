@@ -36,28 +36,29 @@
                     <input name="jenkinsUrl" [(ngModel)]="jenkinsUrl" type="text" class="form-control input-md" placeholder="{{jenkinsUrl}}">
                 </div>
                 <div class="col-md-1 col-minimal-padding">
-                    <!--<button name="startAnalysis" (click)="jenkinsdataretriever.analyze()" type="submit" class="form-control btn btn-success">Start</button>-->
-                    <button name="startAnalysis" class="form-control btn btn-success">Start</button>
+                    <button name="startAnalysis" (click)="jenkinsdataretriever.analyze()" type="submit" class="form-control btn btn-success">Start</button>
                 </div>
             </div>
         </form>
 
         <div class="col-md-12">
-            <!--<jenkins-data-retriever #jenkinsdataretriever
+            <jenkins-data-retriever #jenkinsdataretriever
                 [jenkinsUrl]="jenkinsUrl" 
                 [configService]="configService"
                 [proxyService]="proxyService"
                 [utilService]="utilService"
-                (dataRetrieved)="onDataRetrieved($event); jenkinsdataanalyzer.analyze($event);">
+                (dataRetrieved)="onDataRetrieved($event);">
             </jenkins-data-retriever>
         </div>
 
         <div class="col-md-12">
+            <!--
             <jenkins-data-analyzer #jenkinsdataanalyzer
                 [utilService]="utilService"
                 [jenkinsData]="jenkinsData"
                 [dataAvailable]="dataAvailable">
-            </jenkins-data-analyzer>  -->
+            </jenkins-data-analyzer>
+            -->
         </div>
     </div>
     <HR/>
