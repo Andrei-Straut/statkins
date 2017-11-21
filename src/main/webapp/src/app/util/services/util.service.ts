@@ -103,6 +103,10 @@ export class UtilService {
         }
         
         return Array.from(values.values()).reduce((a, b) => a.concat(b), []);
+    }   
+    
+    getChangeSetArray(builds: Map<any, Array<IJenkinsChangeSet>>): Array<IJenkinsChangeSet> {
+        return Array.from(builds.values()).reduce((a, b) => a.concat(b), []);
     }
 
     getAffectedPathsArray(builds: Map<any, Array<IJenkinsChangeSet>>): Array<string> {

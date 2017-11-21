@@ -47,18 +47,16 @@
                 [configService]="configService"
                 [proxyService]="proxyService"
                 [utilService]="utilService"
-                (dataRetrieved)="onDataRetrieved($event);">
+                (dataRetrieved)="onDataRetrieved($event); jenkinsdataanalyzer.analyze($event);">
             </jenkins-data-retriever>
         </div>
 
         <div class="col-md-12">
-            <!--
             <jenkins-data-analyzer #jenkinsdataanalyzer
                 [utilService]="utilService"
                 [jenkinsData]="jenkinsData"
                 [dataAvailable]="dataAvailable">
             </jenkins-data-analyzer>
-            -->
         </div>
     </div>
     <HR/>

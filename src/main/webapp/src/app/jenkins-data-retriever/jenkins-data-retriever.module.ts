@@ -7,7 +7,7 @@ import {ConfigModule} from '../config/config.module';
 import {ProxyModule} from '../proxy/proxy.module';
 import {UtilModule} from '../util/util.module';
 
-import {JenkinsDataRetrieverComponent} from './components/jenkins-data-retriever/jenkins-data-retriever.component';
+import {JenkinsDataRetrieverComponent} from './components/jenkins-data-retriever.component';
 
 @NgModule({
     imports: [

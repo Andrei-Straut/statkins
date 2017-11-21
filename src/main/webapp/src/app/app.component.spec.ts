@@ -5,13 +5,14 @@ import {FormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
 
 import {JenkinsDataRetrieverModule} from './jenkins-data-retriever/jenkins-data-retriever.module';
+import {JenkinsDataAnalyzerModule} from './jenkins-data-analyzer/jenkins-data-analyzer.module';
 
 describe('AppComponent', () => {
     
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [
-                BrowserModule, FormsModule, HttpModule, JenkinsDataRetrieverModule
+                BrowserModule, FormsModule, HttpModule, JenkinsDataRetrieverModule, JenkinsDataAnalyzerModule
             ],
             declarations: [
                 AppComponent

@@ -29,12 +29,13 @@ import {UtilService} from './util/services/util.service';
 import {TestMockModule} from './test-mock/test-mock.module';
 
 import {JenkinsDataRetrieverModule} from './jenkins-data-retriever/jenkins-data-retriever.module';
+import {JenkinsDataAnalyzerModule} from './jenkins-data-analyzer/jenkins-data-analyzer.module';
 
 @NgModule({
     imports: [
         BrowserModule, FormsModule, HttpModule,
         ConfigModule, ProxyModule, UtilModule,
-        JenkinsDataRetrieverModule,
+        JenkinsDataRetrieverModule, JenkinsDataAnalyzerModule,
         TestMockModule
     ],
     declarations: [

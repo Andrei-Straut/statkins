@@ -1,25 +1,25 @@
 import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 
-import {ConfigService} from '../../../config/services/config.service';
-import {ProxyService} from '../../../proxy/services/proxy.service';
-import {UtilService} from '../../../util/services/util.service';
+import {ConfigService} from '../../config/services/config.service';
+import {ProxyService} from '../../proxy/services/proxy.service';
+import {UtilService} from '../../util/services/util.service';
 import {Logger} from 'angular2-logger/core';
 
 import {IJenkinsData} from 'jenkins-api-ts-typings';
 
-import {IJenkinsService} from '../../services/IJenkinsService';
+import {IJenkinsService} from '../services/IJenkinsService';
 
-import {JenkinsNodeService} from '../../services/jenkins-node.service';
-import {JenkinsUserListService} from '../../services/jenkins-user-list.service';
-import {JenkinsUserService} from '../../services/jenkins-user.service';
-import {JenkinsJobListService} from '../../services/jenkins-job-list.service';
-import {JenkinsJobService} from '../../services/jenkins-job.service';
-import {JenkinsViewListService} from '../../services/jenkins-view-list.service';
-import {JenkinsViewService} from '../../services/jenkins-view.service';
-import {JenkinsBuildListService} from '../../services/jenkins-build-list.service';
-import {JenkinsBuildService} from '../../services/jenkins-build.service';
-import {JenkinsChangeSetService} from '../../services/jenkins-change-set.service';
-import {JenkinsActionService} from '../../services/jenkins-action.service';
+import {JenkinsNodeService} from '../services/jenkins-node.service';
+import {JenkinsUserListService} from '../services/jenkins-user-list.service';
+import {JenkinsUserService} from '../services/jenkins-user.service';
+import {JenkinsJobListService} from '../services/jenkins-job-list.service';
+import {JenkinsJobService} from '../services/jenkins-job.service';
+import {JenkinsViewListService} from '../services/jenkins-view-list.service';
+import {JenkinsViewService} from '../services/jenkins-view.service';
+import {JenkinsBuildListService} from '../services/jenkins-build-list.service';
+import {JenkinsBuildService} from '../services/jenkins-build.service';
+import {JenkinsChangeSetService} from '../services/jenkins-change-set.service';
+import {JenkinsActionService} from '../services/jenkins-action.service';
 
 interface IJenkinsServices {
     nodeService: IJenkinsService,
@@ -41,8 +41,8 @@ interface ResponseWithBody {
 
 @Component({
     selector: 'jenkins-data-retriever',
-    templateUrl: '../../templates/jenkins-data-retriever.component.html',
-    styleUrls: ['../../templates/jenkins-data-retriever.component.css'],
+    templateUrl: '../templates/jenkins-data-retriever.template.html',
+    styleUrls: ['../templates/jenkins-data-retriever.template.css'],
     providers: [
         ConfigService, ProxyService, Logger
     ],
