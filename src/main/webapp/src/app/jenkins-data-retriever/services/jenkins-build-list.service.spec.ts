@@ -1,15 +1,15 @@
 import {TestBed} from '@angular/core/testing';
 import {Logger} from '../../../../node_modules/angular2-logger/core';
-
+import {IJenkinsBuild} from 'jenkins-api-ts-typings';
 import {JenkinsBuildListService} from './jenkins-build-list.service';
 
 import {TestMockModule} from '../../test-mock/test-mock.module';
 import {UtilMockService} from '../../test-mock/services/util.mock.service';
-import {JenkinsJobListProviderService} from '../../test-mock/services/jenkins-job-list-provider.service'
+import {JenkinsDataProviderService} from '../../test-mock/services/jenkins-data-provider.service';
 
 describe('JenkinsBuildListService', () => {
 
-    let loggerService: Logger = undefined;
+    let loggerService: Logger = undefined; 
     let expectedMapSize: number = 3;
     let expectedNumberOfBuilds: number = 36;
 
@@ -62,12 +62,34 @@ describe('JenkinsBuildListService', () => {
 
     it('getData should return correct values for input', () => {
         let utilService = new UtilMockService();
-        let service: JenkinsBuildListService = new JenkinsBuildListService(utilService, loggerService, new JenkinsJobListProviderService().getJobs());
+        let service: JenkinsBuildListService = new JenkinsBuildListService(utilService, loggerService, new JenkinsDataProviderService().getData().jobs);
         service.execute();
 
         expect(service.getData().size).toBe(expectedMapSize);
         expect(utilService.mapToArray(service.getData()).length).toBe(expectedNumberOfBuilds);
         expect(service.isComplete()).toBeTruthy();
         expect(service.isSuccessful()).toBeTruthy();
+    });
+
+    it('all builds should have url', () => {
+        let utilService = new UtilMockService();
+        let service: JenkinsBuildListService = new JenkinsBuildListService(utilService, loggerService, new JenkinsDataProviderService().getData().jobs);
+        service.execute();
+
+        utilService.mapToArray(service.getData()).forEach(function(build: IJenkinsBuild) {
+            expect(build).toBeDefined("Build was undefined");
+            expect(build.url).toBeDefined("Build " + build.id + " had no url");
+        });
+    });
+
+    it('all builds should have number', () => {
+        let utilService = new UtilMockService();
+        let service: JenkinsBuildListService = new JenkinsBuildListService(utilService, loggerService, new JenkinsDataProviderService().getData().jobs);
+        service.execute();
+
+        utilService.mapToArray(service.getData()).forEach(function(build: IJenkinsBuild) {
+            expect(build).toBeDefined("Build was undefined");
+            expect(build.number).toBeDefined("Build " + build.url + " had no build number");
+        });
     });
 });

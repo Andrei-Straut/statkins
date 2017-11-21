@@ -3,13 +3,13 @@ import {CommonModule} from '@angular/common';
 import {ConfigMockService} from './services/config.mock.service';
 import {UtilMockService} from './services/util.mock.service';
 import {ProxyMockService} from './services/proxy.mock.service';
-import {IJenkinsDataMockService} from './services/jenkinsdata.mock.service';
+import {IJenkinsDataMockService} from './services/jenkins-data.mock.service';
 
 import {ConfigModule} from '../config/config.module';
 import {ProxyModule} from '../proxy/proxy.module';
 import {UtilModule} from '../util/util.module';
 
-import {JenkinsJobListProviderService} from './services/jenkins-job-list-provider.service';
+import {JenkinsDataProviderService} from './services/jenkins-data-provider.service';
 
 @NgModule({
     imports: [
@@ -22,6 +22,6 @@ import {JenkinsJobListProviderService} from './services/jenkins-job-list-provide
         ProxyMockService, 
         IJenkinsDataMockService,
         
-        JenkinsJobListProviderService]
+        JenkinsDataProviderService]
 })
 export class TestMockModule {}

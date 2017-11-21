@@ -5,7 +5,7 @@ import {JenkinsBasicJobStatisticsService} from './jenkins-basic-job-statistics.s
 import {Logger} from '../../../../node_modules/angular2-logger/core';
 import {TestMockModule} from '../../test-mock/test-mock.module';
 import {UtilMockService} from '../../test-mock/services/util.mock.service';
-import {IJenkinsDataMockService} from '../../test-mock/services/jenkinsdata.mock.service';
+import {IJenkinsDataMockService} from '../../test-mock/services/jenkins-data.mock.service';
 
 describe('JenkinsBasicJobStatisticsService', () => {
 
