@@ -8,14 +8,14 @@ import {ProxyService} from '../../proxy/services/proxy.service';
 import {IJenkinsJob} from 'jenkins-api-ts-typings';
 import {JenkinsJob} from 'jenkins-api-ts-typings';
 
-import {JenkinsService} from './JenkinsService';
+import {JenkinsDataRetrieverService} from './JenkinsDataRetrieverService';
 import {JenkinsServiceId} from './JenkinsServiceId';
 
 /**
  * Retrieve the list of jenkins jobs from the root url. Each job only contains the name and the job url. 
  * This list will be used later to retrieve mode detailed information for each job
  */
-export class JenkinsJobListService extends JenkinsService {
+export class JenkinsJobListService extends JenkinsDataRetrieverService {
     readonly jenkinsJobListUrl: string;
     private jobList: Array<IJenkinsJob>;
 

@@ -9,14 +9,14 @@ import {Logger} from 'angular2-logger/core';
 import {IJenkinsView} from 'jenkins-api-ts-typings';
 import {JenkinsView} from 'jenkins-api-ts-typings';
 
-import {JenkinsService} from './JenkinsService';
+import {JenkinsDataRetrieverService} from './JenkinsDataRetrieverService';
 import {JenkinsServiceId} from './JenkinsServiceId';
 
 /**
  * Retrieve the list of jenkins views from the root url. Each view only contains the name and the view url. 
  * This list will be used later to retrieve mode detailed information for each views
  */
-export class JenkinsViewListService extends JenkinsService {
+export class JenkinsViewListService extends JenkinsDataRetrieverService {
     readonly jenkinsViewListUrl: string;
     private viewList: Array<IJenkinsView>;
 

@@ -7,7 +7,7 @@ import {Logger} from 'angular2-logger/core';
 
 import {IJenkinsData} from 'jenkins-api-ts-typings';
 
-import {IJenkinsService} from '../services/IJenkinsService';
+import {IJenkinsDataRetrieverService} from '../services/IJenkinsDataRetrieverService';
 
 import {JenkinsNodeService} from '../services/jenkins-node.service';
 import {JenkinsUserListService} from '../services/jenkins-user-list.service';
@@ -22,17 +22,17 @@ import {JenkinsChangeSetService} from '../services/jenkins-change-set.service';
 import {JenkinsActionService} from '../services/jenkins-action.service';
 
 interface IJenkinsServices {
-    nodeService: IJenkinsService,
-    userListService: IJenkinsService,
-    userService: IJenkinsService,
-    jobListService: IJenkinsService,
-    jobService: IJenkinsService,
-    viewListService: IJenkinsService,
-    viewService: IJenkinsService
-    buildListService: IJenkinsService,
-    buildService: IJenkinsService,
-    changeSetService: IJenkinsService,
-    actionService: IJenkinsService,
+    nodeService: IJenkinsDataRetrieverService,
+    userListService: IJenkinsDataRetrieverService,
+    userService: IJenkinsDataRetrieverService,
+    jobListService: IJenkinsDataRetrieverService,
+    jobService: IJenkinsDataRetrieverService,
+    viewListService: IJenkinsDataRetrieverService,
+    viewService: IJenkinsDataRetrieverService
+    buildListService: IJenkinsDataRetrieverService,
+    buildService: IJenkinsDataRetrieverService,
+    changeSetService: IJenkinsDataRetrieverService,
+    actionService: IJenkinsDataRetrieverService,
 };
 
 interface ResponseWithBody {
@@ -194,7 +194,7 @@ export class JenkinsDataRetrieverComponent implements OnInit {
         return this.urlCheckSuccessful;
     }
 
-    isHideLoadingLabel(service: IJenkinsService): boolean {
+    isHideLoadingLabel(service: IJenkinsDataRetrieverService): boolean {
         if (this.retrievalStarted && this.retrievalFinished) {
             return true;
         }
@@ -202,7 +202,7 @@ export class JenkinsDataRetrieverComponent implements OnInit {
         return service !== undefined && service !== null && service.isComplete();
     }
 
-    isHideSuccessfulLabel(service: IJenkinsService): boolean {
+    isHideSuccessfulLabel(service: IJenkinsDataRetrieverService): boolean {
         if (service === undefined || service === null) {
             return true;
         }
@@ -214,7 +214,7 @@ export class JenkinsDataRetrieverComponent implements OnInit {
         return !service.isSuccessful();
     }
 
-    isHideErrorLabel(service: IJenkinsService): boolean {
+    isHideErrorLabel(service: IJenkinsDataRetrieverService): boolean {
         if (service === undefined || service === null) {
             return true;
         }
@@ -274,7 +274,7 @@ export class JenkinsDataRetrieverComponent implements OnInit {
         return false;
     }
 
-    private serviceEndedWithErrors(service: IJenkinsService): boolean {
+    private serviceEndedWithErrors(service: IJenkinsDataRetrieverService): boolean {
         if (service === null || service === undefined) {
             return false;
         }

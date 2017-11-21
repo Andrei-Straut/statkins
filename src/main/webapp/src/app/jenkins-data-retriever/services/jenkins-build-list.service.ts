@@ -8,14 +8,14 @@ import {IJenkinsBuild} from 'jenkins-api-ts-typings';
 import {JenkinsBuild} from 'jenkins-api-ts-typings';
 import {IJenkinsJob} from 'jenkins-api-ts-typings';
 
-import {JenkinsService} from './JenkinsService';
+import {JenkinsDataRetrieverService} from './JenkinsDataRetrieverService';
 import {JenkinsServiceId} from './JenkinsServiceId';
 
 /**
  * Retrieve the list of jenkins build from each job's data. Each build only contains the number and the build url. 
  * This list will be used later to retrieve mode detailed information for each build
  */
-export class JenkinsBuildListService extends JenkinsService {
+export class JenkinsBuildListService extends JenkinsDataRetrieverService {
     private buildList: Map<IJenkinsJob, Array<IJenkinsBuild>>;
 
     constructor(private util: UtilService, private LOGGER: Logger, private jobList: Array<IJenkinsJob>) {

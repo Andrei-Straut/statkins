@@ -8,13 +8,13 @@ import {Logger} from 'angular2-logger/core';
 
 import {IJenkinsJob} from 'jenkins-api-ts-typings';
 
-import {JenkinsService} from './JenkinsService';
+import {JenkinsDataRetrieverService} from './JenkinsDataRetrieverService';
 import {JenkinsServiceId} from './JenkinsServiceId';
 
 /**
  * Retrieve the jenkins job's details from each job url
  */
-export class JenkinsJobService extends JenkinsService {
+export class JenkinsJobService extends JenkinsDataRetrieverService {
 
     constructor(private config: ConfigService, private proxy: ProxyService, private util: UtilService, private LOGGER: Logger, private jobList: Array<IJenkinsJob>) {
         super();

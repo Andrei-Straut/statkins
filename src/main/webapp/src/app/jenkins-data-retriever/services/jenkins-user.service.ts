@@ -7,13 +7,13 @@ import {UtilService} from '../../util/services/util.service'
 import {Logger} from 'angular2-logger/core';
 
 import {IJenkinsUser} from 'jenkins-api-ts-typings';
-import {JenkinsService} from './JenkinsService';
+import {JenkinsDataRetrieverService} from './JenkinsDataRetrieverService';
 import {JenkinsServiceId} from './JenkinsServiceId';
 
 /**
  * Retrieve the jenkins users's details from each user url
  */
-export class JenkinsUserService extends JenkinsService {
+export class JenkinsUserService extends JenkinsDataRetrieverService {
 
     constructor(private config: ConfigService, private proxy: ProxyService, private util: UtilService, private LOGGER: Logger, private userList: Array<IJenkinsUser>) {
         super();

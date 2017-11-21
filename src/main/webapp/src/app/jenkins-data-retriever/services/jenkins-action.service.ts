@@ -13,13 +13,13 @@ import {IJenkinsAction} from 'jenkins-api-ts-typings';
 import {JenkinsAction} from 'jenkins-api-ts-typings';
 import {JenkinsTimeInQueueAction} from 'jenkins-api-ts-typings';
 
-import {JenkinsService} from './JenkinsService';
+import {JenkinsDataRetrieverService} from './JenkinsDataRetrieverService';
 import {JenkinsServiceId} from './JenkinsServiceId';
 
 /**
  * Retrieve the jenkins actions details from each build
  */
-export class JenkinsActionService extends JenkinsService {
+export class JenkinsActionService extends JenkinsDataRetrieverService {
     private actions: Map<IJenkinsBuild, Array<IJenkinsAction>>;
 
     constructor(private config: ConfigService, private util: UtilService, private LOGGER: Logger, private buildList: Map<IJenkinsJob, Array<IJenkinsBuild>>) {

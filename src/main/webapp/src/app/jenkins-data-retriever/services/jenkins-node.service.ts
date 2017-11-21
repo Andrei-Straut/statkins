@@ -9,13 +9,13 @@ import {Logger} from 'angular2-logger/core';
 import {IJenkinsNode} from 'jenkins-api-ts-typings';
 import {JenkinsNode} from 'jenkins-api-ts-typings';
 
-import {JenkinsService} from './JenkinsService';
+import {JenkinsDataRetrieverService} from './JenkinsDataRetrieverService';
 import {JenkinsServiceId} from './JenkinsServiceId';
 
 /**
  * Retrieve the jenkins nodes from the root url
  */
-export class JenkinsNodeService extends JenkinsService {
+export class JenkinsNodeService extends JenkinsDataRetrieverService {
     readonly jenkinsNodeUrl: string;
     private nodeList: Array<IJenkinsNode>;
 

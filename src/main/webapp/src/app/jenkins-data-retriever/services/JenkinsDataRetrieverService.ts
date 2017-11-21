@@ -1,7 +1,7 @@
-import {IJenkinsService} from './IJenkinsService';
+import {IJenkinsDataRetrieverService} from './IJenkinsDataRetrieverService';
 import {JenkinsServiceId} from './JenkinsServiceId';
 
-export abstract class JenkinsService implements IJenkinsService {
+export abstract class JenkinsDataRetrieverService implements IJenkinsDataRetrieverService {
     protected complete: boolean = false;
     protected completedSuccessfully: boolean = false;
     

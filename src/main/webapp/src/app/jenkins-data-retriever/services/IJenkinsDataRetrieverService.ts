@@ -1,6 +1,6 @@
 import {JenkinsServiceId} from './JenkinsServiceId';
 
-export interface IJenkinsService {
+export interface IJenkinsDataRetrieverService {
     execute(): void;
     isComplete(): boolean;
     isSuccessful(): boolean;

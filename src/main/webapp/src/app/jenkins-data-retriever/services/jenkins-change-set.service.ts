@@ -10,13 +10,13 @@ import {IJenkinsChangeSet} from 'jenkins-api-ts-typings';
 import {JenkinsChangeSet} from 'jenkins-api-ts-typings';
 import {IJenkinsUser} from 'jenkins-api-ts-typings';
 
-import {JenkinsService} from './JenkinsService';
+import {JenkinsDataRetrieverService} from './JenkinsDataRetrieverService';
 import {JenkinsServiceId} from './JenkinsServiceId';
 
 /**
  * Retrieve the jenkins changeset's details from each build url
  */
-export class JenkinsChangeSetService extends JenkinsService {
+export class JenkinsChangeSetService extends JenkinsDataRetrieverService {
     private changeSets: Map<IJenkinsBuild, Array<IJenkinsChangeSet>>;
 
     constructor(private util: UtilService, private LOGGER: Logger, private buildList: Map<IJenkinsJob, Array<IJenkinsBuild>>, private userList: Array<IJenkinsUser>) {
