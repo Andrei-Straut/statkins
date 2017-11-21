@@ -14,3 +14,5 @@ node
 npm-debug.log
 TESTS-HeadlessChrome_0.0.0_(Windows_7_0.0.0).xml
 /src/main/webapp/e2e/*.nbignore
+test-report.html
+test-report.xml
