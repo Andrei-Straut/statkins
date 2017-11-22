@@ -16,9 +16,12 @@ import {IJenkinsDataMockService} from '../../test-mock/services/jenkins-data.moc
 
 import {AndreiStrautInfoMasterBuild02DataProvider} from '../../test-mock/data-provider/build/andrei-straut-info-master-build-02-data-provider';
 
+let loggerService: Logger = undefined;
+let utilService: UtilMockService = new UtilMockService();
+let configService: ConfigMockService = new ConfigMockService();
+
 describe('JenkinsActionService', () => {
 
-    let loggerService: Logger = undefined;
     let expectedMapSize: number = 9;
     let expectedNumberOfActions: number = 46;
 
@@ -35,18 +38,17 @@ describe('JenkinsActionService', () => {
     });
 
     it('should be created', () => {
-        let service: JenkinsActionService = new JenkinsActionService(new ConfigMockService(), new UtilMockService(), loggerService, new Map<any, Array<any>>());
+        let service: JenkinsActionService = createService(new Map<any, Array<any>>());
         expect(service).toBeTruthy();
     });
 
     it('should have correct ServiceId', () => {
-        let service: JenkinsActionService = new JenkinsActionService(new ConfigMockService(), new UtilMockService(), loggerService, new Map<any, Array<any>>());
-        
+        let service: JenkinsActionService = createService(new Map<any, Array<any>>());
         expect(service.getServiceId() === JenkinsServiceId.Actions);
     });
 
     it('getData should return empty when there\'s no builds in build list', () => {
-        let service: JenkinsActionService = new JenkinsActionService(new ConfigMockService(), new UtilMockService(), loggerService, new Map<any, Array<any>>());
+        let service: JenkinsActionService = createService(new Map<any, Array<any>>());
         service.execute();
 
         expect(service.getData().size).toBe(0);
@@ -55,7 +57,7 @@ describe('JenkinsActionService', () => {
     });
 
     it('getData should return empty for undefined build list', () => {
-        let service: JenkinsActionService = new JenkinsActionService(new ConfigMockService(), new UtilMockService(), loggerService, new Map<any, Array<any>>());
+        let service: JenkinsActionService = createService(new Map<any, Array<any>>());
         service.execute();
 
         expect(service.getData().size).toBe(0);
@@ -64,7 +66,7 @@ describe('JenkinsActionService', () => {
     });
 
     it('getData should return empty for null build list', () => {
-        let service: JenkinsActionService = new JenkinsActionService(new ConfigMockService(), new UtilMockService(), loggerService, new Map<any, Array<any>>());
+        let service: JenkinsActionService = createService(new Map<any, Array<any>>());
         service.execute();
 
         expect(service.getData().size).toBe(0);
@@ -74,7 +76,7 @@ describe('JenkinsActionService', () => {
 
     it('getData should return correct values for input', () => {
         let utilService = new UtilMockService();
-        let service: JenkinsActionService = new JenkinsActionService(new ConfigMockService(), utilService, loggerService, new JenkinsDataProviderService().getData().builds);
+        let service: JenkinsActionService = createService(new JenkinsDataProviderService().getData().builds);
         service.execute();
 
         expect(service.getData().size).toBe(expectedMapSize);
@@ -85,7 +87,7 @@ describe('JenkinsActionService', () => {
 
     it('all builds should have actions', () => {
         let utilService = new UtilMockService();
-        let service: JenkinsActionService = new JenkinsActionService(new ConfigMockService(), utilService, loggerService, new JenkinsDataProviderService().getData().builds);
+        let service: JenkinsActionService = createService(new JenkinsDataProviderService().getData().builds);
         service.execute();
         
         let buildData: Map<IJenkinsBuild, Array<IJenkinsAction>> = service.getData();
@@ -109,7 +111,7 @@ describe('JenkinsActionService', () => {
         jenkinsDataService.jobs.push(job);
         jenkinsDataService.builds.set(job, Array.of(build));
         
-        let service: JenkinsActionService = new JenkinsActionService(new ConfigMockService(), utilService, loggerService, jenkinsDataService.builds);
+        let service: JenkinsActionService = createService(jenkinsDataService.builds);
         service.execute();
         
         let buildData: Map<IJenkinsBuild, Array<IJenkinsAction>> = service.getData();
@@ -133,7 +135,7 @@ describe('JenkinsActionService', () => {
         jenkinsDataService.jobs.push(emptyJob);
         jenkinsDataService.builds.set(emptyJob, Array.of(emptyBuild));
         
-        let service: JenkinsActionService = new JenkinsActionService(new ConfigMockService(), utilService, loggerService, jenkinsDataService.builds);
+        let service: JenkinsActionService = createService(jenkinsDataService.builds);
         service.execute();
         
         let buildData: Map<IJenkinsBuild, Array<IJenkinsAction>> = service.getData();
@@ -156,7 +158,7 @@ describe('JenkinsActionService', () => {
         jenkinsDataService.jobs.push(emptyJob);
         jenkinsDataService.builds.set(emptyJob, Array.of(emptyBuild));
         
-        let service: JenkinsActionService = new JenkinsActionService(new ConfigMockService(), utilService, loggerService, jenkinsDataService.builds);
+        let service: JenkinsActionService = createService(jenkinsDataService.builds);
         service.execute();
         
         let buildData: Map<IJenkinsBuild, Array<IJenkinsAction>> = service.getData();
@@ -176,7 +178,7 @@ describe('JenkinsActionService', () => {
         jenkinsDataService.jobs.push(job);
         jenkinsDataService.builds.set(job, Array.of(emptyBuild));
         
-        let service: JenkinsActionService = new JenkinsActionService(new ConfigMockService(), utilService, loggerService, jenkinsDataService.builds);
+        let service: JenkinsActionService = createService(jenkinsDataService.builds);
         service.execute();
         
         let buildData: Map<IJenkinsBuild, Array<IJenkinsAction>> = service.getData();
@@ -185,3 +187,8 @@ describe('JenkinsActionService', () => {
         expect(actions.length === 0);
     });
 });
+
+function createService(data: any): JenkinsActionService {
+    let service: JenkinsActionService = new JenkinsActionService(configService, utilService, loggerService, data);
+    return service;
+}

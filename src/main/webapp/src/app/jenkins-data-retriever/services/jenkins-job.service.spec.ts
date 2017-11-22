@@ -7,6 +7,12 @@ import {TestMockModule} from '../../test-mock/test-mock.module';
 import {ConfigMockService} from '../../test-mock/services/config.mock.service';
 import {UtilMockService} from '../../test-mock/services/util.mock.service';
 import {ProxyMockService} from '../../test-mock/services/proxy.mock.service';
+import {JenkinsServiceId} from './JenkinsServiceId';
+
+let loggerService: Logger = undefined;
+let utilService: UtilMockService = new UtilMockService();
+let configService: ConfigMockService = new ConfigMockService();
+let proxyService: ProxyMockService = new ProxyMockService();
 
 describe('JenkinsJobService', () => {
     
@@ -22,7 +28,17 @@ describe('JenkinsJobService', () => {
     });
 
     it('should be created', () => {
-        let service: JenkinsJobService = new JenkinsJobService(new ConfigMockService(), new ProxyMockService(), new UtilMockService(), loggerService, new Array<any>());
+        let service: JenkinsJobService = createService(new Array<any>());
         expect(service).toBeTruthy();
     });
+
+    it('should have correct ServiceId', () => {
+        let service: JenkinsJobService = createService(new Array<any>());
+        expect(service.getServiceId() === JenkinsServiceId.Jobs);
+    });
 });
+
+function createService(data: any): JenkinsJobService {
+    let service: JenkinsJobService = new JenkinsJobService(configService, proxyService, utilService, loggerService, data);
+    return service;
+}

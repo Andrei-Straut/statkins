@@ -11,9 +11,9 @@ import {JenkinsDataProviderService} from '../../test-mock/services/jenkins-data-
 
 import {AndreiStrautInfoMasterJobDataProvider} from '../../test-mock/data-provider/job/andrei-straut-info-master-job-data-provider';
 
-describe('JenkinsBuildListService', () => {
+let loggerService: Logger = undefined; 
 
-    let loggerService: Logger = undefined; 
+describe('JenkinsBuildListService', () => {
     let expectedMapSize: number = 3;
     let expectedNumberOfBuilds: number = 36;
 
@@ -30,21 +30,19 @@ describe('JenkinsBuildListService', () => {
     });
 
     it('should be created', () => {
-        let service: JenkinsBuildListService = new JenkinsBuildListService(new UtilMockService(), loggerService, new Array<any>());
-
+        let service: JenkinsBuildListService = createService(new Array<any>());
         expect(service).toBeTruthy();
         expect(service.isComplete()).toBeFalsy();
         expect(service.isSuccessful()).toBeFalsy();
     });
 
     it('should have correct ServiceId', () => {
-        let service: JenkinsBuildListService = new JenkinsBuildListService(new UtilMockService(), loggerService, new Array<any>());
-        
+        let service: JenkinsBuildListService = createService(new Array<any>());
         expect(service.getServiceId() === JenkinsServiceId.BuildList);
     });
 
     it('getData should return empty when there\'s no jobs in build list', () => {
-        let service: JenkinsBuildListService = new JenkinsBuildListService(new UtilMockService(), loggerService, new Array<any>());
+        let service: JenkinsBuildListService = createService(new Array<any>());
         service.execute();
 
         expect(service.getData().size).toBe(0);
@@ -53,7 +51,7 @@ describe('JenkinsBuildListService', () => {
     });
 
     it('getData should return empty for undefined build list', () => {
-        let service: JenkinsBuildListService = new JenkinsBuildListService(new UtilMockService(), loggerService, undefined);
+        let service: JenkinsBuildListService = createService(undefined);
         service.execute();
 
         expect(service.getData().size).toBe(0);
@@ -62,7 +60,7 @@ describe('JenkinsBuildListService', () => {
     });
 
     it('getData should return empty for null build list', () => {
-        let service: JenkinsBuildListService = new JenkinsBuildListService(new UtilMockService(), loggerService, null);
+        let service: JenkinsBuildListService = createService(null);
         service.execute();
 
         expect(service.getData().size).toBe(0);
@@ -72,7 +70,7 @@ describe('JenkinsBuildListService', () => {
 
     it('getData should return empty for job with no jsonData', () => {
         let emptyJob = new JenkinsJob();
-        let service: JenkinsBuildListService = new JenkinsBuildListService(new UtilMockService(), loggerService, Array.of(emptyJob));
+        let service: JenkinsBuildListService = createService(Array.of(emptyJob));
         service.execute();
 
         expect(service.getData().size).toBe(0);
@@ -86,7 +84,7 @@ describe('JenkinsBuildListService', () => {
         let job = new JenkinsJob();
         job.fromJson(jsonData);
         
-        let service: JenkinsBuildListService = new JenkinsBuildListService(new UtilMockService(), loggerService, Array.of(job));
+        let service: JenkinsBuildListService = createService(Array.of(job));
         service.execute();
 
         expect(service.getData().size).toBe(0);
@@ -100,7 +98,7 @@ describe('JenkinsBuildListService', () => {
         let job = new JenkinsJob();
         job.fromJson(jsonData);
         
-        let service: JenkinsBuildListService = new JenkinsBuildListService(new UtilMockService(), loggerService, Array.of(job));
+        let service: JenkinsBuildListService = createService(Array.of(job));
         service.execute();
 
         expect(service.getData().size).toBe(0);
@@ -110,7 +108,7 @@ describe('JenkinsBuildListService', () => {
 
     it('getData should return correct values for input', () => {
         let utilService = new UtilMockService();
-        let service: JenkinsBuildListService = new JenkinsBuildListService(utilService, loggerService, new JenkinsDataProviderService().getData().jobs);
+        let service: JenkinsBuildListService = createService(new JenkinsDataProviderService().getData().jobs);
         service.execute();
 
         expect(service.getData().size).toBe(expectedMapSize);
@@ -121,7 +119,7 @@ describe('JenkinsBuildListService', () => {
 
     it('all builds should have url', () => {
         let utilService = new UtilMockService();
-        let service: JenkinsBuildListService = new JenkinsBuildListService(utilService, loggerService, new JenkinsDataProviderService().getData().jobs);
+        let service: JenkinsBuildListService = createService(new JenkinsDataProviderService().getData().jobs);
         service.execute();
 
         utilService.mapToArray(service.getData()).forEach(function(build: IJenkinsBuild) {
@@ -132,7 +130,7 @@ describe('JenkinsBuildListService', () => {
 
     it('all builds should have number', () => {
         let utilService = new UtilMockService();
-        let service: JenkinsBuildListService = new JenkinsBuildListService(utilService, loggerService, new JenkinsDataProviderService().getData().jobs);
+        let service: JenkinsBuildListService = createService(new JenkinsDataProviderService().getData().jobs);
         service.execute();
 
         utilService.mapToArray(service.getData()).forEach(function(build: IJenkinsBuild) {
@@ -141,3 +139,8 @@ describe('JenkinsBuildListService', () => {
         });
     });
 });
+
+function createService(data: any): JenkinsBuildListService {
+    let service: JenkinsBuildListService = new JenkinsBuildListService(new UtilMockService(), loggerService, data);
+    return service;
+}
