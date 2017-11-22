@@ -47,16 +47,6 @@
                     <workingDirectory>${webapp.root}</workingDirectory>
                 </configuration>
                 <executions>
-                    <execution>
-                        <id>install node and npm</id>
-                        <goals>
-                            <goal>install-node-and-npm</goal>
-                        </goals>
-                        <configuration>
-                            <nodeVersion>${node.version}</nodeVersion>
-                            <npmVersion>${npm.version}</npmVersion>
-                        </configuration>
-                    </execution>
                     
                     <execution>
                         <id>npm install</id>
