@@ -36,13 +36,13 @@ export class JenkinsBuildListService extends JenkinsDataRetrieverService {
         for (let i = 0, n = this.jobList.length; i < n; i++) {
 
             let job = this.jobList[i];
-            let buildsJson: Array<JSON> = (JSON.parse(job.getJsonData()))["builds"];
-
-            if (this.util.isInvalid(buildsJson)) {
+            
+            if (this.util.isInvalid(job.getJsonData()) || this.util.isInvalid(((JSON.parse(job.getJsonData()))["builds"]))) {
                 this.LOGGER.warn("No job details found for:", job.name);
                 continue;
             }
-
+            
+            let buildsJson: Array<JSON> = (JSON.parse(job.getJsonData()))["builds"];
             this.buildList.set(job, buildsJson.map(buildJson => {
                 let build = new JenkinsBuild();
                 build.fromJson(buildJson);

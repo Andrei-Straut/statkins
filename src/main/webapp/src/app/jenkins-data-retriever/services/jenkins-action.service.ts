@@ -88,14 +88,13 @@ export class JenkinsActionService extends JenkinsDataRetrieverService {
     }
 
     private hasActions(build: IJenkinsBuild): boolean {
-
-        let buildData: JSON = JSON.parse(build.getJsonData());
-        if (buildData === undefined || buildData == null) {
+        
+        if (this.util.isInvalid(build.getJsonData())) {
             return false;
         }
 
-        let actionsData: Array<JSON> = buildData["actions"];
-        if (this.util.isInvalid(actionsData)) {
+        let buildData: JSON = JSON.parse(build.getJsonData());        
+        if (!buildData.hasOwnProperty("actions") || this.util.isInvalid(buildData["actions"])) {
             return false;
         }
 

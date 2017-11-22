@@ -37,7 +37,9 @@ export class AppComponent {
     ngOnInit() {
         this.LOGGER.level = this.configService.loggerLevel;
         this.LOGGER.store();
-        // console.info("Logger Level set to", this.configService.loggerLevel, ". Possible level values", this.LOGGER.Level); 
+        console.info("Logger Level set to", this.configService.loggerLevel, ". Possible level values", this.LOGGER.Level);
+        this.LOGGER.info("Proxy URL", this.configService.proxyUrl);
+        this.LOGGER.info("Jenkins URL", this.configService.jenkinsUrl);
     }
     
     start(event: Event) {

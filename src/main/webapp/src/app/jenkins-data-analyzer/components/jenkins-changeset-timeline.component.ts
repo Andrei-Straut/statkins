@@ -283,7 +283,7 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
             return JenkinsChangeSetTimelineComponent.DEFAULT_GROUP;
         }
 
-        let hasFailed = this.utilService.mapToArray(builds).filter(build => this.utilService.buildResultIs(build, "FAILED")).length > 0;
+        let hasFailed = this.utilService.mapToArray(builds).filter(build => this.utilService.buildResultIs(build, "FAILURE")).length > 0;
         let hasUnstable = this.utilService.mapToArray(builds).filter(build => this.utilService.buildResultIs(build, "UNSTABLE")).length > 0;
         let hasSuccessful = this.utilService.mapToArray(builds).filter(build => this.utilService.buildResultIs(build, "SUCCESS")).length > 0;
 
@@ -315,7 +315,7 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
             return JenkinsChangeSetTimelineComponent.UNSTABLE_GROUP;
         }
 
-        if (this.utilService.buildResultIs(build, "FAILED")) {
+        if (this.utilService.buildResultIs(build, "FAILURE")) {
             return JenkinsChangeSetTimelineComponent.FAILED_GROUP;
         }
 
@@ -346,7 +346,7 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
 
     private getChangeSetTimelineClass(builds: Map<IJenkinsJob, Array<IJenkinsBuild>>): string {
 
-        let hasFailed = this.utilService.mapToArray(builds).filter(build => this.utilService.buildResultIs(build, "FAILED")).length > 0;
+        let hasFailed = this.utilService.mapToArray(builds).filter(build => this.utilService.buildResultIs(build, "FAILURE")).length > 0;
         let hasUnstable = this.utilService.mapToArray(builds).filter(build => this.utilService.buildResultIs(build, "UNSTABLE")).length > 0;
         let hasSuccessful = this.utilService.mapToArray(builds).filter(build => this.utilService.buildResultIs(build, "SUCCESS")).length > 0;
 

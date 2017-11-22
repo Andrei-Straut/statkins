@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 export class ConfigService {
     private readonly _INSTANCE_ID: string;
     
-     readonly _configuration:string = "DEV";
+    readonly _configuration:string = "DEV";
 //    readonly _configuration:string = "STAGING";
 //    readonly _configuration:string = "LIVE";
     
@@ -17,7 +17,7 @@ export class ConfigService {
     readonly userSuffix = 'view/all/people/';
     readonly viewSuffix = 'view/';
     readonly jobSuffix = 'job/';
-    readonly loggerLevel = 3;
+    readonly loggerLevel:number = 3;
     readonly defaultDepth = "?depth=1";
     
     readonly jenkinsTimeInQueueActionId = "jenkins.metrics.impl.TimeInQueueAction";

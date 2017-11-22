@@ -4,15 +4,19 @@ import {ConfigService} from './config.service';
 
 class ConfigServiceTestDev extends ConfigService {
     readonly _configuration:string = "DEV";
+    readonly loggerLevel = 0;
 }
 class ConfigServiceTestStaging extends ConfigService {
     readonly _configuration:string = "STAGING";
+    readonly loggerLevel = 0;
 }
 class ConfigServiceTestLive extends ConfigService {
     readonly _configuration:string = "LIVE";
+    readonly loggerLevel = 0;
 }
 class ConfigServiceTestInvalid extends ConfigService {
     readonly _configuration:string = "SOME_CONFIG";
+    readonly loggerLevel = 0;
 }
 
 describe('ConfigService', () => {
@@ -38,19 +42,31 @@ describe('ConfigService', () => {
     it('proxyUrl should be same between DEV and DEV configuration', inject([ConfigService], (service: ConfigService) => {
         let configTest: ConfigService = new ConfigServiceTestDev();
         
-        expect(configTest.proxyUrl === service.proxyUrl).toBeTruthy();
+        if (service._configuration === 'DEV') {
+            expect(configTest.proxyUrl === service.proxyUrl).toBeTruthy();
+        } else {
+            expect(configTest.proxyUrl !== service.proxyUrl).toBeTruthy();
+        }
     }));
 
     it('proxyUrl should be different between DEV and STAGING configuration', inject([ConfigService], (service: ConfigService) => {
         let configTest: ConfigService = new ConfigServiceTestStaging();
         
-        expect(configTest.proxyUrl !== service.proxyUrl).toBeTruthy();
+        if (service._configuration === 'STAGING') {
+            expect(configTest.proxyUrl === service.proxyUrl).toBeTruthy();
+        } else {
+            expect(configTest.proxyUrl !== service.proxyUrl).toBeTruthy();
+        }
     }));
 
     it('proxyUrl should be different between DEV and LIVE configuration', inject([ConfigService], (service: ConfigService) => {
         let configTest: ConfigService = new ConfigServiceTestLive();
         
-        expect(configTest.proxyUrl !== service.proxyUrl).toBeTruthy();
+        if (service._configuration === 'LIVE') {
+            expect(configTest.proxyUrl === service.proxyUrl).toBeTruthy();
+        } else {
+            expect(configTest.proxyUrl !== service.proxyUrl).toBeTruthy();
+        }
     }));
 
     it('proxyUrl should be undefined for unsupported configuration', inject([ConfigService], (service: ConfigService) => {
@@ -62,19 +78,31 @@ describe('ConfigService', () => {
     it('jenkinsUrl should be same between DEV and DEV configuration', inject([ConfigService], (service: ConfigService) => {
         let configTest: ConfigService = new ConfigServiceTestDev();
         
-        expect(configTest.jenkinsUrl === service.jenkinsUrl).toBeTruthy();
+        if (service._configuration === 'DEV') {
+            expect(configTest.jenkinsUrl === service.jenkinsUrl).toBeTruthy();
+        } else {
+            expect(configTest.jenkinsUrl !== service.jenkinsUrl).toBeTruthy();
+        }
     }));
 
     it('jenkinsUrl should be same between DEV and STAGING configuration', inject([ConfigService], (service: ConfigService) => {
         let configTest: ConfigService = new ConfigServiceTestStaging();
         
-        expect(configTest.jenkinsUrl === service.jenkinsUrl).toBeTruthy();
+        if (service._configuration === 'DEV' || service._configuration === 'STAGING') {
+            expect(configTest.jenkinsUrl === service.jenkinsUrl).toBeTruthy();
+        } else {
+            expect(configTest.jenkinsUrl !== service.jenkinsUrl).toBeTruthy();
+        }
     }));
 
     it('jenkinsUrl should be different between DEV and LIVE configuration', inject([ConfigService], (service: ConfigService) => {
         let configTest: ConfigService = new ConfigServiceTestLive();
         
-        expect(configTest.jenkinsUrl !== service.jenkinsUrl).toBeTruthy();
+        if (service._configuration === 'LIVE') {
+            expect(configTest.jenkinsUrl === service.jenkinsUrl).toBeTruthy();
+        } else {
+            expect(configTest.jenkinsUrl !== service.jenkinsUrl).toBeTruthy();
+        }
     }));
 
     it('jenkinsUrl should be undefined for unsupported configuration', inject([ConfigService], (service: ConfigService) => {

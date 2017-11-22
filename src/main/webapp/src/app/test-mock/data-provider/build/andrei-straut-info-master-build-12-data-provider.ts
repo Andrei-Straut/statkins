@@ -49,7 +49,12 @@ export class AndreiStrautInfoMasterBuild12DataProvider implements IBuildDataProv
             },
             "remoteUrls": ["https://github.com/Andrei-Straut/andreistraut.info"],
             "scmName": ""
-        }, {
+        },
+        {
+            "_class": "jenkins.metrics.impl.TimeInQueueAction", 
+            "queuingDurationMillis": 103833,
+            "totalDurationMillis": 1474583}, 
+        {
             "_class": "hudson.plugins.git.GitTagAction"
         }, {}, {
             "_class": "hudson.maven.reporters.MavenAggregatedArtifactRecord"
