@@ -82,13 +82,13 @@ export class JenkinsBuildService extends JenkinsDataRetrieverService {
         let promises: Map<IJenkinsJob, Array<Promise<JSON>>> = new Map<IJenkinsJob, Array<Promise<JSON>>>();
 
         for (let job of Array.from(builds.keys())) {
-            promises.set(job, this.createJobPromises(job));
+            promises.set(job, this.createBuildPromisesFor(job));
         }
 
         return promises;
     }
 
-    private createJobPromises(job: IJenkinsJob): Array<Promise<JSON>> {
+    private createBuildPromisesFor(job: IJenkinsJob): Array<Promise<JSON>> {
         let parent = this;
 
         return job.builds.map(function (build) {

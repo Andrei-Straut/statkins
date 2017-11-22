@@ -3,7 +3,7 @@ import {IJobDataProviderService} from './jenkins-job-data-provider';
 export class DrpMasterJobDataProvider implements IJobDataProviderService {
 
     public getJobData(): JSON {
-        return this.data as JSON;
+        return JSON.parse(JSON.stringify(this.data));
     }
 
     private data: any = {

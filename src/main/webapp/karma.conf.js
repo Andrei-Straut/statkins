@@ -14,12 +14,18 @@ module.exports = function (config) {
             require('karma-spec-reporter'),
             require('@angular/cli/plugins/karma')
         ],
+        files: [
+            './src/assets/jquery/jquery-1.11.2.min.js'
+        ],
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: true,
         singleRun: true,
-        browsers: ['ChromeHeadless'],
+        browsers: [
+//            'Chrome'
+            'ChromeHeadless'
+        ],
         customLaunchers: {
             ChromeHeadless: {
                 base: 'Chrome',

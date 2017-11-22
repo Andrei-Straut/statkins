@@ -6,7 +6,7 @@ import {IBuildDataProviderService} from './jenkins-build-data-provider';
 export class AndreiStrautInfoMasterBuild02DataProvider implements IBuildDataProviderService {
 
     public getBuildData(): JSON {
-        return this.data as JSON;
+        return JSON.parse(JSON.stringify(this.data));
     }
 
     private data: any = {
