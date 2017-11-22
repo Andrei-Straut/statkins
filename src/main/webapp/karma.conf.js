@@ -11,7 +11,7 @@ module.exports = function (config) {
             require('karma-junit-reporter'),
             require('karma-coverage-istanbul-reporter'),
             require('karma-htmlfile-reporter'),
-            require('karma-spec-reporter'),
+            require('karma-mocha-reporter'),
             require('@angular/cli/plugins/karma')
         ],
         files: [
@@ -43,7 +43,7 @@ module.exports = function (config) {
         angularCli: {
             environment: 'dev'
         },
-        reporters: ['progress', 'junit', 'html', 'coverage-istanbul', 'spec'],
+        reporters: ['progress', 'junit', 'html', 'coverage-istanbul', 'mocha'],
         /** HTML Test Report */
         htmlReporter: {
             outputFile: 'dist/test-results/test-report.html',
@@ -69,13 +69,10 @@ module.exports = function (config) {
             fixWebpackSourcePaths: true
         },
         /** Console test report */
-        specReporter: {
-            maxLogLines: 5, // limit number of lines logged per test
-            suppressErrorSummary: true, // do not print error summary
-            suppressFailed: false, // do not print information about failed tests
-            suppressPassed: false, // do not print information about passed tests
-            suppressSkipped: true, // do not print information about skipped tests
-            showSpecTiming: false // print the time elapsed for each spec
+        mochaReporter: {
+            output: 'minimal',
+            ignoreSkipped: true,
+            maxLogLines: -1
         }
     });
 };
