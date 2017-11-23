@@ -86,7 +86,7 @@ export class JenkinsDataProviderService {
             changeSets.set(build, new Array<IJenkinsChangeSet>());
             
             if (build.getJsonData()["changeSet"] !== undefined && build.getJsonData()["changeSet"] !== null 
-                && (build.getJsonData()["changeSet"] as Array<JSON>).length > 0) {
+                && ((JSON.parse(build.getJsonData())["changeSet"]) as Array<JSON>).length > 0) {
                 
                 let changeSetsJson: Array<JSON> = build.getJsonData()["changeSet"]["items"];
                 

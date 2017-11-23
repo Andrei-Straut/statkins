@@ -42,10 +42,6 @@ export class AppComponent {
         this.LOGGER.info("Jenkins URL", this.configService.jenkinsUrl);
     }
     
-    start(event: Event) {
-        event.preventDefault();
-    }
-    
     onDataRetrieved(data: IJenkinsData) {
         this.LOGGER.info("=============================== Data Set ===============================");
         this.LOGGER.info(data);

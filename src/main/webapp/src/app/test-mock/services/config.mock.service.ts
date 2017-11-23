@@ -12,9 +12,4 @@ export class ConfigMockService extends ConfigService {
     get proxyUrl(): string {
         return "SomeUrl";
     }
-
-    get jenkinsUrl(): string {
-        return "SomeUrl";
-    }
-
 }
