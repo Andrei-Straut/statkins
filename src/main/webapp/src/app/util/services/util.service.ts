@@ -9,6 +9,7 @@ import {IJenkinsChangeSet} from 'jenkins-api-ts-typings';
 import {IJenkinsNode} from 'jenkins-api-ts-typings';
 import {IJenkinsAction} from 'jenkins-api-ts-typings';
 import {JenkinsTimeInQueueAction} from 'jenkins-api-ts-typings';
+import {JenkinsBuildStatus} from 'jenkins-api-ts-typings';
 
 @Injectable()
 export class UtilService {
@@ -35,10 +36,18 @@ export class UtilService {
     }
 
     padDate(dateTime: Date): string {
+        if (this.isInvalid(dateTime)) {
+            return new Date().toISOString().slice(0, 10);
+        }
+
         return dateTime.toISOString().slice(0, 10);
     }
 
     padTime(dateTime: Date): string {
+        if (this.isInvalid(dateTime)) {
+            return "00:00";
+        }
+
         let hours: string = ('0' + dateTime.getHours()).slice(-2);
         let minutes: string = ('0' + dateTime.getMinutes()).slice(-2);
 
@@ -47,7 +56,7 @@ export class UtilService {
 
     padTimestamp(timestamp: number): number {
 
-        if (timestamp === 0) {
+        if (this.isInvalid(timestamp) || timestamp === 0) {
             return 0;
         }
 
@@ -55,21 +64,28 @@ export class UtilService {
             timestamp = timestamp * -1;
         }
 
+        if (timestamp < 1) {
+            timestamp = 1;
+        }
+
+        timestamp = Math.round(timestamp);
+
         let lowerMargin = 999999999999;
         let upperMargin = lowerMargin * 10;
 
-        let maxIterations: number = 10;
+        let maxIterations: number = 100;
         while (timestamp < lowerMargin && maxIterations > 0) {
             timestamp = timestamp * 10;
             maxIterations--;
         }
 
-        maxIterations = 10;
+        maxIterations = 100;
         while (timestamp > upperMargin && maxIterations > 0) {
-            timestamp = timestamp / 10;
+            timestamp = Math.round(timestamp / 10);
             maxIterations--;
         }
 
+        timestamp = Math.round(timestamp);
         return timestamp;
     }
 
@@ -95,18 +111,14 @@ export class UtilService {
 
         return momentA.isAfter(momentB);
     }
-    
+
     mapToArray<T>(values: Map<any, Array<T>>): Array<T> {
 
         if (this.isInvalid(values)) {
             return new Array<T>();
         }
-        
+
         return Array.from(values.values()).reduce((a, b) => a.concat(b), []);
-    }   
-    
-    getChangeSetArray(builds: Map<any, Array<IJenkinsChangeSet>>): Array<IJenkinsChangeSet> {
-        return Array.from(builds.values()).reduce((a, b) => a.concat(b), []);
     }
 
     getAffectedPathsArray(builds: Map<any, Array<IJenkinsChangeSet>>): Array<string> {
@@ -148,8 +160,8 @@ export class UtilService {
 
         return builds.length > 0 ? builds[0] as IJenkinsBuild : undefined;
     }
-    
-    buildResultIs(build: IJenkinsBuild, status: string) {
+
+    buildResultIs(build: IJenkinsBuild, status: JenkinsBuildStatus) {
 
         if (this.isInvalid(status)) {
             return false;
@@ -158,8 +170,8 @@ export class UtilService {
         if (this.isInvalid(build) || this.isInvalid(build.result)) {
             return false;
         }
-        
-        return build.result.toUpperCase().trim().replace(" ", "") === status.toUpperCase().trim().replace(" ", "");
+
+        return build.result.toUpperCase().trim().replace(/ /g, "") === status.toUpperCase().trim().replace(/ /g, "");
     }
 
     buildIsRunning(build: IJenkinsBuild): boolean {
@@ -251,7 +263,7 @@ export class UtilService {
 
     getBuildDuration(build: IJenkinsBuild): number {
 
-        if (build === undefined || build === null || build.duration === undefined || build.duration === null) {
+        if (this.isInvalid(build) || this.isInvalid(build.duration)) {
             return 0;
         }
 
@@ -264,20 +276,19 @@ export class UtilService {
         if (this.isInvalid(builds)) {
             return 0;
         }
+        
+        let filteredBuilds: Array<IJenkinsBuild> = builds.filter(b => !parent.isInvalid(b) && !parent.isInvalid(b.duration) && !isNaN(b.duration));
+        if (filteredBuilds.length === 0) {
+            return 0;
+        }
 
-        let durations: Array<number> = builds.map(build => build.duration);
-        let totalDuration = durations.reduce(function (a, b) {
-            if (parent.isInvalid(a)) {
-                return b;
-            }
-            if (parent.isInvalid(b)) {
-                return a;
-            }
+        let durations: Array<number> = filteredBuilds.map(build => build.duration);
+        let totalDuration = durations.reduce(function (a:number, b:number) {
             return a + b;
         });
-        let average = totalDuration / builds.length;
+        let average = totalDuration / filteredBuilds.length;
 
-        return Math.round(average);
+        return Math.ceil(average);
     }
 
     getBuildAverageWeightedDuration(builds: Array<IJenkinsBuild>): number {

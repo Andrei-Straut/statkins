@@ -8,6 +8,7 @@ import {IJenkinsData} from 'jenkins-api-ts-typings';
 import {IJenkinsBuild} from 'jenkins-api-ts-typings';
 import {IJenkinsChangeSet} from 'jenkins-api-ts-typings';
 import {IJenkinsJob} from 'jenkins-api-ts-typings';
+import {JenkinsBuildStatus} from 'jenkins-api-ts-typings';
 
 import {VisDataSetItem} from '../services/VisDataSetItem';
 import {VisBuildTimelineBuildVisibility} from '../services/VisBuildTimelineBuildVisibility';
@@ -243,7 +244,7 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
             Array.from(buildsContainingCommit.keys()).forEach(function (job) {
                 buildsContainingCommit.get(job).forEach(function (build) {
                     let spanClass = parent.getChangeSetSpanTitleClass(build);
-                    let abortedStatus = parent.utilService.buildResultIs(build, "ABORTED") ? " <b><i>(aborted)</i></b>" : "";
+                    let abortedStatus = parent.utilService.buildResultIs(build, JenkinsBuildStatus.Aborted) ? " <b><i>(aborted)</i></b>" : "";
                     let runningStatus = parent.utilService.buildIsRunning(build) ? " <b><i>(running)</i></b>" : "";
                     buildString = buildString + "<span class='vis-build-result-span " + spanClass + "'>"
                         + job.name + " #" + build.number + abortedStatus + runningStatus + "</span>" + "<br/>"
@@ -283,9 +284,9 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
             return JenkinsChangeSetTimelineComponent.DEFAULT_GROUP;
         }
 
-        let hasFailed = this.utilService.mapToArray(builds).filter(build => this.utilService.buildResultIs(build, "FAILURE")).length > 0;
-        let hasUnstable = this.utilService.mapToArray(builds).filter(build => this.utilService.buildResultIs(build, "UNSTABLE")).length > 0;
-        let hasSuccessful = this.utilService.mapToArray(builds).filter(build => this.utilService.buildResultIs(build, "SUCCESS")).length > 0;
+        let hasFailed = this.utilService.mapToArray(builds).filter(build => this.utilService.buildResultIs(build, JenkinsBuildStatus.Failure)).length > 0;
+        let hasUnstable = this.utilService.mapToArray(builds).filter(build => this.utilService.buildResultIs(build, JenkinsBuildStatus.Unstable)).length > 0;
+        let hasSuccessful = this.utilService.mapToArray(builds).filter(build => this.utilService.buildResultIs(build, JenkinsBuildStatus.Success)).length > 0;
 
         if (hasFailed) {
             return JenkinsChangeSetTimelineComponent.FAILED_GROUP;
@@ -307,15 +308,15 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
             return JenkinsChangeSetTimelineComponent.DEFAULT_GROUP;
         }
 
-        if (this.utilService.buildResultIs(build, "SUCCESS")) {
+        if (this.utilService.buildResultIs(build, JenkinsBuildStatus.Success)) {
             return JenkinsChangeSetTimelineComponent.SUCCESS_GROUP;
         }
 
-        if (this.utilService.buildResultIs(build, "UNSTABLE")) {
+        if (this.utilService.buildResultIs(build, JenkinsBuildStatus.Unstable)) {
             return JenkinsChangeSetTimelineComponent.UNSTABLE_GROUP;
         }
 
-        if (this.utilService.buildResultIs(build, "FAILURE")) {
+        if (this.utilService.buildResultIs(build, JenkinsBuildStatus.Failure)) {
             return JenkinsChangeSetTimelineComponent.FAILED_GROUP;
         }
 
@@ -346,9 +347,9 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
 
     private getChangeSetTimelineClass(builds: Map<IJenkinsJob, Array<IJenkinsBuild>>): string {
 
-        let hasFailed = this.utilService.mapToArray(builds).filter(build => this.utilService.buildResultIs(build, "FAILURE")).length > 0;
-        let hasUnstable = this.utilService.mapToArray(builds).filter(build => this.utilService.buildResultIs(build, "UNSTABLE")).length > 0;
-        let hasSuccessful = this.utilService.mapToArray(builds).filter(build => this.utilService.buildResultIs(build, "SUCCESS")).length > 0;
+        let hasFailed = this.utilService.mapToArray(builds).filter(build => this.utilService.buildResultIs(build, JenkinsBuildStatus.Failure)).length > 0;
+        let hasUnstable = this.utilService.mapToArray(builds).filter(build => this.utilService.buildResultIs(build, JenkinsBuildStatus.Unstable)).length > 0;
+        let hasSuccessful = this.utilService.mapToArray(builds).filter(build => this.utilService.buildResultIs(build, JenkinsBuildStatus.Success)).length > 0;
 
         if (hasFailed) {
             return "red";

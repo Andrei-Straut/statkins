@@ -8,6 +8,7 @@ import {Logger} from 'angular2-logger/core';
 import {IJenkinsData} from 'jenkins-api-ts-typings';
 import {IJenkinsBuild} from 'jenkins-api-ts-typings';
 import {IJenkinsJob} from 'jenkins-api-ts-typings';
+import {JenkinsBuildStatus} from 'jenkins-api-ts-typings';
 
 import {VisDataSetItem} from '../services/VisDataSetItem';
 import {VisEventProperties} from '../services/VisEventProperties';
@@ -238,7 +239,7 @@ export class JenkinsBuildTimelineComponent implements OnInit {
                     startDateTime = new Date(build.timestamp);
                 }
 
-                let endDateTime = new Date(build.timestamp + build.duration);
+                let endDateTime = parent.utilService.buildIsRunning(build) ? new Date() : new Date(build.timestamp + build.duration);
                 let visClass = parent.getBuildClass(build);
 
                 let buildData: VisDataSetItem = {
@@ -353,22 +354,22 @@ export class JenkinsBuildTimelineComponent implements OnInit {
 
     private getItemTitle(job: IJenkinsJob, build: IJenkinsBuild) {
         let running = this.utilService.buildIsRunning(build) ? " <b><i>(Running)</i></b>" : "";
-        let aborted = this.utilService.buildResultIs(build, "ABORTED") ? " <b><i>(Aborted)</i></b>" : "";
+        let aborted = this.utilService.buildResultIs(build, JenkinsBuildStatus.Aborted) ? " <b><i>(Aborted)</i></b>" : "";
         let timeSpentInQueue = Math.round(moment.duration((this.utilService.getBuildTimeInQueue(build)), "milliseconds").asMinutes());
 
         let queuedDateTime = new Date(build.timestamp - this.utilService.getBuildTimeInQueue(build));
         let startDateTime = new Date(build.timestamp);
-        let endDateTime = new Date(build.timestamp + build.duration);
+        let endDateTime = this.utilService.buildIsRunning(build) ? new Date() : new Date(build.timestamp + build.duration);
 
         return "<b>" + job.name + " #" + build.number + "</b><br/>"
             + (!this.utilService.isInvalid(build.displayName) ? "<b>Name</b>: " + build.displayName + "<br/>" : "")
             + (!this.utilService.isInvalid(build.description) ? "<b>Description</b>: " + build.description + "<br/>" : "")
-            + (this.getItemDateTimes(queuedDateTime, startDateTime, endDateTime) + running + aborted + "<br/>")
+            + (this.getItemDateTimes(queuedDateTime, startDateTime, endDateTime, this.utilService.buildIsRunning(build)) + running + aborted + "<br/>")
             + ((timeSpentInQueue > 0) ? ("This build spent " + timeSpentInQueue + " minutes in queue<br/>") : "")
             + "<i>Double-click to open in Jenkins</i>";
     }
 
-    private getItemDateTimes(queuedDateTime: Date, startDateTime: Date, endDateTime: Date): string {
+    private getItemDateTimes(queuedDateTime: Date, startDateTime: Date, endDateTime: Date, isRunning: boolean): string {
         let queuedInfo = this.utilService.padTime(queuedDateTime);
         let startedInfo = this.utilService.padTime(startDateTime);
         let endedInfo = this.utilService.padTime(endDateTime);
@@ -380,6 +381,10 @@ export class JenkinsBuildTimelineComponent implements OnInit {
             queuedInfo = this.utilService.padDate(queuedDateTime) + " " + this.utilService.padTime(queuedDateTime);
             startedInfo = this.utilService.padDate(startDateTime) + " " + this.utilService.padTime(startDateTime);
             endedInfo = this.utilService.padDate(endDateTime) + " " + this.utilService.padTime(endDateTime);
+        }
+        
+        if (isRunning) {
+            endedInfo = "N/A";
         }
 
         return "<b>Triggered</b>: " + queuedInfo + ", " + "<b>Started</b>: " + startedInfo + ", " + "<b>Ended</b>: " + endedInfo;

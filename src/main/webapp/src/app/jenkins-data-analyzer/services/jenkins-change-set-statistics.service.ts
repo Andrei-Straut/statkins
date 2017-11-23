@@ -20,7 +20,7 @@ export class JenkinsChangeSetStatisticsService implements StatisticsEntryProvide
     public getStatistics(): StatisticsCardEntry {
         this.analyzerData = new StatisticsCardEntry(
             "Commits",
-            "Number Of Commits: " + this.util.getChangeSetArray(this.data.changeSets).length,
+            "Number Of Commits: " + this.util.mapToArray(this.data.changeSets).length,
             [
                 this.getNumberOfChangeSetsToday(this.data.changeSets),
                 this.getNumberOfChangeSetsYesterday(this.data.changeSets),
@@ -39,7 +39,7 @@ export class JenkinsChangeSetStatisticsService implements StatisticsEntryProvide
         let numberOfChangeSets: number = 0;
 
         let today = new Date();
-        this.util.getChangeSetArray(data).forEach(function (changeSet) {
+        this.util.mapToArray(data).forEach(function (changeSet) {
             if (!parent.util.isInvalid(changeSet.timestamp) && parent.util.isSameDate(new Date(changeSet.timestamp), today)) {
                 numberOfChangeSets += 1;
             }
@@ -56,7 +56,7 @@ export class JenkinsChangeSetStatisticsService implements StatisticsEntryProvide
         let yesterday = new Date(today);
         yesterday.setDate(today.getDate() - 1);
 
-        this.util.getChangeSetArray(data).forEach(function (changeSet) {
+        this.util.mapToArray(data).forEach(function (changeSet) {
             if (parent.util.isSameDate(new Date(changeSet.timestamp), yesterday)) {
                 numberOfChangeSets += 1;
             }
@@ -130,7 +130,7 @@ export class JenkinsChangeSetStatisticsService implements StatisticsEntryProvide
     private getChangeSetsByUser(data: Map<IJenkinsBuild, Array<IJenkinsChangeSet>>): Map<IJenkinsUser, Array<IJenkinsChangeSet>> {
         var changeSetsByUser: Map<IJenkinsUser, Array<IJenkinsChangeSet>> = new Map<IJenkinsUser, Array<IJenkinsChangeSet>>();
 
-        this.util.getChangeSetArray(data).forEach(function (changeSet) {
+        this.util.mapToArray(data).forEach(function (changeSet) {
 
             if (!changeSetsByUser.has(changeSet.author)) {
                 changeSetsByUser.set(changeSet.author, new Array<IJenkinsChangeSet>());
