@@ -40,6 +40,7 @@ export class JenkinsChangeSetService extends JenkinsDataRetrieverService {
 
                 if (!this.hasChangeSets(build)) {
                     this.LOGGER.debug("No change sets found for build #" + build.number, "of job", job.name);
+                    this.changeSets.set(build, new Array<IJenkinsChangeSet>());
                     continue;
                 }
 
@@ -91,12 +92,12 @@ export class JenkinsChangeSetService extends JenkinsDataRetrieverService {
     }
 
     private hasChangeSets(build: IJenkinsBuild): boolean {
-
-        let buildData: JSON = JSON.parse(build.getJsonData());
-        if (buildData === undefined || buildData == null) {
+        
+        if (build.getJsonData() == undefined || build.getJsonData() == null) {
             return false;
         }
 
+        let buildData: JSON = JSON.parse(build.getJsonData());
         let changeSetData: JSON = buildData["changeSet"];
         if (changeSetData === undefined || changeSetData == null || !changeSetData.hasOwnProperty("items")) {
             return false;
