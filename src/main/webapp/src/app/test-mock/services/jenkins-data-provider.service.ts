@@ -36,13 +36,13 @@ export class JenkinsDataProviderService {
     private views: Array<IJenkinsView> = new Array<IJenkinsView>();
     private changeSets: Map<IJenkinsBuild, Array<IJenkinsChangeSet>> = new Map<IJenkinsBuild, Array<IJenkinsChangeSet>>();
     private actions: Map<IJenkinsBuild, Array<IJenkinsAction>> = new Map<IJenkinsBuild, Array<IJenkinsAction>>();
-    
+
     constructor() {
         this.jobs = this.createJobs();
         this.builds = this.createBuilds(this.jobs);
         this.changeSets = this.createChangeSets(this.builds);
     }
-    
+
     public getData(): IJenkinsData {
         return {
             nodes: this.nodes,
@@ -68,97 +68,98 @@ export class JenkinsDataProviderService {
 
         return jobs;
     }
-    
+
     private createBuilds(jobData: Array<IJenkinsJob>): Map<IJenkinsJob, Array<IJenkinsBuild>> {
         let builds: Map<IJenkinsJob, Array<IJenkinsBuild>> = new Map<IJenkinsJob, Array<IJenkinsBuild>>();
-        
-        jobData.forEach(function(job: IJenkinsJob) {
+
+        jobData.forEach(function (job: IJenkinsJob) {
             builds.set(job, job.builds);
         });
-        
+
         return builds;
     }
-    
+
     private createChangeSets(buildData: Map<IJenkinsJob, Array<IJenkinsBuild>>): Map<IJenkinsBuild, Array<IJenkinsChangeSet>> {
         let changeSets: Map<IJenkinsBuild, Array<IJenkinsChangeSet>> = new Map<IJenkinsBuild, Array<IJenkinsChangeSet>>();
-        
-         Array.from(buildData.values()).reduce((a, b) => a.concat(b), []).forEach(function(build: IJenkinsBuild) {
+
+        Array.from(buildData.values()).reduce((a, b) => a.concat(b), []).forEach(function (build: IJenkinsBuild) {
             changeSets.set(build, new Array<IJenkinsChangeSet>());
-            
-            if (build.getJsonData()["changeSet"] !== undefined && build.getJsonData()["changeSet"] !== null 
-                && ((JSON.parse(build.getJsonData())["changeSet"]) as Array<JSON>).length > 0) {
-                
-                let changeSetsJson: Array<JSON> = build.getJsonData()["changeSet"]["items"];
-                
-                changeSetsJson.forEach(function(changeSetJson) {
-                    let changeSet: IJenkinsChangeSet = new JenkinsChangeSet();
-                    changeSet.fromJson(changeSetJson);
-                    build.changeSets.push(changeSet);
-                    changeSets.get(build).push(changeSet);
-                })
+
+            let jsonData: JSON = JSON.parse(build.getJsonData());
+            if (jsonData !== undefined && jsonData["changeSet"] !== undefined && jsonData["changeSet"] !== null) {
+                let itemsJsonData = jsonData["changeSet"]["items"];
+                if (itemsJsonData !== undefined && itemsJsonData !== null && (itemsJsonData as Array<JSON>).length > 0) {
+
+                    (itemsJsonData as Array<JSON>).forEach(function (changeSetJson) {
+                        let changeSet: IJenkinsChangeSet = new JenkinsChangeSet();
+                        changeSet.fromJson(changeSetJson);
+                        build.changeSets.push(changeSet);
+                        changeSets.get(build).push(changeSet);
+                    });
+                }
             }
         });
-        
+
         return changeSets;
     }
-    
+
     private createAndreiStrautInfoMasterData() {
         let andreiStrautInfoMasterJob: IJenkinsJob = new JenkinsJob();
         andreiStrautInfoMasterJob.fromJson(new AndreiStrautInfoMasterJobDataProvider().getJobData());
-        
+
         let andreiStrautInfoMasterBuild12: IJenkinsBuild = new JenkinsBuild();
         andreiStrautInfoMasterBuild12.fromJson(new AndreiStrautInfoMasterBuild12DataProvider().getBuildData());
-        
+
         let andreiStrautInfoMasterBuild13: IJenkinsBuild = new JenkinsBuild();
         andreiStrautInfoMasterBuild13.fromJson(new AndreiStrautInfoMasterBuild13DataProvider().getBuildData());
-        
+
         let andreiStrautInfoMasterBuild14: IJenkinsBuild = new JenkinsBuild();
         andreiStrautInfoMasterBuild14.fromJson(new AndreiStrautInfoMasterBuild14DataProvider().getBuildData());
-        
+
         andreiStrautInfoMasterJob.builds.push(andreiStrautInfoMasterBuild12);
         andreiStrautInfoMasterJob.builds.push(andreiStrautInfoMasterBuild13);
         andreiStrautInfoMasterJob.builds.push(andreiStrautInfoMasterBuild14);
-        
+
         return andreiStrautInfoMasterJob;
     }
-    
+
     private createDrpMasterData() {
         let drpMasterJob: IJenkinsJob = new JenkinsJob();
         drpMasterJob.fromJson(new DrpMasterJobDataProvider().getJobData());
-        
+
         let drpMasterBuild05: IJenkinsBuild = new JenkinsBuild();
         drpMasterBuild05.fromJson(new DrpMasterBuild05DataProvider().getBuildData());
-        
+
         let drpMasterBuild06: IJenkinsBuild = new JenkinsBuild();
         drpMasterBuild06.fromJson(new DrpMasterBuild06DataProvider().getBuildData());
-        
+
         let drpMasterBuild07: IJenkinsBuild = new JenkinsBuild();
         drpMasterBuild07.fromJson(new DrpMasterBuild07DataProvider().getBuildData());
-        
+
         drpMasterJob.builds.push(drpMasterBuild05);
         drpMasterJob.builds.push(drpMasterBuild06);
         drpMasterJob.builds.push(drpMasterBuild07);
-        
+
         return drpMasterJob;
     }
-    
+
     private createGapsMasterData() {
         let gapsMasterJob: IJenkinsJob = new JenkinsJob();
         gapsMasterJob.fromJson(new GapsMasterJobDataProvider().getJobData());
-        
+
         let gapsMasterBuild04: IJenkinsBuild = new JenkinsBuild();
         gapsMasterBuild04.fromJson(new GapsMasterBuild04DataProvider().getBuildData());
-        
+
         let gapsMasterBuild14: IJenkinsBuild = new JenkinsBuild();
         gapsMasterBuild14.fromJson(new GapsMasterBuild14DataProvider().getBuildData());
-        
+
         let gapsMasterBuild15: IJenkinsBuild = new JenkinsBuild();
         gapsMasterBuild15.fromJson(new GapsMasterBuild15DataProvider().getBuildData());
-        
+
         gapsMasterJob.builds.push(gapsMasterBuild04);
         gapsMasterJob.builds.push(gapsMasterBuild14);
         gapsMasterJob.builds.push(gapsMasterBuild15);
-        
+
         return gapsMasterJob;
     }
 }
