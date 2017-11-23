@@ -65,7 +65,7 @@ module.exports = function (config) {
         /** HTML Coverage Report */
         coverageIstanbulReporter: {
             dir: 'dist/test-results/coverage',
-            reports: ['html', 'json'],
+            reports: ['html', 'json', 'clover'],
             fixWebpackSourcePaths: true
         },
         /** Console test report */

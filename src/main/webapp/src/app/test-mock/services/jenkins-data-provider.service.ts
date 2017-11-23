@@ -9,6 +9,7 @@ import {JenkinsBuild} from 'jenkins-api-ts-typings';
 import {IJenkinsUser} from 'jenkins-api-ts-typings';
 import {IJenkinsView} from 'jenkins-api-ts-typings';
 import {IJenkinsChangeSet} from 'jenkins-api-ts-typings';
+import {JenkinsChangeSet} from 'jenkins-api-ts-typings';
 import {IJenkinsAction} from 'jenkins-api-ts-typings';
 
 import {AndreiStrautInfoMasterJobDataProvider} from '../data-provider/job/andrei-straut-info-master-job-data-provider';
@@ -39,6 +40,7 @@ export class JenkinsDataProviderService {
     constructor() {
         this.jobs = this.createJobs();
         this.builds = this.createBuilds(this.jobs);
+        this.changeSets = this.createChangeSets(this.builds);
     }
     
     public getData(): IJenkinsData {
@@ -75,6 +77,29 @@ export class JenkinsDataProviderService {
         });
         
         return builds;
+    }
+    
+    private createChangeSets(buildData: Map<IJenkinsJob, Array<IJenkinsBuild>>): Map<IJenkinsBuild, Array<IJenkinsChangeSet>> {
+        let changeSets: Map<IJenkinsBuild, Array<IJenkinsChangeSet>> = new Map<IJenkinsBuild, Array<IJenkinsChangeSet>>();
+        
+         Array.from(buildData.values()).reduce((a, b) => a.concat(b), []).forEach(function(build: IJenkinsBuild) {
+            changeSets.set(build, new Array<IJenkinsChangeSet>());
+            
+            if (build.getJsonData()["changeSet"] !== undefined && build.getJsonData()["changeSet"] !== null 
+                && (build.getJsonData()["changeSet"] as Array<JSON>).length > 0) {
+                
+                let changeSetsJson: Array<JSON> = build.getJsonData()["changeSet"]["items"];
+                
+                changeSetsJson.forEach(function(changeSetJson) {
+                    let changeSet: IJenkinsChangeSet = new JenkinsChangeSet();
+                    changeSet.fromJson(changeSetJson);
+                    build.changeSets.push(changeSet);
+                    changeSets.get(build).push(changeSet);
+                })
+            }
+        });
+        
+        return changeSets;
     }
     
     private createAndreiStrautInfoMasterData() {

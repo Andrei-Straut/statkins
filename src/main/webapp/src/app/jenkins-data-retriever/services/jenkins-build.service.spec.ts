@@ -21,7 +21,6 @@ let configService: ConfigMockService = new ConfigMockService();
 let proxyService: ProxyJenkinsJobMockService = new ProxyJenkinsJobMockService();
 let proxyErrorService: ProxyObservableErrorMockService = new ProxyObservableErrorMockService();
 let proxyEmptyResponseService: ProxyEmptyResponseMockService = new ProxyEmptyResponseMockService();
-let proxyExceptionResponseService: ProxyExceptionMockService = new ProxyExceptionMockService();
 
 describe('JenkinsBuildService', () => {
     
@@ -126,18 +125,6 @@ describe('JenkinsBuildService', () => {
         expect(service.isComplete()).toBeTruthy();
         expect(service.isSuccessful()).toBeTruthy();
     });
-
-    it('service should not crash when proxy throws error', async () => {
-        let buildMap = new JenkinsDataProviderService().getData().builds;
-        
-        let service: JenkinsBuildService = createServiceWithProxyInvalidResponse(buildMap);
-        await service.execute();
-        
-        expect(service.getData().size).toBe(3);
-        expect(utilService.mapToArray(service.getData()).length).toBe(9);
-        expect(service.isComplete()).toBeTruthy();
-        expect(service.isSuccessful()).toBeTruthy();
-    });
 });
 
 function createService(data: any): JenkinsBuildService {
@@ -152,10 +139,5 @@ function createServiceWithProxyError(data: any): JenkinsBuildService {
 
 function createServiceWithProxyEmpty(data: any): JenkinsBuildService {
     let service: JenkinsBuildService = new JenkinsBuildService(configService, proxyEmptyResponseService, utilService, loggerService, data);
-    return service;
-}
-
-function createServiceWithProxyInvalidResponse(data: any): JenkinsBuildService {
-    let service: JenkinsBuildService = new JenkinsBuildService(configService, proxyExceptionResponseService, utilService, loggerService, data);
     return service;
 }
