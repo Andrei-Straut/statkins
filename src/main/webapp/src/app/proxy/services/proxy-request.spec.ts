@@ -15,44 +15,93 @@ describe('ProxyRequestService', () => {
     it('should have the url provided in the constructor', () => {
         let url = "SomeUrl";
         let request = new ProxyRequest("SomeUrl");
-        
+
         expect(request.url).toBe(url);
     });
 
     it('should have method GET', () => {
         let method = "GET";
         let request = new ProxyRequest("SomeUrl");
-        
+
         expect(request.method).toBe(method);
     });
 
     it('should have an object as headers property', () => {
         let request = new ProxyRequest("SomeUrl");
-        
+
         expect(request.headers instanceof Object).toBeTruthy();
     });
 
     it('should have Content-Type defined', () => {
         let request = new ProxyRequest("SomeUrl");
-        
+
         expect(request.headers["Content-Type"]).toBeDefined();
     });
 
     it('should have expected value for Content-Type', () => {
         let request = new ProxyRequest("SomeUrl");
-        
+
         expect(request.headers["Content-Type"]).toBe("application/json");
     });
 
     it('should have Server defined', () => {
         let request = new ProxyRequest("SomeUrl");
-        
+
         expect(request.headers["Server"]).toBeDefined();
     });
 
     it('should have expected value for Server', () => {
         let request = new ProxyRequest("SomeUrl");
-        
+
         expect(request.headers["Server"]).toBe("GlassFish Server Open Source Edition 4.0");
+    });
+    
+    
+    
+    
+    
+
+    it('built request should have the url provided in the constructor', () => {
+        let url = "SomeUrl";
+        let request = new ProxyRequest("SomeUrl").build();
+
+        expect(request["endpoint"]).toBe(url);
+    });
+
+    it('built request should have method GET', () => {
+        let method = "GET";
+        let request = new ProxyRequest("SomeUrl").build();
+
+        expect(request["method"]).toBe(method);
+    });
+
+    it('built request should have an object as headers property', () => {
+        let request = new ProxyRequest("SomeUrl").build();
+
+        expect(request["headers"] as JSON).toBeTruthy();
+    });
+
+    it('should have Content-Type defined', () => {
+        let request = new ProxyRequest("SomeUrl").build();
+
+        expect(request["headers"]["Content-Type"]).toBeDefined();
+    });
+
+    it('should have expected value for Content-Type', () => {
+        let request = new ProxyRequest("SomeUrl").build();
+
+        expect(request["headers"]["Content-Type"]).toBe("application/json");
+    });
+
+    it('should have Server defined', () => {
+        let request = new ProxyRequest("SomeUrl").build();
+
+        expect(request["headers"]["Server"]).toBeDefined();
+    });
+
+    it('should have expected value for Server', () => {
+        let request = new ProxyRequest("SomeUrl").build();
+
+        expect(request["headers"]["Server"]).toBe("GlassFish Server Open Source Edition 4.0");
     });
 });
