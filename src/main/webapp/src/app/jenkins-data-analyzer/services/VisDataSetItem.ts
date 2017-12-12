@@ -1,6 +1,6 @@
 
 
-export class VisDataSetItem {
+export interface VisDataSetItem {
     id: string;
     title: string;
     content: string;

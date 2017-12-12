@@ -1,6 +1,6 @@
 import { DataSet } from 'vis';
 
-export class VisNetworkData {
+export interface VisNetworkData {
     nodes: DataSet<any>;
     edges: DataSet<any>;
 }

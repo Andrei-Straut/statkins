@@ -18,10 +18,11 @@ export class JenkinsJobRelationshipNetworkService {
     }
 
     getDataSet(showUnconnectedNodes: boolean, showConnectedNodes: boolean): VisNetworkData {
-        let relationshipDataSet: VisNetworkData = new VisNetworkData();
-        relationshipDataSet.nodes = new DataSet<any>();
-        relationshipDataSet.edges = new DataSet<any>();
-
+        let relationshipDataSet: VisNetworkData = {
+            nodes: new DataSet<any>(),
+            edges: new DataSet<any>()
+        };
+        
         if (this.utilService.isInvalid(this.jenkinsData) || this.utilService.isInvalid(this.jenkinsData.jobs)) {
             return relationshipDataSet;
         }
@@ -43,10 +44,11 @@ export class JenkinsJobRelationshipNetworkService {
     }
 
     private getJobGraph(currentJobs: Array<IJenkinsJob>, treeLevel: number, showUnconnectedNodes: boolean, showConnectedNodes: boolean): VisNetworkData {
-        let jobsData: VisNetworkData = new VisNetworkData();
-        jobsData.nodes = new DataSet<any>();
-        jobsData.edges = new DataSet<any>();
-
+        let jobsData: VisNetworkData = {
+            nodes: new DataSet<any>(),
+            edges: new DataSet<any>()
+        };
+        
         if (this.utilService.isInvalid(currentJobs)) {
             return jobsData;
         }
@@ -114,9 +116,10 @@ export class JenkinsJobRelationshipNetworkService {
     }
 
     private mapDownstreamJobsToGraphEdges(job: IJenkinsJob, showConnectedNodes: boolean) {
-        let jobsData: VisNetworkData = new VisNetworkData();
-        jobsData.nodes = new DataSet<any>();
-        jobsData.edges = new DataSet<any>();
+        let jobsData: VisNetworkData = {
+            nodes: new DataSet<any>(),
+            edges: new DataSet<any>()
+        };
 
         job.downstreamProjects.forEach(downstreamProject => {
             let edge: any = {

@@ -1,5 +1,5 @@
 import {Component, Input, SimpleChanges, OnInit} from '@angular/core';
-import {Options, Network} from 'vis';
+import {Options, Network, DataSet} from 'vis';
 import {IJenkinsData} from 'jenkins-api-ts-typings';
 
 import {UtilService} from '../../util/services/util.service';
@@ -19,7 +19,7 @@ export class JenkinsJobRelationshipNetworkComponent implements OnInit {
     utilService: UtilService;
 
     @Input('jenkinsData')
-    jenkinsData = <IJenkinsData>null;
+    jenkinsData = <IJenkinsData> null;
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes["utilService"] !== undefined && changes["utilService"].currentValue !== undefined) {
@@ -37,7 +37,7 @@ export class JenkinsJobRelationshipNetworkComponent implements OnInit {
     private readonly visNetworkElementId = "jobRelationshipNetwork";
     private visNetworkContainer: HTMLElement;
     private visNetworkOptions: Options;
-    private visJobNetworkData: VisNetworkData = new VisNetworkData();
+    private visJobNetworkData: VisNetworkData = {nodes: new DataSet<any>(), edges: new DataSet<any>()};
     private visNetwork: Network;
 
     private readonly verticalMultiplier = 300;

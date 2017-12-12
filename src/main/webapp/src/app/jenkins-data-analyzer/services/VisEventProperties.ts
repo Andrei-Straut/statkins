@@ -1,5 +1,5 @@
 
     
-export class VisEventProperties {
+export interface VisEventProperties {
     item: string;
 }

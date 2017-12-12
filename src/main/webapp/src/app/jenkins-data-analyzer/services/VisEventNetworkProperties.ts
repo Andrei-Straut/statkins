@@ -1,6 +1,6 @@
-import { VisDataSetItem } from './VisDataSetItem';
-    
-export class VisEventNetworkProperties {
+
+
+    export interface VisEventNetworkProperties {
     nodes: Array<string>;
     edges: Array<any>;
     event: any;
