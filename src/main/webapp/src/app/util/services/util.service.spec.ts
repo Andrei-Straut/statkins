@@ -12,6 +12,8 @@ import {IJenkinsUser} from 'jenkins-api-ts-typings';
 import {JenkinsUser} from 'jenkins-api-ts-typings';
 import {IJenkinsView} from 'jenkins-api-ts-typings';
 import {JenkinsView} from 'jenkins-api-ts-typings';
+import {IJenkinsChangeSet} from 'jenkins-api-ts-typings';
+import {JenkinsChangeSet} from 'jenkins-api-ts-typings';
 import {IJenkinsAction} from 'jenkins-api-ts-typings';
 import {JenkinsAction} from 'jenkins-api-ts-typings';
 import {JenkinsTimeInQueueAction} from 'jenkins-api-ts-typings';
@@ -266,7 +268,155 @@ describe('UtilService', () => {
         expect(service.mapToArray(map).length).toBe(expectedLength);
         expect(service.mapToArray(map)).toEqual(expectedValue);
     }));
-
+    
+    it('getAffectedPathsArray should return empty for undefined build array', inject([UtilService], (service: UtilService) => {
+        let builds: Map<IJenkinsBuild, Array<IJenkinsChangeSet>> = undefined;
+        expect(service.getAffectedPathsArray(builds)).toBeTruthy();
+        expect(service.getAffectedPathsArray(builds).length).toBe(0);
+    }));
+    
+    it('getAffectedPathsArray should return empty for null build array', inject([UtilService], (service: UtilService) => {
+        let builds: Map<IJenkinsBuild, Array<IJenkinsChangeSet>> = null;
+        expect(service.getAffectedPathsArray(builds)).toBeTruthy();
+        expect(service.getAffectedPathsArray(builds).length).toBe(0);
+    }));
+    
+    it('getAffectedPathsArray should return empty for empty build array', inject([UtilService], (service: UtilService) => {
+        let builds: Map<IJenkinsBuild, Array<IJenkinsChangeSet>> = new Map<IJenkinsBuild, Array<IJenkinsChangeSet>>();
+        expect(service.getAffectedPathsArray(builds)).toBeTruthy();
+        expect(service.getAffectedPathsArray(builds).length).toBe(0);
+        
+    }));
+    
+    it('getAffectedPathsArray should return empty for builds with undefined changesets', inject([UtilService], (service: UtilService) => {
+        let builds: Map<IJenkinsBuild, Array<IJenkinsChangeSet>> = new Map<IJenkinsBuild, Array<IJenkinsChangeSet>>();
+        
+        let build1: IJenkinsBuild = new JenkinsBuild();
+        build1.changeSets = undefined;
+        
+        let build2: IJenkinsBuild = new JenkinsBuild();
+        build2.changeSets = undefined;
+        
+        builds.set(build1, build1.changeSets);
+        builds.set(build2, build2.changeSets);
+        
+        expect(service.getAffectedPathsArray(builds)).toBeTruthy();
+        expect(service.getAffectedPathsArray(builds).length).toBe(0);
+        
+    }));
+    
+    it('getAffectedPathsArray should return empty for builds with null changesets', inject([UtilService], (service: UtilService) => {
+        let builds: Map<IJenkinsBuild, Array<IJenkinsChangeSet>> = new Map<IJenkinsBuild, Array<IJenkinsChangeSet>>();
+        
+        let build1: IJenkinsBuild = new JenkinsBuild();
+        build1.changeSets = null;
+        
+        let build2: IJenkinsBuild = new JenkinsBuild();
+        build2.changeSets = null;
+        
+        builds.set(build1, build1.changeSets);
+        builds.set(build2, build2.changeSets);
+        
+        expect(service.getAffectedPathsArray(builds)).toBeTruthy();
+        expect(service.getAffectedPathsArray(builds).length).toBe(0);
+    }));
+    
+    it('getAffectedPathsArray should return empty for builds with empty changesets', inject([UtilService], (service: UtilService) => {
+        let builds: Map<IJenkinsBuild, Array<IJenkinsChangeSet>> = new Map<IJenkinsBuild, Array<IJenkinsChangeSet>>();
+        
+        let build1: IJenkinsBuild = new JenkinsBuild();
+        build1.changeSets = new Array<IJenkinsChangeSet>();
+        
+        let build2: IJenkinsBuild = new JenkinsBuild();
+        build2.changeSets = new Array<IJenkinsChangeSet>();
+        
+        builds.set(build1, build1.changeSets);
+        builds.set(build2, build2.changeSets);
+        
+        expect(service.getAffectedPathsArray(builds)).toBeTruthy();
+        expect(service.getAffectedPathsArray(builds).length).toBe(0);
+    }));
+    
+    it('getAffectedPathsArray should return empty for changesets with undefined affected paths', inject([UtilService], (service: UtilService) => {
+        let builds: Map<IJenkinsBuild, Array<IJenkinsChangeSet>> = new Map<IJenkinsBuild, Array<IJenkinsChangeSet>>();
+        
+        let build1: IJenkinsBuild = new JenkinsBuild();
+        let build1ChangeSet: IJenkinsChangeSet = new JenkinsChangeSet();
+        build1ChangeSet.affectedPaths = undefined;
+        build1.changeSets = Array.from([build1ChangeSet]);
+        
+        let build2: IJenkinsBuild = new JenkinsBuild();
+        let build2ChangeSet: IJenkinsChangeSet = new JenkinsChangeSet();
+        build2ChangeSet.affectedPaths = undefined;
+        build2.changeSets = Array.from([build2ChangeSet]);
+        
+        builds.set(build1, build1.changeSets);
+        builds.set(build2, build2.changeSets);
+        
+        expect(service.getAffectedPathsArray(builds)).toBeTruthy();
+        expect(service.getAffectedPathsArray(builds).length).toBe(0);
+    }));
+    
+    it('getAffectedPathsArray should return empty for changesets with null affected paths', inject([UtilService], (service: UtilService) => {
+        let builds: Map<IJenkinsBuild, Array<IJenkinsChangeSet>> = new Map<IJenkinsBuild, Array<IJenkinsChangeSet>>();
+        
+        let build1: IJenkinsBuild = new JenkinsBuild();
+        let build1ChangeSet: IJenkinsChangeSet = new JenkinsChangeSet();
+        build1ChangeSet.affectedPaths = null;
+        build1.changeSets = Array.from([build1ChangeSet]);
+        
+        let build2: IJenkinsBuild = new JenkinsBuild();
+        let build2ChangeSet: IJenkinsChangeSet = new JenkinsChangeSet();
+        build2ChangeSet.affectedPaths = null;
+        build2.changeSets = Array.from([build2ChangeSet]);
+        
+        builds.set(build1, build1.changeSets);
+        builds.set(build2, build2.changeSets);
+        
+        expect(service.getAffectedPathsArray(builds)).toBeTruthy();
+        expect(service.getAffectedPathsArray(builds).length).toBe(0);
+    }));
+    
+    it('getAffectedPathsArray should return empty for changesets with empty affected paths', inject([UtilService], (service: UtilService) => {
+        let builds: Map<IJenkinsBuild, Array<IJenkinsChangeSet>> = new Map<IJenkinsBuild, Array<IJenkinsChangeSet>>();
+        
+        let build1: IJenkinsBuild = new JenkinsBuild();
+        let build1ChangeSet: IJenkinsChangeSet = new JenkinsChangeSet();
+        build1ChangeSet.affectedPaths = new Array<string>();
+        build1.changeSets = Array.from([build1ChangeSet]);
+        
+        let build2: IJenkinsBuild = new JenkinsBuild();
+        let build2ChangeSet: IJenkinsChangeSet = new JenkinsChangeSet();
+        build2ChangeSet.affectedPaths = new Array<string>();;
+        build2.changeSets = Array.from([build2ChangeSet]);
+        
+        builds.set(build1, build1.changeSets);
+        builds.set(build2, build2.changeSets);
+        
+        expect(service.getAffectedPathsArray(builds)).toBeTruthy();
+        expect(service.getAffectedPathsArray(builds).length).toBe(0);
+    }));
+    
+    it('getAffectedPathsArray should return correct values for changesets with affected paths', inject([UtilService], (service: UtilService) => {
+        let builds: Map<IJenkinsBuild, Array<IJenkinsChangeSet>> = new Map<IJenkinsBuild, Array<IJenkinsChangeSet>>();
+        
+        let build1: IJenkinsBuild = new JenkinsBuild();
+        let build1ChangeSet: IJenkinsChangeSet = new JenkinsChangeSet();
+        build1ChangeSet.affectedPaths = Array.from(["SomeAffectedPath1", "SomeAffectedPath11", "SomeAffectedPath12"]);
+        build1.changeSets = Array.from([build1ChangeSet]);
+        
+        let build2: IJenkinsBuild = new JenkinsBuild();
+        let build2ChangeSet: IJenkinsChangeSet = new JenkinsChangeSet();
+        build2ChangeSet.affectedPaths = Array.from(["SomeAffectedPath1", "SomeAffectedPath21", "SomeAffectedPath22"]);
+        build2.changeSets = Array.from([build2ChangeSet]);
+        
+        builds.set(build1, build1.changeSets);
+        builds.set(build2, build2.changeSets);
+        
+        expect(service.getAffectedPathsArray(builds)).toBeTruthy();
+        expect(service.getAffectedPathsArray(builds).length).toBe(6);
+    }));
+    
     it('getJobByName should return undefined for undefined job array', inject([UtilService], (service: UtilService) => {
         let jobList: Array<IJenkinsJob> = undefined;
 
@@ -680,14 +830,6 @@ describe('UtilService', () => {
         expect(service.getViewByName(viewList, "SomeName")).toBe(view1);
         expect(service.getViewByName(viewList, "SomeName").description).toBe(view1.description);
     }));
-
-
-
-
-
-
-
-
 
     it('buildResultIs should return false for undefined parameter', inject([UtilService], (service: UtilService) => {
         let build: IJenkinsBuild = new JenkinsBuild();
@@ -1308,5 +1450,191 @@ describe('UtilService', () => {
         let job: IJenkinsJob = new JenkinsJob();
         job.builds = Array.from([new JenkinsBuild(), new JenkinsBuild(), new JenkinsBuild()]);
         expect(service.getNumberOfBuilds(job)).toBe(3);
+    }));
+
+    it('getLastBuildTimestamp should return 0 for undefined job', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = undefined;
+        expect(service.getLastBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastBuildTimestamp should return 0 for null job', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = null;
+        expect(service.getLastBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastBuildTimestamp should return 0 for undefined last build', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = new JenkinsJob();
+        job.lastBuild = undefined;
+        expect(service.getLastBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastBuildTimestamp should return 0 for null last build', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = new JenkinsJob();
+        job.lastBuild = null;
+        expect(service.getLastBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastBuildTimestamp should return 0 for undefined last build timestamp', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = new JenkinsJob();
+        job.lastBuild = new JenkinsBuild();
+        expect(service.getLastBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastBuildTimestamp should return 0 for null last build timestamp', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = new JenkinsJob();
+        job.lastBuild = new JenkinsBuild();
+        expect(service.getLastBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastBuildTimestamp should return 0 for undefined last build timestamp value', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = new JenkinsJob();
+        job.lastBuild = new JenkinsBuild();
+        job.lastBuild.timestamp = undefined;
+        expect(service.getLastBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastBuildTimestamp should return 0 for null last build timestamp value', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = new JenkinsJob();
+        job.lastBuild = new JenkinsBuild();
+        job.lastBuild.timestamp = null;
+        expect(service.getLastBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastBuildTimestamp should return 0 when last build timestamp value is smaller than 0', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = new JenkinsJob();
+        job.lastBuild = new JenkinsBuild();
+        job.lastBuild.timestamp = -123;
+        expect(service.getLastBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastBuildTimestamp should return correct results when last build timestamp value is valid', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = new JenkinsJob();
+        job.lastBuild = new JenkinsBuild();
+        job.lastBuild.timestamp = 123;
+        expect(service.getLastBuildTimestamp(job)).toBe(123);
+    }));
+
+    it('getLastSuccessfulBuildTimestamp should return 0 for undefined job', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = undefined;
+        expect(service.getLastSuccessfulBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastSuccessfulBuildTimestamp should return 0 for null job', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = null;
+        expect(service.getLastSuccessfulBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastSuccessfulBuildTimestamp should return 0 for undefined last successful build', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = new JenkinsJob();
+        job.lastSuccessfulBuild = undefined;
+        expect(service.getLastSuccessfulBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastSuccessfulBuildTimestamp should return 0 for null last successful build', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = new JenkinsJob();
+        job.lastSuccessfulBuild = null;
+        expect(service.getLastSuccessfulBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastSuccessfulBuildTimestamp should return 0 for undefined last successful build timestamp', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = new JenkinsJob();
+        job.lastSuccessfulBuild = new JenkinsBuild();
+        expect(service.getLastSuccessfulBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastSuccessfulBuildTimestamp should return 0 for null last successful build timestamp', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = new JenkinsJob();
+        job.lastSuccessfulBuild = new JenkinsBuild();
+        expect(service.getLastSuccessfulBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastSuccessfulBuildTimestamp should return 0 for undefined last successful build timestamp value', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = new JenkinsJob();
+        job.lastSuccessfulBuild = new JenkinsBuild();
+        job.lastSuccessfulBuild.timestamp = undefined;
+        expect(service.getLastSuccessfulBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastSuccessfulBuildTimestamp should return 0 for null last successful build timestamp value', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = new JenkinsJob();
+        job.lastSuccessfulBuild = new JenkinsBuild();
+        job.lastSuccessfulBuild.timestamp = null;
+        expect(service.getLastSuccessfulBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastSuccessfulBuildTimestamp should return 0 when last successful build timestamp value is smaller than 0', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = new JenkinsJob();
+        job.lastSuccessfulBuild = new JenkinsBuild();
+        job.lastSuccessfulBuild.timestamp = -123;
+        expect(service.getLastSuccessfulBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastSuccessfulBuildTimestamp should return correct results when last successful build timestamp value is valid', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = new JenkinsJob();
+        job.lastSuccessfulBuild = new JenkinsBuild();
+        job.lastSuccessfulBuild.timestamp = 123;
+        expect(service.getLastSuccessfulBuildTimestamp(job)).toBe(123);
+    }));
+
+    it('getLastFailedBuildTimestamp should return 0 for undefined job', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = undefined;
+        expect(service.getLastFailedBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastFailedBuildTimestamp should return 0 for null job', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = null;
+        expect(service.getLastFailedBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastFailedBuildTimestamp should return 0 for undefined last failed build', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = new JenkinsJob();
+        job.lastFailedBuild = undefined;
+        expect(service.getLastFailedBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastFailedBuildTimestamp should return 0 for null last failed build', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = new JenkinsJob();
+        job.lastFailedBuild = null;
+        expect(service.getLastFailedBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastFailedBuildTimestamp should return 0 for undefined last failed build timestamp', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = new JenkinsJob();
+        job.lastFailedBuild = new JenkinsBuild();
+        expect(service.getLastFailedBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastFailedBuildTimestamp should return 0 for null last failed build timestamp', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = new JenkinsJob();
+        job.lastFailedBuild = new JenkinsBuild();
+        expect(service.getLastFailedBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastFailedBuildTimestamp should return 0 for undefined last failed build timestamp value', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = new JenkinsJob();
+        job.lastFailedBuild = new JenkinsBuild();
+        job.lastFailedBuild.timestamp = undefined;
+        expect(service.getLastFailedBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastFailedBuildTimestamp should return 0 for null last failed build timestamp value', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = new JenkinsJob();
+        job.lastFailedBuild = new JenkinsBuild();
+        job.lastFailedBuild.timestamp = null;
+        expect(service.getLastFailedBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastFailedBuildTimestamp should return 0 when last failed build timestamp value is smaller than 0 ', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = new JenkinsJob();
+        job.lastFailedBuild = new JenkinsBuild();
+        job.lastFailedBuild.timestamp = -123;
+        expect(service.getLastFailedBuildTimestamp(job)).toBe(0);
+    }));
+
+    it('getLastFailedBuildTimestamp should return correct results when last failed  timestamp value is valid', inject([UtilService], (service: UtilService) => {
+        let job: IJenkinsJob = new JenkinsJob();
+        job.lastFailedBuild = new JenkinsBuild();
+        job.lastFailedBuild.timestamp = 123;
+        expect(service.getLastFailedBuildTimestamp(job)).toBe(123);
     }));
 });

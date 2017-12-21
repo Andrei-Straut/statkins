@@ -127,7 +127,7 @@ export class UtilService {
         }
         
         return this.mapToArray(builds)
-            .filter(changeSet => !this.isInvalid(changeSet))
+            .filter(changeSet => (!this.isInvalid(changeSet) && !this.isInvalid(changeSet.affectedPaths)))
             .map(changeSet => changeSet.affectedPaths)
             .reduce((a, b) => a.concat(b), []);
     }
@@ -400,8 +400,8 @@ export class UtilService {
     }
 
     getLastBuildTimestamp(job: IJenkinsJob): number {
-        if (job === undefined || job.lastBuild === undefined
-            || job.lastBuild.timestamp === undefined || job.lastBuild.timestamp === 0) {
+        if (this.isInvalid(job) || this.isInvalid(job.lastBuild) 
+            || this.isInvalid(job.lastBuild.timestamp) || job.lastBuild.timestamp <= 0) {
 
             return 0;
         }
@@ -410,8 +410,8 @@ export class UtilService {
     }
 
     getLastSuccessfulBuildTimestamp(job: IJenkinsJob): number {
-        if (job === undefined || job.lastSuccessfulBuild === undefined
-            || job.lastSuccessfulBuild.timestamp === undefined || job.lastSuccessfulBuild.timestamp === 0) {
+        if (this.isInvalid(job) || this.isInvalid(job.lastSuccessfulBuild) 
+            || this.isInvalid(job.lastSuccessfulBuild.timestamp) || job.lastSuccessfulBuild.timestamp <= 0) {
 
             return 0;
         }
@@ -420,8 +420,8 @@ export class UtilService {
     }
 
     getLastFailedBuildTimestamp(job: IJenkinsJob): number {
-        if (job === undefined || job.lastFailedBuild === undefined
-            || job.lastFailedBuild.timestamp === undefined || job.lastFailedBuild.timestamp === 0) {
+        if (this.isInvalid(job) || this.isInvalid(job.lastFailedBuild) 
+            || this.isInvalid(job.lastFailedBuild.timestamp) || job.lastFailedBuild.timestamp <= 0) {
 
             return 0;
         }
