@@ -8,57 +8,65 @@ export class AndreiStrautInfoMasterBuild12DataProvider implements IBuildDataProv
 
     private data: any = {
         "_class": "hudson.maven.MavenModuleSetBuild",
-        "actions": [{
-            "_class": "hudson.model.CauseAction",
-            "causes": [{
-                "_class": "com.cloudbees.jenkins.GitHubPushCause",
-                "shortDescription": "Started by GitHub push by Andrei-Straut"
-            }, {
-                "_class": "com.cloudbees.jenkins.GitHubPushCause",
-                "shortDescription": "Started by GitHub push by Andrei-Straut"
-            }]
-        }, {}, {
-            "_class": "hudson.plugins.git.util.BuildData",
-            "buildsByBranchName": {
-                "refs/remotes/origin/master": {
-                    "_class": "hudson.plugins.git.util.Build",
-                    "buildNumber": 12,
-                    "buildResult": null,
-                    "marked": {
-                        "SHA1": "e6cae6587caf25ab524105c7ddc8c91b9e376925",
-                        "branch": [{
-                            "SHA1": "e6cae6587caf25ab524105c7ddc8c91b9e376925",
-                            "name": "refs/remotes/origin/master"
-                        }]
-                    },
-                    "revision": {
-                        "SHA1": "e6cae6587caf25ab524105c7ddc8c91b9e376925",
-                        "branch": [{
-                            "SHA1": "e6cae6587caf25ab524105c7ddc8c91b9e376925",
-                            "name": "refs/remotes/origin/master"
-                        }]
+        "actions": [
+            {
+                "_class": "hudson.model.CauseAction",
+                "causes": [
+                    {
+                        "_class": "com.cloudbees.jenkins.GitHubPushCause",
+                        "shortDescription": "Started by GitHub push by Andrei-Straut"
+                    }, 
+                    {
+                        "_class": "com.cloudbees.jenkins.GitHubPushCause",
+                        "shortDescription": "Started by GitHub push by Andrei-Straut"
                     }
-                }
-            },
-            "lastBuiltRevision": {
-                "SHA1": "e6cae6587caf25ab524105c7ddc8c91b9e376925",
-                "branch": [{
+                ]
+            }, {},
+            {
+                "_class": "hudson.plugins.git.util.BuildData",
+                "buildsByBranchName": {
+                    "refs/remotes/origin/master": {
+                        "_class": "hudson.plugins.git.util.Build",
+                        "buildNumber": 12,
+                        "buildResult": null,
+                        "marked": {
+                            "SHA1": "e6cae6587caf25ab524105c7ddc8c91b9e376925",
+                            "branch": [{
+                                "SHA1": "e6cae6587caf25ab524105c7ddc8c91b9e376925",
+                                "name": "refs/remotes/origin/master"
+                            }]
+                        },
+                        "revision": {
+                            "SHA1": "e6cae6587caf25ab524105c7ddc8c91b9e376925",
+                            "branch": [{
+                                "SHA1": "e6cae6587caf25ab524105c7ddc8c91b9e376925",
+                                "name": "refs/remotes/origin/master"
+                            }]
+                        }
+                    }
+                },
+                "lastBuiltRevision": {
                     "SHA1": "e6cae6587caf25ab524105c7ddc8c91b9e376925",
-                    "name": "refs/remotes/origin/master"
-                }]
+                    "branch": [{
+                        "SHA1": "e6cae6587caf25ab524105c7ddc8c91b9e376925",
+                        "name": "refs/remotes/origin/master"
+                    }]
+                },
+                "remoteUrls": ["https://github.com/Andrei-Straut/andreistraut.info"],
+                "scmName": ""
             },
-            "remoteUrls": ["https://github.com/Andrei-Straut/andreistraut.info"],
-            "scmName": ""
-        },
-        {
-            "_class": "jenkins.metrics.impl.TimeInQueueAction", 
-            "queuingDurationMillis": 103833,
-            "totalDurationMillis": 1474583}, 
-        {
-            "_class": "hudson.plugins.git.GitTagAction"
-        }, {}, {
-            "_class": "hudson.maven.reporters.MavenAggregatedArtifactRecord"
-        }, {}, {}, {}, {}],
+            {
+                "_class": "jenkins.metrics.impl.TimeInQueueAction",
+                "queuingDurationMillis": 103833,
+                "totalDurationMillis": 1474583
+            },
+            {
+                "_class": "hudson.plugins.git.GitTagAction"
+            }, {}, 
+            {
+                "_class": "hudson.maven.reporters.MavenAggregatedArtifactRecord"
+            }, {}, {}, {}, {}
+        ],
         "artifacts": [],
         "building": false,
         "description": null,

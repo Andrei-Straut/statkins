@@ -122,21 +122,43 @@ export class UtilService {
     }
 
     getAffectedPathsArray(builds: Map<any, Array<IJenkinsChangeSet>>): Array<string> {
-        return this.mapToArray(builds).map(changeSet => changeSet.affectedPaths).reduce((a, b) => a.concat(b), []);
+        if (this.isInvalid(builds)) {
+            return new Array<string>();
+        }
+        
+        return this.mapToArray(builds)
+            .filter(changeSet => !this.isInvalid(changeSet))
+            .map(changeSet => changeSet.affectedPaths)
+            .reduce((a, b) => a.concat(b), []);
     }
 
     getJobByName(jobList: Array<IJenkinsJob>, name: string): IJenkinsJob {
-        let jobs: Array<IJenkinsJob> = jobList.filter(job => job.name === name);
+        if (this.isInvalid(jobList) || this.isInvalid(name)) {
+            return undefined;
+        }
+        
+        let jobs: Array<IJenkinsJob> = jobList.filter(job => (!this.isInvalid(job) && job.name === name));
 
         return jobs.length > 0 ? jobs[0] : undefined;
     }
 
     getJobByBuildUrl(jobList: Array<IJenkinsJob>, buildUrl: string): IJenkinsJob {
+        if (this.isInvalid(jobList) || this.isInvalid(buildUrl)) {
+            return undefined;
+        }
 
         for (let job of jobList) {
-            let builds = job.builds.filter(build => build.url.toLowerCase().trim().replace(" ", "") === buildUrl.toLowerCase().trim().replace(" ", ""));
+            if (this.isInvalid(job) || this.isInvalid(job.builds)) {
+                continue;
+            }
+            
+            let builds = job.builds
+                .filter(build => (
+                    !this.isInvalid(build) && 
+                    !this.isInvalid(build.url) && 
+                    build.url.toLowerCase().trim().replace(" ", "") === buildUrl.toLowerCase().trim().replace(" ", "")));
 
-            if (builds !== undefined && builds !== null && builds.length > 0) {
+            if (!this.isInvalid(builds) && builds.length > 0) {
                 return job;
             }
         }
@@ -144,13 +166,21 @@ export class UtilService {
     }
 
     getUserByFullName(userList: Array<IJenkinsUser>, fullName: string): IJenkinsUser {
-        let users: Array<IJenkinsUser> = userList.filter(user => user.fullName === fullName);
+        if (this.isInvalid(userList) || this.isInvalid(fullName)) {
+            return undefined;
+        }
+        
+        let users: Array<IJenkinsUser> = userList.filter(user => !this.isInvalid(user) && !this.isInvalid(user.fullName) && user.fullName === fullName);
 
         return users.length > 0 ? users[0] : undefined;
     }
 
     getViewByName(viewList: Array<IJenkinsView>, name: string): IJenkinsView {
-        let views: Array<IJenkinsView> = viewList.filter(view => view.name === name);
+        if (this.isInvalid(viewList) || this.isInvalid(name)) {
+            return undefined;
+        }
+        
+        let views: Array<IJenkinsView> = viewList.filter(view => !this.isInvalid(view) && !this.isInvalid(view.name) && view.name === name);
 
         return views.length > 0 ? views[0] : undefined;
     }
@@ -276,14 +306,14 @@ export class UtilService {
         if (this.isInvalid(builds)) {
             return 0;
         }
-        
+
         let filteredBuilds: Array<IJenkinsBuild> = builds.filter(b => !parent.isInvalid(b) && !parent.isInvalid(b.duration) && !isNaN(b.duration));
         if (filteredBuilds.length === 0) {
             return 0;
         }
 
         let durations: Array<number> = filteredBuilds.map(build => build.duration);
-        let totalDuration = durations.reduce(function (a:number, b:number) {
+        let totalDuration = durations.reduce(function (a: number, b: number) {
             return a + b;
         });
         let average = totalDuration / filteredBuilds.length;
@@ -323,35 +353,46 @@ export class UtilService {
     }
 
     public getBuildTimeInQueue(build: IJenkinsBuild): number {
+        if (this.isInvalid(build) || this.isInvalid(build.actions)) {
+            return 0;
+        }
+
         let timeInQueueArray: Array<IJenkinsAction> = build.actions.filter(action => (action as IJenkinsAction).isTimeInQueueActionClass());
+        if (this.isInvalid(timeInQueueArray)) {
+            return 0;
+        }
 
-        if (!this.isInvalid(timeInQueueArray)) {
-            let timeInQueue = ((timeInQueueArray[0]) as JenkinsTimeInQueueAction).getQueuingDurationMillis();
+        let timeInQueueAction: JenkinsTimeInQueueAction = timeInQueueArray[0] as JenkinsTimeInQueueAction;
 
-            if (!this.isInvalid(timeInQueue) && !isNaN(timeInQueue) && timeInQueue > 0) {
-                return timeInQueue;
-            }
+        let timeInQueue = timeInQueueAction.getQueuingDurationMillis();
+        if (!this.isInvalid(timeInQueue) && !isNaN(timeInQueue) && timeInQueue > 0) {
+            return timeInQueue;
         }
 
         return 0;
     }
 
     public getBuildTotalTime(build: IJenkinsBuild): number {
-        let totalTimeArray: Array<IJenkinsAction> = build.actions.filter(action => (action as IJenkinsAction).isTimeInQueueActionClass());
-
-        if (!this.isInvalid(totalTimeArray)) {
-            let totalTime = ((totalTimeArray[0]) as JenkinsTimeInQueueAction).getTotalDurationMillis();
-
-            if (!this.isInvalid(totalTime) && !isNaN(totalTime) && totalTime > 0) {
-                return totalTime;
-            }
+        if (this.isInvalid(build) || this.isInvalid(build.actions)) {
+            return 0;
         }
 
-        return build.duration;
+        let totalTimeArray: Array<IJenkinsAction> = build.actions.filter(action => (action as IJenkinsAction).isTimeInQueueActionClass());
+        if (this.isInvalid(totalTimeArray)) {
+            return 0;
+        }
+
+        let timeInQueueAction: JenkinsTimeInQueueAction = totalTimeArray[0] as JenkinsTimeInQueueAction;
+        let totalTime = timeInQueueAction.getTotalDurationMillis();
+        if (!this.isInvalid(totalTime) && !isNaN(totalTime) && totalTime > 0) {
+            return totalTime;
+        }
+
+        return 0;
     }
 
     getNumberOfBuilds(job: IJenkinsJob): number {
-        if (job === undefined || job.builds === undefined || job.builds.length === 0) {
+        if (this.isInvalid(job) || this.isInvalid(job.builds)) {
             return 0;
         }
 

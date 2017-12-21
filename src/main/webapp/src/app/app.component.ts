@@ -26,6 +26,16 @@ export class AppComponent {
     dataAvailable: boolean = false;
     
     constructor(private LOGGER:Logger, config: ConfigService, proxy: ProxyService, util: UtilService) {
+        if(config === undefined || config === null) {
+            throw new Error("Config Service not provided or not found. Cannot continue");
+        }
+        if(proxy === undefined || proxy === null) {
+            throw new Error("Proxy Service not provided or not found. Cannot continue");
+        }
+        if(util === undefined || util === null) {
+            throw new Error("Util Service not provided or not found. Cannot continue");
+        }
+        
         this.name = config.appName;
         this.copyright = config.copyright;
         this.configService = config;

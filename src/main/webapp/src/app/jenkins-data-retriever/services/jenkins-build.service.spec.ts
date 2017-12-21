@@ -11,7 +11,6 @@ import {UtilMockService} from '../../test-mock/services/util.mock.service';
 import {ProxyJenkinsJobMockService} from '../../test-mock/services/proxy.jenkins-build.mock.service';
 import {ProxyObservableErrorMockService} from '../../test-mock/services/proxy.observable-error.mock.service';
 import {ProxyEmptyResponseMockService} from '../../test-mock/services/proxy.empty-response.mock.service';
-import {ProxyExceptionMockService} from '../../test-mock/services/proxy.exception.mock.service';
 import {JenkinsServiceId} from './JenkinsServiceId';
 import {JenkinsDataProviderService} from '../../test-mock/services/jenkins-data-provider.service';
 
