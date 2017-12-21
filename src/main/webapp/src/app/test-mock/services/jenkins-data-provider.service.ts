@@ -39,6 +39,7 @@ export class JenkinsDataProviderService {
 
     constructor() {
         this.jobs = this.createJobs();
+        this.nodes = this.createNodes();
         this.builds = this.createBuilds(this.jobs);
         this.changeSets = this.createChangeSets(this.builds);
     }
@@ -53,6 +54,10 @@ export class JenkinsDataProviderService {
             changeSets: this.changeSets,
             actions: this.actions
         };
+    }
+
+    private createNodes(): Array<IJenkinsNode> {
+        return new Array<IJenkinsNode>();
     }
 
     private createJobs(): Array<IJenkinsJob> {

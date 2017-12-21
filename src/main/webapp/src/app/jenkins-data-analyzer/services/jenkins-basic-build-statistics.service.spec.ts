@@ -24,4 +24,13 @@ describe('JenkinsBasicBuildStatisticsService', () => {
         let service: JenkinsBasicBuildStatisticsService = new JenkinsBasicBuildStatisticsService(new UtilMockService(), loggerService, new IJenkinsDataMockService());
         expect(service).toBeTruthy();
     });
+
+    it('getStatistics should return a value with empty mock Jenkins Data', () => {
+        let service: JenkinsBasicBuildStatisticsService = new JenkinsBasicBuildStatisticsService(new UtilMockService(), loggerService, new IJenkinsDataMockService());
+        expect(service.getStatistics()).toBeTruthy();
+        
+        expect(service.getStatistics().title).toBe("Builds");
+        expect(service.getStatistics().subTitle).toBe("Number Of Builds: 0");
+        expect(service.getStatistics().contents.length).toBe(7);
+    });
 });

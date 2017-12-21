@@ -35,6 +35,10 @@ export class JenkinsBasicBuildStatisticsService implements StatisticsEntryProvid
 
     private getNumberOfBuilds(builds: Map<IJenkinsJob, Array<IJenkinsBuild>>): number {
         var numberOfBuilds: number = 0;
+        
+        if (this.util.isInvalid(builds)) {
+            return 0;
+        }
 
         Array.from(builds.keys()).forEach(function (entry) {
             numberOfBuilds = numberOfBuilds + entry.builds.length;
@@ -79,10 +83,18 @@ export class JenkinsBasicBuildStatisticsService implements StatisticsEntryProvid
 
             buildsByDay.get(day).push(build);
         }
+        
+        if (this.util.isInvalid(buildsByDay)) {
+             return new StatisticsEntry("Busiest day", "N/A", undefined);
+        }
 
         var mostBuilt: string = Array.from(buildsByDay.keys()).reduce(function (day1, day2) {
             return buildsByDay.get(day1) >= buildsByDay.get(day2) ? day1 : day2;
         });
+        
+        if (this.util.isInvalid(mostBuilt)) {
+             return new StatisticsEntry("Busiest day", "N/A", undefined);
+        }
 
         return new StatisticsEntry("Busiest day", mostBuilt + ", " + buildsByDay.get(mostBuilt).length + " builds", undefined);
     }
@@ -122,6 +134,11 @@ export class JenkinsBasicBuildStatisticsService implements StatisticsEntryProvid
     private getBuildWithMostChangeSets(builds: Map<IJenkinsJob, Array<IJenkinsBuild>>): StatisticsEntry {
         let parent = this;
         let buildArray: Array<IJenkinsBuild> = this.util.mapToArray(builds);
+        
+        if (this.util.isInvalid(buildArray)) {
+             return new StatisticsEntry("Most commits", "N/A", undefined);
+        }
+        
         let mostCommitted = buildArray.reduce(function (buildA, buildB) {
             if (parent.util.isInvalid(buildA) || parent.util.isInvalid(buildA.changeSets)) {
                 return buildB;
@@ -149,6 +166,10 @@ export class JenkinsBasicBuildStatisticsService implements StatisticsEntryProvid
     }
 
     private getAverageBuildDuration(builds: Map<IJenkinsJob, Array<IJenkinsBuild>>): StatisticsEntry {
+        if (this.util.isInvalid(builds)) {
+             return new StatisticsEntry("Average build duration", "N/A", undefined);
+        }
+        
         let totalDurationTimestamp = this.util.mapToArray(builds).map(build => build.duration).reduce(function (buildADuration, buildBDuration) {
             return (isNaN(buildADuration) ? 0 : buildADuration) + (isNaN(buildBDuration) ? 0 : buildBDuration);
         });

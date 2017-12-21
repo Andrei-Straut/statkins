@@ -78,7 +78,7 @@ describe('ConfigService', () => {
     it('jenkinsUrl should be same between DEV and DEV configuration', inject([ConfigService], (service: ConfigService) => {
         let configTest: ConfigService = new ConfigServiceTestDev();
         
-        if (service._configuration === 'DEV') {
+        if (service._configuration === 'DEV' || service._configuration === 'STAGING') {
             expect(configTest.jenkinsUrl === service.jenkinsUrl).toBeTruthy();
         } else {
             expect(configTest.jenkinsUrl !== service.jenkinsUrl).toBeTruthy();

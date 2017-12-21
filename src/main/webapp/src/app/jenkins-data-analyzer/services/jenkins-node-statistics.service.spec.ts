@@ -24,4 +24,13 @@ describe('JenkinsNodeStatisticsService', () => {
         let service: JenkinsNodeStatisticsService = new JenkinsNodeStatisticsService(new UtilMockService(), loggerService, new IJenkinsDataMockService());
         expect(service).toBeTruthy();
     });
+
+    it('getStatistics should return a value with empty mock Jenkins Data', () => {
+        let service: JenkinsNodeStatisticsService = new JenkinsNodeStatisticsService(new UtilMockService(), loggerService, new IJenkinsDataMockService());
+        expect(service.getStatistics()).toBeTruthy();
+        
+        expect(service.getStatistics().title).toBe("Nodes");
+        expect(service.getStatistics().subTitle).toBe("Number Of Nodes: N/A");
+        expect(service.getStatistics().contents.length).toBe(6);
+    });
 });

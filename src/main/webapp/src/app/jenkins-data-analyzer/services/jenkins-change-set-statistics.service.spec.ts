@@ -24,4 +24,13 @@ describe('JenkinsChangeSetStatisticsService', () => {
         let service: JenkinsChangeSetStatisticsService = new JenkinsChangeSetStatisticsService(new UtilMockService(), loggerService, new IJenkinsDataMockService());
         expect(service).toBeTruthy();
     });
+
+    it('getStatistics should return a value with empty mock Jenkins Data', () => {
+        let service: JenkinsChangeSetStatisticsService = new JenkinsChangeSetStatisticsService(new UtilMockService(), loggerService, new IJenkinsDataMockService());
+        expect(service.getStatistics()).toBeTruthy();
+        
+        expect(service.getStatistics().title).toBe("Commits");
+        expect(service.getStatistics().subTitle).toBe("Number Of Commits: 0");
+        expect(service.getStatistics().contents.length).toBe(6);
+    });
 });
