@@ -67,7 +67,6 @@ h4,
 h5,
 h6,
 .container {
-    font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     color: white;
 }
 body,
@@ -96,6 +95,14 @@ h2, h3 {
 body {
     padding-top: 0px;
     padding-bottom: 20px;
+}
+.checkbox-inline,
+radio-inline,
+.bg-color-white span {
+    color: black;
+}
+.back-footer-green span {
+    color: white;
 }
 
 /*================================================================================================*/
