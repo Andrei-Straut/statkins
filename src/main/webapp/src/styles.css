@@ -58,9 +58,38 @@
 /*================================================================================================*/
 /*========================================= MASTER STYLES ========================================*/
 /*================================================================================================*/
-
+body,
+header,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.container {
+    font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: white;
+}
+body,
+header,
+.container,
+div.jumbotron{
+    background: #335061;
+    overflow-x: hidden;
+}
+nav,
+.navbar-inverse {
+    background: #2C3E50;
+    color: white;
+}
+a,
+a:hover,
+a:focus,
+a:active,
+a.active {
+    color: #337ab7;
+}
 h2, h3 {
-    color: #444;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: lighter;
 }
@@ -76,6 +105,9 @@ body {
     margin-bottom: 0px;
 }
 .navbar-brand {
+    float: left;
+}
+.navbar-inverse {
     float: left;
 }
 a.btn-navbar {
