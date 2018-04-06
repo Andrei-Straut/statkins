@@ -42,6 +42,7 @@ export class JenkinsBuildService extends JenkinsDataRetrieverService {
                     this.LOGGER.warn("Build details not retrieved correctly");
                     this.LOGGER.debug(err);
                     this.completedSuccessfully = false;
+                    this.allItemsRetrievedSuccessfully = false;
                     this.complete = true;
 
                     return;
@@ -100,6 +101,7 @@ export class JenkinsBuildService extends JenkinsDataRetrieverService {
                 .catch((err) => {
                     parent.LOGGER.warn("Error retrieving details for build #" + build.number, "of job", job.name, "(" + buildUrl + ") - Enable Debug mode for stacktrace");
                     parent.LOGGER.debug(err);
+                    parent.allItemsRetrievedSuccessfully = false;
                 });
         });
     }
@@ -115,6 +117,7 @@ export class JenkinsBuildService extends JenkinsDataRetrieverService {
 
             if (!(<JSON> buildJson).hasOwnProperty("number") || !(<JSON> buildJson).hasOwnProperty("url")) {
                 this.LOGGER.warn("No build details found for build:", buildJson);
+                this.allItemsRetrievedSuccessfully = false;
                 continue;
             }
 
@@ -122,6 +125,7 @@ export class JenkinsBuildService extends JenkinsDataRetrieverService {
 
             if (build === undefined || build === null) {
                 this.LOGGER.warn("Build with number #" + buildJson["number"], "not found for job", job.name);
+                this.allItemsRetrievedSuccessfully = false;
                 continue;
             }
 
@@ -138,11 +142,13 @@ export class JenkinsBuildService extends JenkinsDataRetrieverService {
 
         let jobData: JSON = JSON.parse(job.getJsonData());
         if (!jobData.hasOwnProperty(buildTypeString)) {
+            this.allItemsRetrievedSuccessfully = false;
             return undefined;
         }
 
         let buildData: JSON = (jobData[buildTypeString] as JSON);
         if (buildData === undefined || buildData === null || !buildData.hasOwnProperty("number")) {
+            this.allItemsRetrievedSuccessfully = false;
             return undefined;
         }
 

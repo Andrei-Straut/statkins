@@ -26,6 +26,7 @@ export class JenkinsViewService extends JenkinsDataRetrieverService {
         if (this.util.isInvalid(this.viewList)) {
             this.LOGGER.error("Empty or null view list received");
             this.completedSuccessfully = false;
+            this.allItemsRetrievedSuccessfully = false;
             this.complete = true;
             return;
         }
@@ -41,7 +42,10 @@ export class JenkinsViewService extends JenkinsDataRetrieverService {
             viewPromises.push(this.proxy.proxy(viewUrl)
                 .first()
                 .toPromise()
-                .catch(() => {this.LOGGER.warn("Error retrieving details for view", view.name);}));
+                .catch(() => {
+                    this.LOGGER.warn("Error retrieving details for view", view.name); 
+                    this.allItemsRetrievedSuccessfully = false;
+                }));
         }
 
         await Promise.all(viewPromises)
@@ -63,6 +67,7 @@ export class JenkinsViewService extends JenkinsDataRetrieverService {
 
                     if (this.util.isInvalid(view)) {
                         this.LOGGER.warn("No view with name", viewJson["name"], "found");
+                        this.allItemsRetrievedSuccessfully = false;
                         continue;
                     }
 
@@ -78,6 +83,7 @@ export class JenkinsViewService extends JenkinsDataRetrieverService {
             }).catch(error => {
                 this.LOGGER.error("Error Occurred processing view:", error);
                 this.completedSuccessfully = false;
+                this.allItemsRetrievedSuccessfully = false;
                 this.complete = true;
                 return;
             });

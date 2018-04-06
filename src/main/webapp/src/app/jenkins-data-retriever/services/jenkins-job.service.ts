@@ -24,6 +24,7 @@ export class JenkinsJobService extends JenkinsDataRetrieverService {
         if (this.util.isInvalid(this.jobList)) {
             this.LOGGER.error("Empty or null job list received");
             this.completedSuccessfully = false;
+            this.allItemsRetrievedSuccessfully = false;
             this.complete = true;
             return;
         }
@@ -39,7 +40,10 @@ export class JenkinsJobService extends JenkinsDataRetrieverService {
             jobPromises.push(this.proxy.proxy(jobUrl)
                 .first()
                 .toPromise()
-                .catch(() => {this.LOGGER.warn("Error retrieving details for job", job.name);}));
+                .catch(() => {
+                    this.LOGGER.warn("Error retrieving details for job", job.name); 
+                    this.allItemsRetrievedSuccessfully = false;
+                }));
         }
 
         await Promise.all(jobPromises)
@@ -48,6 +52,7 @@ export class JenkinsJobService extends JenkinsDataRetrieverService {
                 for (let jobJson of <Array<JSON>> values) {
                     if (this.util.isInvalid(jobJson) || !(<JSON> jobJson).hasOwnProperty("name")) {
                         this.LOGGER.warn("No job details found for:", jobJson);
+                        this.allItemsRetrievedSuccessfully = false;
                         continue;
                     }
 
@@ -55,6 +60,7 @@ export class JenkinsJobService extends JenkinsDataRetrieverService {
 
                     if (job === undefined) {
                         this.LOGGER.warn("No job with name", jobJson["name"], "found");
+                        this.allItemsRetrievedSuccessfully = false;
                         continue;
                     }
 

@@ -37,6 +37,7 @@ export class JenkinsNodeService extends JenkinsDataRetrieverService {
             .catch(error => {
                 this.LOGGER.error("Could not retrieve node list:", error);
                 this.completedSuccessfully = false;
+                this.allItemsRetrievedSuccessfully = false;
                 this.complete = true;
             });
 
@@ -44,6 +45,7 @@ export class JenkinsNodeService extends JenkinsDataRetrieverService {
         if (this.util.isInvalid(nodeResponse) || this.util.isInvalid(nodeResponse["computer"])) {
             this.nodeList = new Array<IJenkinsNode>();
             this.completedSuccessfully = false;
+            this.allItemsRetrievedSuccessfully = false;
             this.complete = true;
             return;
         }
@@ -56,6 +58,8 @@ export class JenkinsNodeService extends JenkinsDataRetrieverService {
 
             if (!this.util.isInvalid(jenkinsNode) && !this.util.isInvalid(jenkinsNode.name)) {
                 jenkinsNode.url = this.getJenkinsNodeUrl(this.url, this.config, jenkinsNode.displayName);
+            } else {
+                this.LOGGER.debug("Node details invalid:", nodeResponse);
             }
 
             this.nodeList.push(jenkinsNode);

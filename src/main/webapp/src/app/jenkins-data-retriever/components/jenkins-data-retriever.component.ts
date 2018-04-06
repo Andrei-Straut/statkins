@@ -210,8 +210,28 @@ export class JenkinsDataRetrieverComponent implements OnInit {
         if (!service.isComplete()) {
             return true;
         }
+        
+        if (!service.isDataComplete()) {
+            return true;
+        }
 
-        return !service.isSuccessful();
+        return !service.isSuccessful() && !service.isDataComplete();
+    }
+
+    isHideIncompleteLabel(service: IJenkinsDataRetrieverService): boolean {
+        if (service === undefined || service === null) {
+            return true;
+        }
+
+        if (!service.isComplete()) {
+            return true;
+        }
+
+        if (!service.isSuccessful()) {
+            return true;
+        }
+
+        return service.isDataComplete();
     }
 
     isHideErrorLabel(service: IJenkinsDataRetrieverService): boolean {
@@ -227,7 +247,7 @@ export class JenkinsDataRetrieverComponent implements OnInit {
     }
 
     hasRetrieveErrors(): boolean {
-        if (this.serviceEndedWithErrors(this.services.nodeService)) {
+        if (this.serviceEndedWithErrors(this.services.nodeService) || this.serviceDataIncomplete(this.services.nodeService)) {
             return true;
         }
 
@@ -235,7 +255,7 @@ export class JenkinsDataRetrieverComponent implements OnInit {
             return true;
         }
 
-        if (this.serviceEndedWithErrors(this.services.userService)) {
+        if (this.serviceEndedWithErrors(this.services.userService) || this.serviceDataIncomplete(this.services.userService)) {
             return true;
         }
 
@@ -243,7 +263,7 @@ export class JenkinsDataRetrieverComponent implements OnInit {
             return true;
         }
 
-        if (this.serviceEndedWithErrors(this.services.jobService)) {
+        if (this.serviceEndedWithErrors(this.services.jobService) || this.serviceDataIncomplete(this.services.jobService)) {
             return true;
         }
 
@@ -251,7 +271,7 @@ export class JenkinsDataRetrieverComponent implements OnInit {
             return true;
         }
 
-        if (this.serviceEndedWithErrors(this.services.viewService)) {
+        if (this.serviceEndedWithErrors(this.services.viewService) || this.serviceDataIncomplete(this.services.viewService)) {
             return true;
         }
 
@@ -259,15 +279,15 @@ export class JenkinsDataRetrieverComponent implements OnInit {
             return true;
         }
 
-        if (this.serviceEndedWithErrors(this.services.buildService)) {
+        if (this.serviceEndedWithErrors(this.services.buildService) || this.serviceDataIncomplete(this.services.buildService)) {
             return true;
         }
 
-        if (this.serviceEndedWithErrors(this.services.changeSetService)) {
+        if (this.serviceEndedWithErrors(this.services.changeSetService) || this.serviceDataIncomplete(this.services.changeSetService)) {
             return true;
         }
 
-        if (this.serviceEndedWithErrors(this.services.actionService)) {
+        if (this.serviceEndedWithErrors(this.services.actionService) || this.serviceDataIncomplete(this.services.actionService)) {
             return true;
         }
 
@@ -284,5 +304,17 @@ export class JenkinsDataRetrieverComponent implements OnInit {
         }
 
         return !service.isSuccessful();
+    }
+
+    private serviceDataIncomplete(service: IJenkinsDataRetrieverService): boolean {
+        if (service === null || service === undefined) {
+            return false;
+        }
+
+        if (!service.isComplete()) {
+            return false;
+        }
+
+        return service.isComplete() && !service.isDataComplete();
     }
 }
