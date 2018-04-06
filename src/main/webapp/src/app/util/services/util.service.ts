@@ -118,12 +118,15 @@ export class UtilService {
         let minutes = 0;
         
         if (durationInMinutes > (60 * 24)) {
-            days = Math.round(durationInMinutes / (60 * 24));
-            hours = Math.round((durationInMinutes - (days * 60 * 24)) / 60);
-            minutes = Math.round((durationInMinutes - ((durationInMinutes / (60 * 24)) + (durationInMinutes / 60))) % 60);
+            days = Math.floor(durationInMinutes / (60 * 24));
+            let durationWithoutDays = durationInMinutes - (days * 60 * 24);
+            hours = Math.floor(durationWithoutDays / 60);
+            let durationWithoutDaysWithoutHours = durationWithoutDays - (hours * 60);
+            minutes = Math.floor(durationWithoutDaysWithoutHours % 60);
         } else if(durationInMinutes > 60) {
-            hours = Math.round(durationInMinutes / 60);            
-            minutes = Math.round((durationInMinutes - (durationInMinutes / 60)) % 60);
+            hours = Math.floor(durationInMinutes / 60);
+            let durationWithoutHours = durationInMinutes - (hours * 60);
+            minutes = Math.floor(durationWithoutHours % 60);
         } else {
             minutes = durationInMinutes;
         }
