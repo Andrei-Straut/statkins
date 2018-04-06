@@ -111,6 +111,26 @@ export class UtilService {
 
         return momentA.isAfter(momentB);
     }
+    
+    simpleFormatDuration(durationInMinutes: number): string {
+        let days = 0;
+        let hours = 0;
+        let minutes = 0;
+        
+        if (durationInMinutes > (60 * 24)) {
+            days = Math.round(durationInMinutes / (60 * 24));
+            hours = Math.round((durationInMinutes - (days * 60 * 24)) / 60);
+            minutes = Math.round((durationInMinutes - ((durationInMinutes / (60 * 24)) + (durationInMinutes / 60))) % 60);
+        } else if(durationInMinutes > 60) {
+            hours = Math.round(durationInMinutes / 60);            
+            minutes = Math.round((durationInMinutes - (durationInMinutes / 60)) % 60);
+        } else {
+            minutes = durationInMinutes;
+        }
+        
+        let formatted: string = (days > 0 ? days + 'd ' : "") + (hours > 0 ? hours + 'h ' : "") + minutes + 'm';
+        return formatted;
+    }
 
     mapToArray<T>(values: Map<any, Array<T>>): Array<T> {
 

@@ -273,14 +273,18 @@ export class JenkinsBuildTimelineComponent implements OnInit {
         if (timeInQueueMinutes === 0 || percentageInQueue === 0) {
             return undefined;
         }
-
+        
+        // Use proper time calculations (i.e. if an item takes a day+ to run, show it as a day+, not only as minutes)
+        let finalRunTime: string = this.utilService.simpleFormatDuration(runtimeMinutes);
+        let finalQueueTime: string = this.utilService.simpleFormatDuration(timeInQueueMinutes);
+        
         return ''
             + '<div class="progress-wrapper">'
             + '<div class="progress progress-yellow" style="width:' + percentageInQueue + '%">'
-            + '<label class="progress-label progress-label-yellow">' + 'Queue: ' + timeInQueueMinutes + 'm (' + percentageInQueue + '%)' + '</label>'
+            + '<label class="progress-label progress-label-yellow">' + 'Queue: ' + finalQueueTime + ' (' + percentageInQueue + '%)' + '</label>'
             + '</div>'
             + '<div class="progress progress-green" style="width:' + (100 - percentageInQueue) + '%; left: ' + (percentageInQueue) + '%">'
-            + '<label class="progress-label progress-label-green">' + 'Run: ' + runtimeMinutes + 'm (' + (100 - percentageInQueue) + '%)' + '</label>'
+            + '<label class="progress-label progress-label-green">' + 'Run: ' + finalRunTime + ' (' + (100 - percentageInQueue) + '%)' + '</label>'
             + '</div>'
             + '</div>';
     }
@@ -356,6 +360,7 @@ export class JenkinsBuildTimelineComponent implements OnInit {
         let running = this.utilService.buildIsRunning(build) ? " <b><i>(Running)</i></b>" : "";
         let aborted = this.utilService.buildResultIs(build, JenkinsBuildStatus.Aborted) ? " <b><i>(Aborted)</i></b>" : "";
         let timeSpentInQueue = Math.round(moment.duration((this.utilService.getBuildTimeInQueue(build)), "milliseconds").asMinutes());
+        let finalQueueTime: string = this.utilService.simpleFormatDuration(timeSpentInQueue);
 
         let queuedDateTime = new Date(build.timestamp - this.utilService.getBuildTimeInQueue(build));
         let startDateTime = new Date(build.timestamp);
@@ -365,18 +370,19 @@ export class JenkinsBuildTimelineComponent implements OnInit {
             + (!this.utilService.isInvalid(build.displayName) ? "<b>Name</b>: " + build.displayName + "<br/>" : "")
             + (!this.utilService.isInvalid(build.description) ? "<b>Description</b>: " + build.description + "<br/>" : "")
             + (this.getItemDateTimes(queuedDateTime, startDateTime, endDateTime, this.utilService.buildIsRunning(build)) + running + aborted + "<br/>")
-            + ((timeSpentInQueue > 0) ? ("This build spent " + timeSpentInQueue + " minutes in queue<br/>") : "")
+            + ((timeSpentInQueue > 0) ? ("This build spent " + finalQueueTime + " in queue<br/>") : "")
             + "<i>Double-click to open in Jenkins</i>";
     }
 
     private getItemDateTimes(queuedDateTime: Date, startDateTime: Date, endDateTime: Date, isRunning: boolean): string {
-        let queuedInfo = this.utilService.padTime(queuedDateTime);
-        let startedInfo = this.utilService.padTime(startDateTime);
-        let endedInfo = this.utilService.padTime(endDateTime);
+        let queuedInfo = "Today at " + this.utilService.padTime(queuedDateTime);
+        let startedInfo = "Today at " + this.utilService.padTime(startDateTime);
+        let endedInfo = "Today at " + this.utilService.padTime(endDateTime);
+        let today = new Date();
 
-        if (!this.utilService.isSameDate(queuedDateTime, startDateTime)
-            || !this.utilService.isSameDate(queuedDateTime, endDateTime)
-            || !this.utilService.isSameDate(startDateTime, endDateTime)) {
+        if (!this.utilService.isSameDate(queuedDateTime, today)
+            || !this.utilService.isSameDate(startDateTime, today)
+            || !this.utilService.isSameDate(endDateTime, today)) {
 
             queuedInfo = this.utilService.padDate(queuedDateTime) + " " + this.utilService.padTime(queuedDateTime);
             startedInfo = this.utilService.padDate(startDateTime) + " " + this.utilService.padTime(startDateTime);
