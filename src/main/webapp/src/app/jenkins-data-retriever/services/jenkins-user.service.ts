@@ -23,6 +23,7 @@ export class JenkinsUserService extends JenkinsDataRetrieverService {
         if (this.util.isInvalid(this.userList)) {
             this.LOGGER.error("Empty or null user list received");
             this.completedSuccessfully = false;
+            this.allItemsRetrievedSuccessfully = false;
             this.complete = true;
             return;
         }
@@ -38,7 +39,10 @@ export class JenkinsUserService extends JenkinsDataRetrieverService {
             userPromises.push(this.proxy.proxy(userUrl)
                 .first()
                 .toPromise()
-                .catch(() => {this.LOGGER.warn("Error retrieving details for user", user.fullName);}));
+                .catch(() => {
+                    this.LOGGER.warn("Error retrieving details for user", user.fullName);
+                    this.allItemsRetrievedSuccessfully = false;
+                }));
         }
 
         await Promise.all(userPromises)
@@ -47,6 +51,7 @@ export class JenkinsUserService extends JenkinsDataRetrieverService {
                 for (let userJson of <Array<JSON>> values) {
                     if (!(<JSON> userJson).hasOwnProperty("fullName")) {
                         this.LOGGER.warn("No user details found for:", userJson);
+                        this.allItemsRetrievedSuccessfully = false;
                         continue;
                     }
 
@@ -54,6 +59,7 @@ export class JenkinsUserService extends JenkinsDataRetrieverService {
 
                     if (this.util.isInvalid(user)) {
                         this.LOGGER.warn("No user with fullName", userJson["fullName"], "found");
+                        this.allItemsRetrievedSuccessfully = false;
                         continue;
                     }
 

@@ -32,6 +32,7 @@ export class JenkinsActionService extends JenkinsDataRetrieverService {
         if (this.util.isInvalid(this.buildList)) {
             this.LOGGER.error("Empty or null build list received");
             this.completedSuccessfully = false;
+            this.allItemsRetrievedSuccessfully = false;
             this.complete = true;
             return;
         }
