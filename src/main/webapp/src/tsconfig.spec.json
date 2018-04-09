@@ -1,20 +1,23 @@
 {
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "outDir": "../out-tsc/spec",
-    "baseUrl": "./",
-    "module": "commonjs",
-    "target": "es5",
-    "types": [
-      "jasmine",
-      "node"
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../out-tsc/spec",
+        "baseUrl": "./",
+        "module": "commonjs",
+        "target": "es5",
+        "types": [
+            "jasmine",
+            "node"
+        ]
+    },
+    "files": [
+        "test.ts",
+        "../node_modules/angular2-logger/app/core/level.ts",
+        "../node_modules/angular2-logger/app/core/providers.ts",
+        "../node_modules/angular2-logger/app/core/logger.ts"
+    ],
+    "include": [
+        "**/*.spec.ts",
+        "**/*.d.ts"
     ]
-  },
-  "files": [
-    "test.ts"
-  ],
-  "include": [
-    "**/*.spec.ts",
-    "**/*.d.ts"
-  ]
 }
