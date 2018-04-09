@@ -186,7 +186,7 @@ export class JenkinsBasicJobStatisticsService implements StatisticsEntryProvider
             return new StatisticsEntry("Average Queue Time", "N/A", undefined);
         }
         
-        let averageTimeInQueueFormatted = this.util.simpleFormatDuration(averageTimeInQueue);
+        let averageTimeInQueueFormatted = this.util.simpleFormatDuration(averageTimeInQueue, true);
         
         return new StatisticsEntry("Average Queue Time", averageTimeInQueueFormatted, undefined);
     }

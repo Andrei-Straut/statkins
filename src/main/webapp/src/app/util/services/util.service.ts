@@ -112,7 +112,7 @@ export class UtilService {
         return momentA.isAfter(momentB);
     }
     
-    simpleFormatDuration(durationInMinutes: number): string {
+    simpleFormatDuration(durationInMinutes: number, useFullDescriptors: boolean = false): string {
         let days = 0;
         let hours = 0;
         let minutes = 0;
@@ -132,6 +132,10 @@ export class UtilService {
         }
         
         let formatted: string = (days > 0 ? days + 'd ' : "") + (hours > 0 ? hours + 'h ' : "") + minutes + 'm';
+        if(useFullDescriptors) {
+            formatted = (days > 0 ? days + 'days ' : "") + (hours > 0 ? hours + 'hours ' : "") + minutes + 'minutes';
+        }
+        
         return formatted;
     }
 
