@@ -31,6 +31,6 @@ describe('JenkinsBasicJobStatisticsService', () => {
         
         expect(service.getStatistics().title).toBe("Jobs");
         expect(service.getStatistics().subTitle).toBe("Number Of Jobs: 0");
-        expect(service.getStatistics().contents.length).toBe(6);
+        expect(service.getStatistics().contents.length).toBe(7);
     });
 });

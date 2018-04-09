@@ -28,6 +28,7 @@ export class JenkinsBasicJobStatisticsService implements StatisticsEntryProvider
                 this.getLastFailedJob(this.data.builds),
                 this.getLongestDurationJob(this.data.builds),
                 this.getLongestAverageDurationJob(this.data.builds),
+                this.getAverageTimeInQueue(this.data.builds),
             ]
         );
 
@@ -164,5 +165,29 @@ export class JenkinsBasicJobStatisticsService implements StatisticsEntryProvider
         let url = longestAverageRunning.url;
 
         return new StatisticsEntry("Longest Average Duration", text, url);
+    }
+
+    private getAverageTimeInQueue(builds: Map<IJenkinsJob, Array<IJenkinsBuild>>): StatisticsEntry {
+        if (this.util.isInvalid(builds)) {
+            return new StatisticsEntry("Average Queue Time", "N/A", undefined);
+        }
+
+        let buildsArray = this.util.mapToArray(builds);
+        
+        if (this.util.isInvalid(buildsArray)) {
+            return new StatisticsEntry("Average Queue Time", "N/A", undefined);
+        }
+        
+        let numberOfBuilds = buildsArray.length;
+        let totalTimeInQueue = buildsArray.map(build => this.util.getBuildTimeInQueue(build)).reduce((sum, current) => sum + current);
+        let averageTimeInQueue = Math.round(moment.duration((totalTimeInQueue / numberOfBuilds), "milliseconds").asMinutes());
+        
+        if (numberOfBuilds === 0) {
+            return new StatisticsEntry("Average Queue Time", "N/A", undefined);
+        }
+        
+        let averageTimeInQueueFormatted = this.util.simpleFormatDuration(averageTimeInQueue);
+        
+        return new StatisticsEntry("Average Queue Time", averageTimeInQueueFormatted, undefined);
     }
 }
