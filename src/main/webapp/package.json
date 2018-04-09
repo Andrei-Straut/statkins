@@ -6,7 +6,7 @@
     "run": "ng serve",
     "start": "ng serve",
     "build": "ng build --dev",
-    "build-prod": "ng build --prod",
+    "build-prod": "ng build --prod --aot",
     "lint": "tslint \"src/**/*.ts\"",
     "test": "ng test --cc",
     "pree2e": "webdriver-manager update",
