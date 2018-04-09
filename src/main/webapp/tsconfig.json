@@ -18,6 +18,13 @@
             "dom"
         ]
     },
+    "files": [
+        "src/main.ts",
+        "src/polyfills.ts",
+        "node_modules/angular2-logger/app/core/level.ts",
+        "node_modules/angular2-logger/app/core/providers.ts",
+        "node_modules/angular2-logger/app/core/logger.ts"
+    ],
     "exclude": [
         "node_modules"
     ]
