@@ -133,7 +133,7 @@ export class UtilService {
         
         let formatted: string = (days > 0 ? days + 'd ' : "") + (hours > 0 ? hours + 'h ' : "") + minutes + 'm';
         if(useFullDescriptors) {
-            formatted = (days > 0 ? days + 'days ' : "") + (hours > 0 ? hours + 'hours ' : "") + minutes + 'minutes';
+            formatted = (days > 0 ? days + ' days ' : "") + (hours > 0 ? hours + ' hours ' : "") + minutes + ' minutes';
         }
         
         return formatted;
