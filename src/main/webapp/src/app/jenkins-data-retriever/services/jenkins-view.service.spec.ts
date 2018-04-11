@@ -36,6 +36,12 @@ describe('JenkinsViewService', () => {
         let service: JenkinsViewService = createService("SomeUrl", new Array<any>(), new Array<any>());
         expect(service.getServiceId() === JenkinsServiceId.Views);
     });
+
+    it('isComplete and completedSuccssefully should be false at initialization', () => {
+        let service: JenkinsViewService = createService("SomeUrl", new Array<any>(), new Array<any>());
+        expect(service.isComplete()).toBeFalsy();
+        expect(service.isSuccessful()).toBeFalsy();
+    });
 });
 
 function createService(url: any, viewList: any, jobList: any): JenkinsViewService {

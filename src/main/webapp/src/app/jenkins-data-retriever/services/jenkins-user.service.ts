@@ -80,6 +80,10 @@ export class JenkinsUserService extends JenkinsDataRetrieverService {
      * Get the users
      */
     getData(): Array<IJenkinsUser> {
+        if (this.util.isInvalid(this.userList)) {
+            return new Array<IJenkinsUser>();
+        }
+        
         return this.userList;
     }
 

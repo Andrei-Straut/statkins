@@ -45,6 +45,12 @@ describe('JenkinsChangeSetService', () => {
         expect(service.getServiceId() === JenkinsServiceId.Changesets);
     });
 
+    it('isComplete and completedSuccssefully should be false at initialization', () => {
+        let service: JenkinsChangeSetService = createService(new Map<any, Array<any>>(), new Array<any>());
+        expect(service.isComplete()).toBeFalsy();
+        expect(service.isSuccessful()).toBeFalsy();
+    });
+
     it('getData should return empty for undefined build list and empty user list', async () => {
         let service: JenkinsChangeSetService = createService(undefined, new Array<any>());
         await service.execute();

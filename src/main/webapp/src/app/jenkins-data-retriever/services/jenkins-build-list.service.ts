@@ -64,6 +64,10 @@ export class JenkinsBuildListService extends JenkinsDataRetrieverService {
      * Get the builds
      */
     getData(): Map<IJenkinsJob, Array<IJenkinsBuild>> {
+        if (this.util.isInvalid(this.buildList)) {
+            return new Map<IJenkinsJob, Array<IJenkinsBuild>>();
+        }
+        
         return new Map<IJenkinsJob, Array<IJenkinsBuild>>(this.buildList);
     }
 

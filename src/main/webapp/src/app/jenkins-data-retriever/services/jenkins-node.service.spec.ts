@@ -36,6 +36,12 @@ describe('JenkinsNodeService', () => {
         let service: JenkinsNodeService = createService("SomeUrl");
         expect(service.getServiceId() === JenkinsServiceId.Nodes);
     });
+
+    it('isComplete and completedSuccssefully should be false at initialization', () => {
+        let service: JenkinsNodeService = createService("SomeUrl");
+        expect(service.isComplete()).toBeFalsy();
+        expect(service.isSuccessful()).toBeFalsy();
+    });
 });
 
 function createService(data: any): JenkinsNodeService {

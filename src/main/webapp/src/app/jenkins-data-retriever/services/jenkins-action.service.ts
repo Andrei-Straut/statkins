@@ -81,6 +81,10 @@ export class JenkinsActionService extends JenkinsDataRetrieverService {
      * Get the changeSets
      */
     getData(): Map<IJenkinsBuild, Array<IJenkinsAction>> {
+        if (this.util.isInvalid(this.actions)) {
+            return new Map<IJenkinsBuild, Array<IJenkinsAction>>();
+        }
+        
         return new Map(this.actions);
     }
 

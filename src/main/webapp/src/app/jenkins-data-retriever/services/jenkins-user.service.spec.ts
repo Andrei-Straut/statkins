@@ -36,6 +36,12 @@ describe('JenkinsUserService', () => {
         let service: JenkinsUserService = createService(new Array<any>());
         expect(service.getServiceId() === JenkinsServiceId.Users);
     });
+
+    it('isComplete and completedSuccssefully should be false at initialization', () => {
+        let service: JenkinsUserService = createService(new Array<any>());
+        expect(service.isComplete()).toBeFalsy();
+        expect(service.isSuccessful()).toBeFalsy();
+    });
 });
 
 function createService(data: any): JenkinsUserService {
