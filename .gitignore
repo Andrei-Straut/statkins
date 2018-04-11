@@ -17,3 +17,4 @@ TESTS-HeadlessChrome_0.0.0_(Windows_7_0.0.0).xml
 test-report.html
 test-report.xml
 /release/statkins.war
+/release

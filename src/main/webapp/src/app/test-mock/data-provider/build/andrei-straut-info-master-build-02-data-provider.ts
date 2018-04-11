@@ -30,7 +30,7 @@ export class AndreiStrautInfoMasterBuild02DataProvider implements IBuildDataProv
         "number": 2,
         "queueId": 95,
         "result": "SUCCESS",
-        "timestamp": 1503593604402,
+        "timestamp": Date.now() - (24 * 60 * 60 * 1000), // yesterday
         "url": "https://www.andreistraut.info/jenkins/job/andreistraut.info-master/12/",
         "builtOn": "",
         "changeSet": {},

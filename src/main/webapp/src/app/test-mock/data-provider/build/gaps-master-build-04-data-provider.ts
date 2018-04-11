@@ -67,7 +67,7 @@ export class GapsMasterBuild04DataProvider implements IBuildDataProviderService 
         "number": 4,
         "queueId": 5,
         "result": "FAILURE",
-        "timestamp": 1497114933334,
+        "timestamp": Date.now() - (24 * 60 * 60 * 1000), // yesterday,
         "url": "https://www.andreistraut.info/jenkins/job/gaps-master/4/",
         "builtOn": "",
         "changeSet": {
