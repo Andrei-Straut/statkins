@@ -9,6 +9,7 @@ import {ConfigMockService} from '../../test-mock/services/config.mock.service';
 import {ProxyObservableErrorMockService} from '../../test-mock/services/proxy.observable-error.mock.service';
 import {ProxyEmptyResponseMockService} from '../../test-mock/services/proxy.empty-response.mock.service';
 import {ProxyCustomResponseMockService} from '../../test-mock/services/proxy.custom-response.mock.service';
+import {AndreiStrautInfoMasterJobListDataProvider} from '../../test-mock/data-provider/jobList/andrei-straut-info-job-list-data-provider';
 import {JenkinsServiceId} from './JenkinsServiceId';
 
 let loggerService: Logger = undefined;
@@ -92,29 +93,9 @@ describe('JenkinsJobListService', () => {
     });
 
     it('getData should return correct values for response with jobs', async () => {
-        let response: any = {
-            "jobs": [
-                {
-                    "_class": "hudson.maven.MavenModuleSet",
-                    "name": "andreistraut.info-master",
-                    "url": "https://www.andreistraut.info/jenkins/job/andreistraut.info-master/",
-                    "color": "blue"
-                },
-                {
-                    "_class": "hudson.maven.MavenModuleSet",
-                    "name": "andreistraut.info-release",
-                    "url": "https://www.andreistraut.info/jenkins/job/andreistraut.info-release/",
-                    "color": "blue"
-                },
-                {
-                    "_class": "hudson.maven.MavenModuleSet",
-                    "name": "drp-master",
-                    "url": "https://www.andreistraut.info/jenkins/job/drp-master/",
-                    "color": "blue"
-                }]
-        };
+        let data: JSON = new AndreiStrautInfoMasterJobListDataProvider().getJobListData();
         
-        let proxyCustomResponseService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService(JSON.parse(JSON.stringify(response)));
+        let proxyCustomResponseService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService(data);
         let service: JenkinsJobListService = new JenkinsJobListService(configService, proxyCustomResponseService, loggerService, "SomeUrl");
         await service.execute();
 
