@@ -10,7 +10,7 @@ import {ConfigMockService} from '../../test-mock/services/config.mock.service';
 import {UtilMockService} from '../../test-mock/services/util.mock.service';
 import {ProxyJenkinsJobMockService} from '../../test-mock/services/proxy.jenkins-build.mock.service';
 import {ProxyObservableErrorMockService} from '../../test-mock/services/proxy.observable-error.mock.service';
-import {ProxyEmptyResponseMockService} from '../../test-mock/services/proxy.empty-response.mock.service';
+import {ProxyCustomResponseMockService} from '../../test-mock/services/proxy.custom-response.mock.service';
 import {JenkinsServiceId} from './JenkinsServiceId';
 import {JenkinsDataProviderService} from '../../test-mock/services/jenkins-data-provider.service';
 
@@ -19,7 +19,7 @@ let utilService: UtilMockService = new UtilMockService();
 let configService: ConfigMockService = new ConfigMockService();
 let proxyService: ProxyJenkinsJobMockService = new ProxyJenkinsJobMockService();
 let proxyErrorService: ProxyObservableErrorMockService = new ProxyObservableErrorMockService();
-let proxyEmptyResponseService: ProxyEmptyResponseMockService = new ProxyEmptyResponseMockService();
+let proxyCustomResponseService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService(JSON.parse("{}"));
 
 describe('JenkinsBuildService', () => {
     
@@ -143,6 +143,6 @@ function createServiceWithProxyError(data: any): JenkinsBuildService {
 }
 
 function createServiceWithProxyEmpty(data: any): JenkinsBuildService {
-    let service: JenkinsBuildService = new JenkinsBuildService(configService, proxyEmptyResponseService, utilService, loggerService, data);
+    let service: JenkinsBuildService = new JenkinsBuildService(configService, proxyCustomResponseService, utilService, loggerService, data);
     return service;
 }

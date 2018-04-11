@@ -7,7 +7,6 @@ import {Logger} from '../../../../node_modules/angular2-logger/core';
 import {TestMockModule} from '../../test-mock/test-mock.module';
 import {ConfigMockService} from '../../test-mock/services/config.mock.service';
 import {ProxyObservableErrorMockService} from '../../test-mock/services/proxy.observable-error.mock.service';
-import {ProxyEmptyResponseMockService} from '../../test-mock/services/proxy.empty-response.mock.service';
 import {ProxyCustomResponseMockService} from '../../test-mock/services/proxy.custom-response.mock.service';
 import {AndreiStrautInfoMasterJobListDataProvider} from '../../test-mock/data-provider/jobList/andrei-straut-info-job-list-data-provider';
 import {JenkinsServiceId} from './JenkinsServiceId';
@@ -15,7 +14,7 @@ import {JenkinsServiceId} from './JenkinsServiceId';
 let loggerService: Logger = undefined;
 let configService: ConfigMockService = new ConfigMockService();
 let proxyErrorService: ProxyObservableErrorMockService = new ProxyObservableErrorMockService();
-let proxyEmptyResponseService: ProxyEmptyResponseMockService = new ProxyEmptyResponseMockService();
+let proxyEmptyResponseService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService(JSON.parse("{}"));
 
 describe('JenkinsJobListService', () => {
     
