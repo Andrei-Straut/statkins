@@ -89,7 +89,7 @@ export class AndreiStrautInfoMasterBuild12DataProvider implements IBuildDataProv
                 "_class": "hudson.plugins.git.GitChangeSet",
                 "affectedPaths": ["src/main/webapp/index.html"],
                 "commitId": "e6cae6587caf25ab524105c7ddc8c91b9e376925",
-                "timestamp": 1503593528000,
+                "timestamp": Date.now() - (24 * 60 * 60 * 1000), // yesterday
                 "author": {
                     "absoluteUrl": "https://www.andreistraut.info/jenkins/user/andreistraut",
                     "fullName": "Andrei Straut"
