@@ -96,7 +96,7 @@ describe('JenkinsChangesetTimelineComponent', () => {
         let data: IJenkinsData = new JenkinsDataProviderService().getData();
         component.jenkinsData = data;
         let timeline: Timeline = component.analyze(data);
-        expect(timeline).toBeTruthy();
+        expect(timeline).toBeDefined();
     });
 
 });

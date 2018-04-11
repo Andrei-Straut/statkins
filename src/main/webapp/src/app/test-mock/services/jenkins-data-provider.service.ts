@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 
 import {IJenkinsData} from 'jenkins-api-ts-typings';
 import {IJenkinsNode} from 'jenkins-api-ts-typings';
+import {JenkinsNode} from 'jenkins-api-ts-typings';
 import {IJenkinsJob} from 'jenkins-api-ts-typings';
 import {JenkinsJob} from 'jenkins-api-ts-typings';
 import {IJenkinsBuild} from 'jenkins-api-ts-typings';
@@ -26,6 +27,8 @@ import {GapsMasterJobDataProvider} from '../data-provider/job/gaps-master-job-da
 import {GapsMasterBuild04DataProvider} from '../data-provider/build/gaps-master-build-04-data-provider';
 import {GapsMasterBuild14DataProvider} from '../data-provider/build/gaps-master-build-14-data-provider';
 import {GapsMasterBuild15DataProvider} from '../data-provider/build/gaps-master-build-15-data-provider';
+
+import {AndreiStrautInfoMasterNodeDataProvider} from '../data-provider/node/andrei-straut-info-master-node-data-provider';
 
 @Injectable()
 export class JenkinsDataProviderService {
@@ -57,7 +60,13 @@ export class JenkinsDataProviderService {
     }
 
     private createNodes(): Array<IJenkinsNode> {
-        return new Array<IJenkinsNode>();
+        let nodes: Array<IJenkinsNode> = new Array<IJenkinsNode>();
+        
+        let andreiStrautInfoMasterNode: IJenkinsNode = new JenkinsNode();
+        andreiStrautInfoMasterNode.fromJson(new AndreiStrautInfoMasterNodeDataProvider().getNodeData());
+        nodes.push(andreiStrautInfoMasterNode);
+        
+        return nodes;
     }
 
     private createJobs(): Array<IJenkinsJob> {
