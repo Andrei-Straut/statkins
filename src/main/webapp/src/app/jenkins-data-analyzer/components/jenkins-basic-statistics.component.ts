@@ -38,7 +38,7 @@ export class JenkinsBasicStatisticsComponent implements OnInit {
     public dataAvailable: boolean;
     public analyzerData: Array<StatisticsCardEntry> = new Array<StatisticsCardEntry>();
 
-    basicStatistics: StatisticsCardEntry;
+    basicJobStatistics: StatisticsCardEntry;
     basicBuildStatistics: StatisticsCardEntry;
     basicCommitStatistics: StatisticsCardEntry;
     basicNodeStatistics: StatisticsCardEntry;
@@ -52,17 +52,17 @@ export class JenkinsBasicStatisticsComponent implements OnInit {
         this.analyzerData = new Array<StatisticsCardEntry>();
         this.dataAvailable = true;
 
-        this.basicStatistics = new JenkinsBasicJobStatisticsService(this.utilService, this.LOGGER, jenkinsData).getStatistics();
+        this.basicJobStatistics = new JenkinsBasicJobStatisticsService(this.utilService, this.LOGGER, jenkinsData).getStatistics();
         this.basicBuildStatistics = new JenkinsBasicBuildStatisticsService(this.utilService, this.LOGGER, jenkinsData).getStatistics();
         this.basicCommitStatistics = new JenkinsChangeSetStatisticsService(this.utilService, this.LOGGER, jenkinsData).getStatistics();
         this.basicNodeStatistics = new JenkinsNodeStatisticsService(this.utilService, this.LOGGER, jenkinsData).getStatistics();
 
-        this.LOGGER.debug("Basic Job Statistics", this.basicStatistics);
+        this.LOGGER.debug("Basic Job Statistics", this.basicJobStatistics);
         this.LOGGER.debug("Basic Build Statistics", this.basicBuildStatistics);
         this.LOGGER.debug("Basic Commit Statistics", this.basicCommitStatistics);
         this.LOGGER.debug("Basic Node Statistics", this.basicNodeStatistics);
 
-        this.analyzerData.push(this.basicStatistics);
+        this.analyzerData.push(this.basicJobStatistics);
         this.analyzerData.push(this.basicBuildStatistics);
         this.analyzerData.push(this.basicCommitStatistics);
         this.analyzerData.push(this.basicNodeStatistics);

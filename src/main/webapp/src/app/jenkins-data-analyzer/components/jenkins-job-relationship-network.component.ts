@@ -109,8 +109,11 @@ export class JenkinsJobRelationshipNetworkComponent implements OnInit {
             this.maxHorizontalItemsPerLevel);
 
         let jobsData = jobService.getDataSet(this.showNodesWithoutEdges, this.showNodesWithEdges);
-        this.visNetwork.setData(jobsData);
-        this.visNetwork.fit();
+        
+        if (!this.utilService.isInvalid(this.visNetwork)) {
+            this.visNetwork.setData(jobsData);
+            this.visNetwork.fit();
+        }
     }
 
     toggleConnectedNodes() {
@@ -125,8 +128,11 @@ export class JenkinsJobRelationshipNetworkComponent implements OnInit {
             this.maxHorizontalItemsPerLevel);
 
         let jobsData = jobService.getDataSet(this.showNodesWithoutEdges, this.showNodesWithEdges);
-        this.visNetwork.setData(jobsData);
-        this.visNetwork.fit();
+        
+        if (!this.utilService.isInvalid(this.visNetwork)) {
+            this.visNetwork.setData(jobsData);
+            this.visNetwork.fit();
+        }
     }
 
     toggleFullscreen() {
@@ -136,11 +142,14 @@ export class JenkinsJobRelationshipNetworkComponent implements OnInit {
         }
 
         this.visNetworkOptions.height = height + 'px';
-        this.visNetwork.setOptions(this.visNetworkOptions);
-        this.visNetwork.setOptions({physics: {enabled: true}});
-        this.visNetwork.fit();
-        this.visNetwork.setOptions({physics: {enabled: false}});
         this.isFullscreen = !this.isFullscreen;
+        
+        if (!this.utilService.isInvalid(this.visNetwork)) {
+            this.visNetwork.setOptions(this.visNetworkOptions);
+            this.visNetwork.setOptions({physics: {enabled: true}});
+            this.visNetwork.fit();
+            this.visNetwork.setOptions({physics: {enabled: false}});
+        }
     }
 
     private getSettings() {

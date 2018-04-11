@@ -62,7 +62,7 @@ export class JenkinsBasicJobStatisticsService implements StatisticsEntryProvider
             return parent.util.getLastSuccessfulBuildTimestamp(job1) >= parent.util.getLastSuccessfulBuildTimestamp(job2) ? job1 : job2;
         });
 
-        if (this.util.isInvalid(lastSuccessful)) {
+        if (this.util.isInvalid(lastSuccessful) || this.util.isInvalid(lastSuccessful.lastSuccessfulBuild)) {
             return new StatisticsEntry("Last Successful", "N/A", undefined);
         }
 
