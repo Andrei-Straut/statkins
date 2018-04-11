@@ -129,7 +129,10 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
     toggleOverlap() {
         this.groupVisibility.stack = !this.groupVisibility.stack;
         this.visTimelineOptions.stack = this.groupVisibility.stack;
-        this.visTimeline.setOptions(this.visTimelineOptions);
+        
+        if (!this.utilService.isInvalid(this.visTimeline)) {
+            this.visTimeline.setOptions(this.visTimelineOptions);
+        }
     }
 
     toggleSuccessful() {
@@ -159,9 +162,12 @@ export class JenkinsChangeSetTimelineComponent implements OnInit {
         }
 
         this.visTimelineOptions.height = height + 'px'
-        this.visTimeline.setOptions(this.visTimelineOptions);
-        this.visTimeline.redraw();
         this.groupVisibility.isFullscreen = !this.groupVisibility.isFullscreen;
+        
+        if (!this.utilService.isInvalid(this.visTimeline)) {
+            this.visTimeline.setOptions(this.visTimelineOptions);
+            this.visTimeline.redraw();
+        }
     }
 
     setGroupVisibility(group: number, visibility: boolean): void {

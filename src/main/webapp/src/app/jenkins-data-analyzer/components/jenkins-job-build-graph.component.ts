@@ -33,8 +33,8 @@ export class JenkinsJobBuildGraphComponent implements OnInit {
 
     private readonly graphElementId = "jobBuildGraph";
     private visGraphContainer: HTMLElement;
-    private visGraphOptions: TimelineOptions;
-    private visGraph: Timeline;
+    private visTimelineOptions: TimelineOptions;
+    private visTimeline: Timeline;
     private visGroups: DataSet<any> = new DataSet<any>();
     private visJobsData: DataSet<VisDataSetItem> = new DataSet<VisDataSetItem>();
 
@@ -44,7 +44,7 @@ export class JenkinsJobBuildGraphComponent implements OnInit {
 
     ngOnInit() {
         this.visGraphContainer = document.getElementById(this.graphElementId);
-        this.visGraphOptions = {
+        this.visTimelineOptions = {
             autoResize: true,
             clickToUse: false,
             start: 0,
@@ -65,7 +65,7 @@ export class JenkinsJobBuildGraphComponent implements OnInit {
 
     analyze(jenkinsData: IJenkinsData): Timeline {
         this.visJobsData = this.getJobsData(jenkinsData);
-        this.visGraph = new Timeline(this.visGraphContainer, this.visJobsData, this.visGroups, this.visGraphOptions);
+        this.visTimeline = new Timeline(this.visGraphContainer, this.visJobsData, this.visGroups, this.visTimelineOptions);
 
         this.LOGGER.debug("Job Build Data", this.visJobsData);
 
@@ -77,11 +77,11 @@ export class JenkinsJobBuildGraphComponent implements OnInit {
         if (this.utilService.isInvalid(maxNumber)) {
             return;
         }
-        this.visGraphOptions.max = Math.round((maxNumber[0]).builds.length * 1.25);
-        this.visGraphOptions.end = Math.round((maxNumber[0]).builds.length * 1.25);
-        this.visGraph.setOptions(this.visGraphOptions);
+        this.visTimelineOptions.max = Math.round((maxNumber[0]).builds.length * 1.25);
+        this.visTimelineOptions.end = Math.round((maxNumber[0]).builds.length * 1.25);
+        this.visTimeline.setOptions(this.visTimelineOptions);
 
-        return this.visGraph;
+        return this.visTimeline;
     }
 
     private getJobsData(data: IJenkinsData): DataSet<any> {

@@ -84,7 +84,7 @@ export class GapsMasterBuild14DataProvider implements IBuildDataProviderService 
                 "_class": "hudson.plugins.git.GitChangeSet",
                 "affectedPaths": ["src/main/webapp/scripts/gaps/app.gaps.js"],
                 "commitId": "b260a60c925dcd27e69988d22c2f6186a42fa28d",
-                "timestamp": 1503007172000,
+                "timestamp": Date.now() - (24 * 60 * 60 * 1000), // yesterday
                 "author": {
                     "absoluteUrl": "https://www.andreistraut.info/jenkins/user/andreistraut",
                     "fullName": "Andrei Straut"

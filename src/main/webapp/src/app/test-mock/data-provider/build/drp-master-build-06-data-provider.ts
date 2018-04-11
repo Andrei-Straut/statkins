@@ -84,7 +84,7 @@ export class DrpMasterBuild06DataProvider implements IBuildDataProviderService {
                 "_class": "hudson.plugins.git.GitChangeSet",
                 "affectedPaths": ["drp-web/pom.xml"],
                 "commitId": "6a81755141ec31d74e6003e8158ce8e30019d1cf",
-                "timestamp": 1503008261000,
+                "timestamp": Date.now() - (24 * 60 * 60 * 1000), // yesterday
                 "author": {
                     "absoluteUrl": "https://www.andreistraut.info/jenkins/user/andrei.straut",
                     "fullName": "andrei.straut"

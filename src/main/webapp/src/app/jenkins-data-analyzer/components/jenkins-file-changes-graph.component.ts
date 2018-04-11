@@ -33,8 +33,8 @@ export class JenkinsFileChangesGraphComponent implements OnInit {
 
     private readonly graphElementId = "fileChangesGraph";
     private visGraphContainer: HTMLElement;
-    private visGraphOptions: TimelineOptions;
-    private visGraph: Timeline;
+    private visTimelineOptions: TimelineOptions;
+    private visTimeline: Timeline;
     private visGroups: DataSet<any> = new DataSet<any>();
     private visFilesData: DataSet<VisDataSetItem> = new DataSet<VisDataSetItem>();
 
@@ -44,7 +44,7 @@ export class JenkinsFileChangesGraphComponent implements OnInit {
 
     ngOnInit() {
         this.visGraphContainer = document.getElementById(this.graphElementId);
-        this.visGraphOptions = {
+        this.visTimelineOptions = {
             autoResize: true,
             clickToUse: false,
             start: 0,
@@ -65,7 +65,7 @@ export class JenkinsFileChangesGraphComponent implements OnInit {
 
     analyze(jenkinsData: IJenkinsData): Timeline {
         this.visFilesData = this.getFilesData(jenkinsData);
-        this.visGraph = new Timeline(this.visGraphContainer, this.visFilesData, this.visGroups, this.visGraphOptions);
+        this.visTimeline = new Timeline(this.visGraphContainer, this.visFilesData, this.visGroups, this.visTimelineOptions);
 
         this.LOGGER.debug("File Changes Data", this.visFilesData);
 
@@ -76,11 +76,11 @@ export class JenkinsFileChangesGraphComponent implements OnInit {
         let filesData: Map<string, number> = this.getAffectedPathsWithNoOfChangesMap(jenkinsData);
         let maxNumberOfChanges: number = this.getMaxNumberOfChanges(filesData);
 
-        this.visGraphOptions.max = Math.round(maxNumberOfChanges * 1.25);
-        this.visGraphOptions.end = Math.round(maxNumberOfChanges * 1.25);
-        this.visGraph.setOptions(this.visGraphOptions);
+        this.visTimelineOptions.max = Math.round(maxNumberOfChanges * 1.25);
+        this.visTimelineOptions.end = Math.round(maxNumberOfChanges * 1.25);
+        this.visTimeline.setOptions(this.visTimelineOptions);
 
-        return this.visGraph;
+        return this.visTimeline;
     }
 
     private getFilesData(data: IJenkinsData): DataSet<any> {
