@@ -8,16 +8,15 @@ import {Logger} from '../../../../node_modules/angular2-logger/core';
 import {TestMockModule} from '../../test-mock/test-mock.module';
 import {ConfigMockService} from '../../test-mock/services/config.mock.service';
 import {UtilMockService} from '../../test-mock/services/util.mock.service';
-import {ProxyJenkinsJobMockService} from '../../test-mock/services/proxy.jenkins-build.mock.service';
 import {ProxyObservableErrorMockService} from '../../test-mock/services/proxy.observable-error.mock.service';
 import {ProxyCustomResponseMockService} from '../../test-mock/services/proxy.custom-response.mock.service';
 import {JenkinsServiceId} from './JenkinsServiceId';
 import {JenkinsDataProviderService} from '../../test-mock/services/jenkins-data-provider.service';
+import {AndreiStrautInfoMasterBuild14DataProvider} from '../../test-mock/data-provider/build/andrei-straut-info-master-build-14-data-provider';
 
 let loggerService: Logger = undefined;
 let utilService: UtilMockService = new UtilMockService();
 let configService: ConfigMockService = new ConfigMockService();
-let proxyService: ProxyJenkinsJobMockService = new ProxyJenkinsJobMockService();
 let proxyErrorService: ProxyObservableErrorMockService = new ProxyObservableErrorMockService();
 let proxyCustomResponseService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService(JSON.parse("{}"));
 
@@ -133,6 +132,9 @@ describe('JenkinsBuildService', () => {
 });
 
 function createService(data: any): JenkinsBuildService {
+    let jsonData = new AndreiStrautInfoMasterBuild14DataProvider().getBuildData();
+    let proxyService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService(jsonData as JSON);
+    
     let service: JenkinsBuildService = new JenkinsBuildService(configService, proxyService, utilService, loggerService, data);
     return service;
 }
