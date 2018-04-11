@@ -88,6 +88,10 @@ export class JenkinsUserService extends JenkinsDataRetrieverService {
     }
 
     private getUserApiUrl(userUrl: string, config: ConfigService) {
+        if (userUrl === undefined || userUrl === null || userUrl.length === 0) {
+            return undefined;
+        }
+        
         /** Remove trailing slash ('/') from root url, if present, then concatenate the jenkins api suffix */
         return userUrl.replace(/\/$/, "") + '/' + config.apiSuffix;
     }

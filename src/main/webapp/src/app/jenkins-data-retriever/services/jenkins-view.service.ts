@@ -101,6 +101,10 @@ export class JenkinsViewService extends JenkinsDataRetrieverService {
     }
 
     private getViewApiUrl(view: IJenkinsView, config: ConfigService) {
+        if (this.url === undefined || this.url === null || this.url.length === 0) {
+            return undefined;
+        }
+        
         let viewApiUrl = this.url.replace(/\/$/, "") + '/' + config.viewSuffix + encodeURI(view.name) + "/" + config.apiSuffix;
         return viewApiUrl;
     }

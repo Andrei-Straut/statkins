@@ -74,6 +74,10 @@ export class JenkinsViewListService extends JenkinsDataRetrieverService {
     }
 
     private getJenkinsViewJobListUrl(jenkinsUrl: string, config: ConfigService) {
+        if (jenkinsUrl === undefined || jenkinsUrl === null || jenkinsUrl.length === 0) {
+            return undefined;
+        }
+        
         /** Remove trailing slash ('/') from root url, if present, then concatenate the jenkins api suffix */
         return jenkinsUrl.replace(/\/$/, "") + '/' + config.apiSuffix + '?tree=views[name,url]';
     }

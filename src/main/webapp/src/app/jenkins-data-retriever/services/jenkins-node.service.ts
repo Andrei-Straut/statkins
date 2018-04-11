@@ -82,11 +82,19 @@ export class JenkinsNodeService extends JenkinsDataRetrieverService {
     }
 
     private getJenkinsApiNodeUrl(jenkinsUrl: string, config: ConfigService) {
+        if (jenkinsUrl === undefined || jenkinsUrl === null || jenkinsUrl.length === 0) {
+            return undefined;
+        }
+        
         /** Remove trailing slash ('/') from root url, if present, then concatenate the jenkins api suffix */
         return jenkinsUrl.replace(/\/$/, "") + '/' + config.slaveSuffix + config.apiSuffix + "?depth=1";
     }
 
     private getJenkinsNodeUrl(jenkinsUrl: string, config: ConfigService, nodeName: string) {
+        if (jenkinsUrl === undefined || jenkinsUrl === null || jenkinsUrl.length === 0) {
+            return undefined;
+        }
+        
         return jenkinsUrl.replace(/\/$/, "") + '/' + config.slaveSuffix + "/" + nodeName;
     }
 }

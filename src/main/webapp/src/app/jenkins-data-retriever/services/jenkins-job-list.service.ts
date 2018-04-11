@@ -27,12 +27,19 @@ export class JenkinsJobListService extends JenkinsDataRetrieverService {
     }
 
     async execute() {
+        if (this.jenkinsJobListUrl === undefined || this.jenkinsJobListUrl === null || this.jenkinsJobListUrl.length === 0) {
+            this.LOGGER.error("Empty or null url received");
+            this.completedSuccessfully = false;
+            this.complete = true;
+            return;
+        }
+        
         let jobListResponse: JSON;
 
         this.LOGGER.debug("Retrieving job list from:", this.jenkinsJobListUrl);
-
         await this.proxy.proxy(this.jenkinsJobListUrl)
-            .first().toPromise()
+            .first()
+            .toPromise()
             .then(value => jobListResponse = value)
             .catch(error => {
                 this.LOGGER.error("Could not retrieve job list:", error);
@@ -41,8 +48,10 @@ export class JenkinsJobListService extends JenkinsDataRetrieverService {
             });
 
         /* An error occurred, job list unretrievable */
-        if (jobListResponse === undefined) {
-            this.jobList = new Array<IJenkinsJob>();
+        if (jobListResponse === undefined || jobListResponse["jobs"] === undefined || 
+            jobListResponse["jobs"] === null ||
+            (jobListResponse["jobs"] as Array<JSON>).length === 0) {
+            
             this.completedSuccessfully = false;
             this.complete = true;
             return;
@@ -73,6 +82,10 @@ export class JenkinsJobListService extends JenkinsDataRetrieverService {
     }
 
     private getJenkinsApiJobListUrl(jenkinsUrl: string, config: ConfigService) {
+        if (jenkinsUrl === undefined || jenkinsUrl === null || jenkinsUrl.length === 0) {
+            return undefined;
+        }
+        
         /** Remove trailing slash ('/') from root url, if present, then concatenate the jenkins api suffix */
         return jenkinsUrl.replace(/\/$/, "") + '/' + config.apiSuffix + '?tree=jobs[name,url]';
     }

@@ -75,6 +75,10 @@ export class JenkinsBuildService extends JenkinsDataRetrieverService {
     }
 
     private getBuildApiUrl(build: IJenkinsBuild, config: ConfigService) {
+        if (build.url === undefined || build.url === null || build.url.length === 0) {
+            return undefined;
+        }
+        
         let buildApiUrl = build.url.replace(/\/$/, "") + '/' + config.apiSuffix + config.defaultDepth;
         return buildApiUrl;
     }
