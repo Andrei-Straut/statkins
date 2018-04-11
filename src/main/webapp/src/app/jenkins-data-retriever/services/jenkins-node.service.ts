@@ -74,6 +74,10 @@ export class JenkinsNodeService extends JenkinsDataRetrieverService {
      * Get the nodes
      */
     getData(): Array<IJenkinsNode> {
+        if (this.util.isInvalid(this.nodeList)) {
+            return new Array<IJenkinsNode>();
+        }
+        
         return Object.assign([], this.nodeList);
     }
 

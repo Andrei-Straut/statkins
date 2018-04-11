@@ -93,6 +93,10 @@ export class JenkinsViewService extends JenkinsDataRetrieverService {
      * Get the jobs
      */
     getData(): Array<IJenkinsView> {
+        if (this.util.isInvalid(this.viewList)) {
+            return new Array<IJenkinsView>();
+        }
+        
         return this.viewList;
     }
 

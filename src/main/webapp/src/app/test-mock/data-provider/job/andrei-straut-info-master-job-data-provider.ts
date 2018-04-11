@@ -152,11 +152,23 @@ export class AndreiStrautInfoMasterJobDataProvider implements IJobDataProviderSe
         "queueItem": null,
         "concurrentBuild": false,
         "downstreamProjects": [
+            {
+              "_class" : "hudson.model.FreeStyleProject",
+              "name" : "drp-master",
+              "url" : "https://www.andreistraut.info/jenkins/job/drp-master/",
+              "color" : "blue"
+            }
         ],
         "scm": {
             "_class": "hudson.plugins.git.GitSCM"
         },
         "upstreamProjects": [
+            {
+              "_class" : "hudson.model.FreeStyleProject",
+              "name" : "gaps-master",
+              "url" : "https://www.andreistraut.info/jenkins/job/gaps-master/",
+              "color" : "blue"
+            }
         ],
         "modules": [
             {

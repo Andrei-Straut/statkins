@@ -41,6 +41,12 @@ describe('JenkinsBuildListService', () => {
         expect(service.getServiceId() === JenkinsServiceId.BuildList);
     });
 
+    it('isComplete and completedSuccssefully should be false at initialization', () => {
+        let service: JenkinsBuildListService = createService(new Array<any>());
+        expect(service.isComplete()).toBeFalsy();
+        expect(service.isSuccessful()).toBeFalsy();
+    });
+
     it('getData should return empty when there\'s no jobs in build list', () => {
         let service: JenkinsBuildListService = createService(new Array<any>());
         service.execute();

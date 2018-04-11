@@ -48,6 +48,12 @@ describe('JenkinsBuildService', () => {
         expect(service.getServiceId() === JenkinsServiceId.Builds);
     });
 
+    it('isComplete and completedSuccssefully should be false at initialization', () => {
+        let service: JenkinsBuildService = createService(new Map<any, Array<any>>());
+        expect(service.isComplete()).toBeFalsy();
+        expect(service.isSuccessful()).toBeFalsy();
+    });
+
     it('getData should return empty for undefined build list', async () => {
         let service: JenkinsBuildService = createService(undefined);
         await service.execute();

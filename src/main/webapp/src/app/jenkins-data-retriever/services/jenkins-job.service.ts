@@ -82,6 +82,10 @@ export class JenkinsJobService extends JenkinsDataRetrieverService {
      * Get the jobs
      */
     getData(): Array<IJenkinsJob> {
+        if (this.util.isInvalid(this.jobList)) {
+            return new Array<IJenkinsJob>();
+        }
+        
         return this.jobList;
     }
 

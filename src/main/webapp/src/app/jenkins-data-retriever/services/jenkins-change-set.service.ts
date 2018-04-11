@@ -85,6 +85,10 @@ export class JenkinsChangeSetService extends JenkinsDataRetrieverService {
      * Get the changeSets
      */
     getData(): Map<IJenkinsBuild, Array<IJenkinsChangeSet>> {
+        if (this.util.isInvalid(this.changeSets)) {
+            return new Map<IJenkinsBuild, Array<IJenkinsChangeSet>>();
+        }
+        
         return new Map(this.changeSets);
     }
 

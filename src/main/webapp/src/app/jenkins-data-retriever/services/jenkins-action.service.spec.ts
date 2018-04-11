@@ -47,6 +47,12 @@ describe('JenkinsActionService', () => {
         expect(service.getServiceId() === JenkinsServiceId.Actions);
     });
 
+    it('isComplete and completedSuccssefully should be false at initialization', () => {
+        let service: JenkinsActionService = createService(new Map<any, Array<any>>());
+        expect(service.isComplete()).toBeFalsy();
+        expect(service.isSuccessful()).toBeFalsy();
+    });
+
     it('getData should return empty when there\'s no builds in build list', () => {
         let service: JenkinsActionService = createService(new Map<any, Array<any>>());
         service.execute();
