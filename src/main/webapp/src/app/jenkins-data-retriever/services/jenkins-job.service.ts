@@ -132,6 +132,10 @@ export class JenkinsJobService extends JenkinsDataRetrieverService {
     }
 
     private getJobApiUrl(jobUrl: string, config: ConfigService) {
+        if (jobUrl === undefined || jobUrl === null || jobUrl.length === 0) {
+            return undefined;
+        }
+        
         /** Remove trailing slash ('/') from root url, if present, then concatenate the jenkins api suffix */
         return jobUrl.replace(/\/$/, "") + '/' + config.apiSuffix;
     }

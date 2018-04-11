@@ -6,6 +6,8 @@ import 'rxjs/operator/delay';
 import 'rxjs/operator/mergeMap';
 import 'rxjs/operator/switchMap';
 import 'rxjs/add/operator/timeout';
+import 'rxjs/add/observable/throw';
+import 'rxjs/add/operator/catch';
 
 import {ProxyRequest} from './proxy-request';
 import {ConfigService} from '../../config/services/config.service';
@@ -32,6 +34,10 @@ export class ProxyService {
     }
 
     proxy(url: string): Observable<any> {
+        if (url === undefined || url === null || url.length === 0) {
+            return Observable.throw("Invalid URL submitted");
+        }
+        
         var proxy = new ProxyRequest(url);
         var proxyRequest = proxy.build();
         options.body = JSON.stringify(proxyRequest);
@@ -40,12 +46,17 @@ export class ProxyService {
 
         let proxyResponse = this.http.request(this.proxyEndpoint, options)
             .timeout(60000)
-            .map((response: Response) => {return response.text() ? response.json() : JSON.stringify({});});
+            .map((response: Response) => {return response.text() ? response.json() : JSON.stringify({});})
+            .catch((e: any) => Observable.throw(e));
 
         return proxyResponse;
     }
 
     proxyRaw(url: string): Observable<any> {
+        if (url === undefined || url === null || url.length === 0) {
+            return Observable.throw("Invalid URL submitted");
+        }
+        
         var proxy = new ProxyRequest(url);
         var proxyRequest = proxy.build();
         options.body = JSON.stringify(proxyRequest);
