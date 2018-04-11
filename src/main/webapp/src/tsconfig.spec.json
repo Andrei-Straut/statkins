@@ -17,6 +17,7 @@
         "../node_modules/angular2-logger/app/core/logger.ts"
     ],
     "include": [
+        "test.ts",
         "**/*.spec.ts",
         "**/*.d.ts"
     ]

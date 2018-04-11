@@ -74,7 +74,7 @@ export class DrpMasterBuild05DataProvider implements IBuildDataProviderService {
         "number": 5,
         "queueId": 5,
         "result": "SUCCESS",
-        "timestamp": 1502918761713,
+        "timestamp": Date.now() - (24 * 60 * 60 * 1000), // yesterday,
         "url": "https://www.andreistraut.info/jenkins/job/drp-master/5/",
         "builtOn": "",
         "changeSet": {

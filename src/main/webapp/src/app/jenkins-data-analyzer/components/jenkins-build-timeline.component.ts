@@ -148,32 +148,44 @@ export class JenkinsBuildTimelineComponent implements OnInit {
 
             window.open(item.url, '_blank');
         });
-
+        
         return this.visTimeline;
     }
 
     toggleOverlap() {
         this.buildVisibility.stack = !this.buildVisibility.stack;
         this.visTimelineOptions.stack = this.buildVisibility.stack;
-        this.visTimeline.setOptions(this.visTimelineOptions);
+        
+        if (!this.utilService.isInvalid(this.visTimeline)) {
+            this.visTimeline.setOptions(this.visTimelineOptions);
+        }
     }
 
     toggleQueueTimes() {
         this.buildVisibility.queueTimes = !this.buildVisibility.queueTimes;
         this.visJobsData = this.getJobsData(this.jenkinsData, this.buildVisibility);
-        this.visTimeline.setData({groups: this.visGroups, items: this.visJobsData});
+        
+        if (!this.utilService.isInvalid(this.visTimeline)) {
+            this.visTimeline.setData({groups: this.visGroups, items: this.visJobsData});
+        }
     }
 
     toggleBuildWithQTime() {
         this.buildVisibility.buildWithQTime = !this.buildVisibility.buildWithQTime;
         this.visJobsData = this.getJobsData(this.jenkinsData, this.buildVisibility);
-        this.visTimeline.setData({groups: this.visGroups, items: this.visJobsData});
+        
+        if (!this.utilService.isInvalid(this.visTimeline)) {
+            this.visTimeline.setData({groups: this.visGroups, items: this.visJobsData});
+        }
     }
 
     toggleBuildWithoutQTime() {
         this.buildVisibility.buildWithoutQTime = !this.buildVisibility.buildWithoutQTime;
         this.visJobsData = this.getJobsData(this.jenkinsData, this.buildVisibility);
-        this.visTimeline.setData({groups: this.visGroups, items: this.visJobsData});
+        
+        if (!this.utilService.isInvalid(this.visTimeline)) {
+            this.visTimeline.setData({groups: this.visGroups, items: this.visJobsData});
+        }
     }
 
     toggleSuccessful() {
@@ -202,10 +214,13 @@ export class JenkinsBuildTimelineComponent implements OnInit {
             height = document.documentElement.clientHeight - Math.round(document.documentElement.clientHeight / 10);
         }
 
-        this.visTimelineOptions.height = height + 'px'
-        this.visTimeline.setOptions(this.visTimelineOptions);
-        this.visTimeline.redraw();
+        this.visTimelineOptions.height = height + 'px';
         this.buildVisibility.isFullscreen = !this.buildVisibility.isFullscreen;
+        
+        if (!this.utilService.isInvalid(this.visTimeline)) {
+            this.visTimeline.setOptions(this.visTimelineOptions);
+            this.visTimeline.redraw();
+        }
     }
 
     setGroupVisibility(group: number, visibility: boolean): void {
