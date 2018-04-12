@@ -1129,6 +1129,20 @@ describe('UtilService', () => {
         expect(service.getBuildDuration(build)).toBe(123456);
     }));
 
+    it('getBuildDuration should return now for building build', inject([UtilService], (service: UtilService) => {
+        let build: IJenkinsBuild = new JenkinsBuild();
+        let now = Date.now();
+        
+        build.building = true;
+        build.timestamp = now - 60 * 60 * 1000; // 1 hour
+        let expected = now - build.timestamp;
+        let actual = service.getBuildDuration(build);
+        
+        let tolerance = (expected * 5) / 100; // 5 percent tolerance
+        
+        expect((expected - tolerance) <= actual && (expected + tolerance) >= actual).toBe(true);
+    }));
+
     it('getBuildAverageDuration should return 0 for undefined build array', inject([UtilService], (service: UtilService) => {
         let builds: Array<IJenkinsBuild> = undefined;
         expect(service.getBuildAverageDuration(builds)).toBe(0);
