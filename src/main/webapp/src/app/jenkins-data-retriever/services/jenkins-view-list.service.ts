@@ -49,7 +49,8 @@ export class JenkinsViewListService extends JenkinsDataRetrieverService {
             });
 
         /* An error occurred, view list unretrievable */
-        if (this.util.isInvalid(viewListResponse) || this.util.isInvalid(viewListResponse["views"])) {
+        if (this.util.isInvalid(viewListResponse) || !viewListResponse.hasOwnProperty("views") || this.util.isInvalid(viewListResponse["views"])) {
+            this.LOGGER.error("No views found in response");
             this.completedSuccessfully = false;
             this.complete = true;
             return;
