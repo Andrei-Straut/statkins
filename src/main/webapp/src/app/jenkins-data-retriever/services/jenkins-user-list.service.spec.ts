@@ -93,6 +93,22 @@ describe('JenkinsUserListService', () => {
         expect(service.isSuccessful()).toBeFalsy();
     });
 
+    it('getData should return empty when response has no user property', async () => {
+        let data: JSON = new AndreiStrautInfoMasterUserListDataProvider().getUserListData();
+        (data["users"]as Array<JSON>).forEach(user => delete user["user"]);
+        
+        let proxyService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
+        proxyService.setResponse(data);
+        
+        let service: JenkinsUserListService = new JenkinsUserListService(configService, proxyService, utilService, loggerService, "SomeUrl");
+        await service.execute();
+
+        expect(service.getData().length).toBe(0);
+        expect(service.isComplete()).toBeTruthy();
+        expect(service.isSuccessful()).toBeTruthy();
+        expect(service.isDataComplete()).toBeFalsy();
+    });
+
     it('getData should return correct values for response with users', async () => {
         let data: JSON = new AndreiStrautInfoMasterUserListDataProvider().getUserListData();
         
