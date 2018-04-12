@@ -27,6 +27,13 @@ export class JenkinsNodeService extends JenkinsDataRetrieverService {
     }
 
     async execute() {
+        if (this.jenkinsNodeUrl === undefined || this.jenkinsNodeUrl === null || this.jenkinsNodeUrl.length === 0) {
+            this.LOGGER.error("Empty or null url received");
+            this.completedSuccessfully = false;
+            this.complete = true;
+            return;
+        }
+        
         let nodeResponse: JSON;
 
         this.LOGGER.debug("Retrieving nodes from:", this.jenkinsNodeUrl);
@@ -42,7 +49,7 @@ export class JenkinsNodeService extends JenkinsDataRetrieverService {
             });
 
         /* An error occurred, node list unretrievable */
-        if (this.util.isInvalid(nodeResponse) || this.util.isInvalid(nodeResponse["computer"])) {
+        if (this.util.isInvalid(nodeResponse) || !nodeResponse.hasOwnProperty("computer") || this.util.isInvalid(nodeResponse["computer"])) {
             this.nodeList = new Array<IJenkinsNode>();
             this.completedSuccessfully = false;
             this.allItemsRetrievedSuccessfully = false;
@@ -56,9 +63,10 @@ export class JenkinsNodeService extends JenkinsDataRetrieverService {
             let jenkinsNode: IJenkinsNode = new JenkinsNode();
             jenkinsNode.fromJson(node);
 
-            if (!this.util.isInvalid(jenkinsNode) && !this.util.isInvalid(jenkinsNode.name)) {
+            if (!this.util.isInvalid(jenkinsNode) && !this.util.isInvalid(jenkinsNode.displayName)) {
                 jenkinsNode.url = this.getJenkinsNodeUrl(this.url, this.config, jenkinsNode.displayName);
             } else {
+                this.allItemsRetrievedSuccessfully = false;
                 this.LOGGER.debug("Node details invalid:", nodeResponse);
             }
 
@@ -99,6 +107,6 @@ export class JenkinsNodeService extends JenkinsDataRetrieverService {
             return undefined;
         }
         
-        return jenkinsUrl.replace(/\/$/, "") + '/' + config.slaveSuffix + "/" + nodeName;
+        return jenkinsUrl.replace(/\/$/, "") + '/' + config.slaveSuffix + nodeName;
     }
 }

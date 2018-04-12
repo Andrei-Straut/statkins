@@ -63,7 +63,7 @@ export class JenkinsDataProviderService {
         let nodes: Array<IJenkinsNode> = new Array<IJenkinsNode>();
         
         let andreiStrautInfoMasterNode: IJenkinsNode = new JenkinsNode();
-        andreiStrautInfoMasterNode.fromJson(new AndreiStrautInfoMasterNodeDataProvider().getNodeData());
+        andreiStrautInfoMasterNode.fromJson((new AndreiStrautInfoMasterNodeDataProvider().getNodeData()["computer"])[0]);
         nodes.push(andreiStrautInfoMasterNode);
         
         return nodes;

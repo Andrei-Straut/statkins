@@ -45,10 +45,10 @@ export class JenkinsUserListService extends JenkinsDataRetrieverService {
             .catch(error => {
                 this.completedSuccessfully = false;
                 this.complete = true;
-                this.LOGGER.error("Could not retrieve user list:", error)
+                this.LOGGER.error("Could not retrieve user list:", error);
             });
 
-        /* An error occurred, job list unretrievable */
+        /* An error occurred, user list unretrievable */
         if (this.util.isInvalid(userResponse) || !userResponse.hasOwnProperty("users") || this.util.isInvalid(userResponse["users"])) {
             this.LOGGER.error("No users found in response");
             this.userList = new Array<IJenkinsUser>();
@@ -60,6 +60,12 @@ export class JenkinsUserListService extends JenkinsDataRetrieverService {
         this.LOGGER.debug("Received response:", userResponse);
 
         for (let user of userResponse["users"]) {
+            
+            if (this.util.isInvalid(user) || !(user as JSON).hasOwnProperty("user") || this.util.isInvalid(user["user"])) {
+                this.allItemsRetrievedSuccessfully = false;
+                continue;
+            }            
+            
             let jenkinsUser: IJenkinsUser = new JenkinsUser();
             jenkinsUser.fromJson(user["user"]);
 
