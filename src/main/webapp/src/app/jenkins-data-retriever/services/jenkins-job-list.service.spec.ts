@@ -14,7 +14,7 @@ import {JenkinsServiceId} from './JenkinsServiceId';
 let loggerService: Logger = undefined;
 let configService: ConfigMockService = new ConfigMockService();
 let proxyErrorService: ProxyObservableErrorMockService = new ProxyObservableErrorMockService();
-let proxyEmptyResponseService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService(JSON.parse("{}"));
+let proxyService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
 
 describe('JenkinsJobListService', () => {
     
@@ -83,7 +83,7 @@ describe('JenkinsJobListService', () => {
     });
 
     it('getData should return empty when response is empty', async () => {
-        let service: JenkinsJobListService = new JenkinsJobListService(configService, proxyEmptyResponseService, loggerService, "SomeUrl");
+        let service: JenkinsJobListService = new JenkinsJobListService(configService, proxyService, loggerService, "SomeUrl");
         await service.execute();
 
         expect(service.getData().length).toBe(0);
@@ -94,8 +94,9 @@ describe('JenkinsJobListService', () => {
     it('getData should return correct values for response with jobs', async () => {
         let data: JSON = new AndreiStrautInfoMasterJobListDataProvider().getJobListData();
         
-        let proxyCustomResponseService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService(data);
-        let service: JenkinsJobListService = new JenkinsJobListService(configService, proxyCustomResponseService, loggerService, "SomeUrl");
+        let proxyService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
+        proxyService.setResponse(data);
+        let service: JenkinsJobListService = new JenkinsJobListService(configService, proxyService, loggerService, "SomeUrl");
         await service.execute();
 
         expect(service.isComplete()).toBeTruthy();
