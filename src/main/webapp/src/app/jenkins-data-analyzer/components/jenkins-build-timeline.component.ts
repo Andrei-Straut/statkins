@@ -278,21 +278,30 @@ export class JenkinsBuildTimelineComponent implements OnInit {
     }
 
     private getQueueTemplate(build: IJenkinsBuild): string {
+        
+        let running = this.utilService.buildIsRunning(build) ? " <b><i>(Running)</i></b>" : "";
+        let aborted = this.utilService.buildResultIs(build, JenkinsBuildStatus.Aborted) ? " <b><i>(Aborted)</i></b>" : "";
 
-        let timeInQueueMillis = this.utilService.getBuildTimeInQueue(build);
-        let totalTimeMillis = this.utilService.getBuildTotalTime(build);
-        let percentageInQueue = Math.round((timeInQueueMillis * 100) / totalTimeMillis);
-        let timeInQueueMinutes = Math.round(moment.duration(timeInQueueMillis, "milliseconds").asMinutes());
-        let runtimeMinutes = Math.round(moment.duration(build.duration, "milliseconds").asMinutes());
+        let queuedAtTimestamp = build.timestamp - this.utilService.getBuildTimeInQueue(build);
+        let startedAtTimestamp = build.timestamp;
+        let endedAtTimestamp = this.utilService.buildIsRunning(build) ? Date.now() : (build.timestamp + build.duration);
+        
+        let timeInQueueDuration = this.utilService.getBuildTimeInQueue(build);
+        let timeRunningDuration = endedAtTimestamp - build.timestamp;
+        let totalTimeDuration = timeInQueueDuration + timeRunningDuration;
 
+        let percentageInQueue = Math.round((timeInQueueDuration * 100) / totalTimeDuration);
+        
+        let timeInQueueMinutes = Math.round(moment.duration(timeInQueueDuration, "milliseconds").asMinutes());
         if (timeInQueueMinutes === 0 || percentageInQueue === 0) {
             return undefined;
         }
         
         // Use proper time calculations (i.e. if an item takes a day+ to run, show it as a day+, not only as minutes)
-        let finalRunTime: string = this.utilService.simpleFormatDuration(runtimeMinutes);
+        let timeRunningDurationMinutes = Math.round(moment.duration(timeRunningDuration, "milliseconds").asMinutes());
+        let finalRunTime: string = this.utilService.simpleFormatDuration(timeRunningDurationMinutes);
         let finalQueueTime: string = this.utilService.simpleFormatDuration(timeInQueueMinutes);
-        
+                
         return ''
             + '<div class="progress-wrapper">'
             + '<div class="progress progress-yellow" style="width:' + percentageInQueue + '%">'

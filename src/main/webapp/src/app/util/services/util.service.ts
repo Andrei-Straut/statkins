@@ -318,15 +318,6 @@ export class UtilService {
         return builds;
     }
 
-    getBuildDuration(build: IJenkinsBuild): number {
-
-        if (this.isInvalid(build) || this.isInvalid(build.duration)) {
-            return 0;
-        }
-
-        return build.duration as number;
-    }
-
     getBuildAverageDuration(builds: Array<IJenkinsBuild>): number {
         let parent = this;
 
@@ -379,6 +370,27 @@ export class UtilService {
         return Math.ceil(weightedDuration);
     }
 
+    getBuildDuration(build: IJenkinsBuild): number {
+
+        if (this.isInvalid(build)) {
+            return 0;
+        }
+        
+        if (this.isInvalid(build.duration) && this.isInvalid(build.building)) {
+            return 0;
+        }
+        
+        if (build.building === true) {
+            return Date.now() - build.timestamp;
+        }
+        
+        if(!this.isInvalid(build.duration)) {
+            return build.duration;
+        }
+
+        return 0;
+    }
+
     public getBuildTimeInQueue(build: IJenkinsBuild): number {
         if (this.isInvalid(build) || this.isInvalid(build.actions)) {
             return 0;
@@ -394,25 +406,6 @@ export class UtilService {
         let timeInQueue = timeInQueueAction.getQueuingDurationMillis();
         if (!this.isInvalid(timeInQueue) && !isNaN(timeInQueue) && timeInQueue > 0) {
             return timeInQueue;
-        }
-
-        return 0;
-    }
-
-    public getBuildTotalTime(build: IJenkinsBuild): number {
-        if (this.isInvalid(build) || this.isInvalid(build.actions)) {
-            return 0;
-        }
-
-        let totalTimeArray: Array<IJenkinsAction> = build.actions.filter(action => (action as IJenkinsAction).isTimeInQueueActionClass());
-        if (this.isInvalid(totalTimeArray)) {
-            return 0;
-        }
-
-        let timeInQueueAction: JenkinsTimeInQueueAction = totalTimeArray[0] as JenkinsTimeInQueueAction;
-        let totalTime = timeInQueueAction.getTotalDurationMillis();
-        if (!this.isInvalid(totalTime) && !isNaN(totalTime) && totalTime > 0) {
-            return totalTime;
         }
 
         return 0;

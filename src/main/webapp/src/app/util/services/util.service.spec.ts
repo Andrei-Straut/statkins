@@ -1099,17 +1099,19 @@ describe('UtilService', () => {
 
     it('getBuildDuration should return 0 for build with undefined duration', inject([UtilService], (service: UtilService) => {
         let build: IJenkinsBuild = new JenkinsBuild();
-        build.duration = undefined
+        build.duration = undefined;
+        build.building = false;
         expect(service.getBuildDuration(build)).toBe(0);
     }));
 
     it('getBuildDuration should return 0 for build with null duration', inject([UtilService], (service: UtilService) => {
         let build: IJenkinsBuild = new JenkinsBuild();
-        build.duration = undefined
+        build.duration = null;
+        build.building = false;
         expect(service.getBuildDuration(build)).toBe(0);
     }));
 
-    it('getBuildDuration should return 0 for undefined build', inject([UtilService], (service: UtilService) => {
+    it('getBuildDuration should return 0 for build with undefined building', inject([UtilService], (service: UtilService) => {
         let build: IJenkinsBuild = new JenkinsBuild();
         build.building = undefined;
         expect(service.getBuildDuration(build)).toBe(0);
@@ -1312,110 +1314,6 @@ describe('UtilService', () => {
         build.actions.push(timeInQueueAction2);
 
         expect(service.getBuildTimeInQueue(build)).toBe(duration);
-    }));
-    
-    it('getBuildTotalTime should return 0 for undefined build', inject([UtilService], (service: UtilService) => {
-        let build: IJenkinsBuild = undefined;
-        expect(service.getBuildTotalTime(build)).toBe(0);
-    }));
-
-    it('getBuildTotalTime should return 0 for null build', inject([UtilService], (service: UtilService) => {
-        let build: IJenkinsBuild = null;
-        expect(service.getBuildTotalTime(build)).toBe(0);
-    }));
-
-    it('getBuildTotalTime should return 0 for build with undefined actions', inject([UtilService], (service: UtilService) => {
-        let build: IJenkinsBuild = new JenkinsBuild();
-        build.actions = undefined;
-        expect(service.getBuildTotalTime(build)).toBe(0);
-    }));
-
-    it('getBuildTotalTime should return 0 for build with null actions', inject([UtilService], (service: UtilService) => {
-        let build: IJenkinsBuild = new JenkinsBuild();
-        build.actions = null;
-        expect(service.getBuildTotalTime(build)).toBe(0);
-    }));
-
-    it('getBuildTotalTime should return 0 for build with empty actions', inject([UtilService], (service: UtilService) => {
-        let build: IJenkinsBuild = new JenkinsBuild();
-        build.actions = new Array<any>();
-        expect(service.getBuildTotalTime(build)).toBe(0);
-    }));
-
-    it('getBuildTotalTime should return 0 for build without timeInQueueActions', inject([UtilService], (service: UtilService) => {
-        let build: IJenkinsBuild = new JenkinsBuild();
-        build.fromJson(new AndreiStrautInfoMasterBuild13DataProvider().getBuildData());
-        build.actions = new Array<any>();
-        build.actions.push(new JenkinsAction());
-        expect(service.getBuildTotalTime(build)).toBe(0);
-    }));
-
-    it('getBuildTotalTime should return 0 for builds with totalDuration NaN', inject([UtilService], (service: UtilService) => {
-        let timeInQueueAction: IJenkinsAction = new JenkinsTimeInQueueAction();
-        timeInQueueAction.fromJson(JSON.parse(
-                '{"_class": "jenkins.metrics.impl.TimeInQueueAction",' +
-                '"queuingDurationMillis": "123456",' +
-                '"totalDurationMillis": "asdfg"}'
-        ));
-        
-        let build: IJenkinsBuild = new JenkinsBuild();
-        build.actions = new Array<any>();
-        build.actions.push(timeInQueueAction);
-
-        expect(service.getBuildTotalTime(build)).toBe(0);
-    }));
-
-    it('getBuildTotalTime should return 0 for builds with totalDuration smaller than 0', inject([UtilService], (service: UtilService) => {
-        let timeInQueueAction: IJenkinsAction = new JenkinsTimeInQueueAction();
-        timeInQueueAction.fromJson(JSON.parse(
-                '{"_class": "jenkins.metrics.impl.TimeInQueueAction",' +
-                '"queuingDurationMillis": 123456,' +
-                '"totalDurationMillis": -123456}'
-        ));
-        
-        let build: IJenkinsBuild = new JenkinsBuild();
-        build.actions = new Array<any>();
-        build.actions.push(timeInQueueAction);
-
-        expect(service.getBuildTotalTime(build)).toBe(0);
-    }));
-
-    it('getBuildTotalTime should return correct results for build with timeInQueueActions', inject([UtilService], (service: UtilService) => {
-        let duration = 123456;
-        
-        let someAction: IJenkinsAction = new JenkinsAction();
-        someAction.fromJson(JSON.parse(
-                '{"_class": "hudson.plugins.git.GitTagAction"}'
-        ));
-        
-        let someOtherAction: IJenkinsAction = new JenkinsAction();
-        someOtherAction.fromJson(JSON.parse(
-                '{"_class": "hudson.model.CauseAction",' +
-                '"causes": []}'
-        ));
-        
-        let timeInQueueAction1: IJenkinsAction = new JenkinsTimeInQueueAction();
-        timeInQueueAction1.fromJson(JSON.parse(
-                '{"_class": "jenkins.metrics.impl.TimeInQueueAction",' +
-                '"queuingDurationMillis": 103833,' +
-                '"totalDurationMillis": 123456}'
-        ));
-        
-        let timeInQueueAction2: IJenkinsAction = new JenkinsTimeInQueueAction();
-        timeInQueueAction2.fromJson(JSON.parse(
-                '{"_class": "jenkins.metrics.impl.TimeInQueueAction",' +
-                '"queuingDurationMillis": 103833,' +
-                '"totalDurationMillis": 1}'
-        ));
-        
-        let build: IJenkinsBuild = new JenkinsBuild();
-        build.actions = new Array<any>();
-        build.actions.push(someAction);
-        build.actions.push(timeInQueueAction1);
-        build.actions.push(someOtherAction);
-        build.actions.push(timeInQueueAction2);
-
-        expect(service.getBuildTotalTime(build)).toBe(duration);
     }));
 
     it('getNumberOfBuilds should return 0 for undefined job', inject([UtilService], (service: UtilService) => {
