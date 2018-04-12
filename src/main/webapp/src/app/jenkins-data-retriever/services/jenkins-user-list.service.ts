@@ -28,6 +28,13 @@ export class JenkinsUserListService extends JenkinsDataRetrieverService {
     }
 
     async execute() {
+        if (this.jenkinsUserUrl === undefined || this.jenkinsUserUrl === null || this.jenkinsUserUrl.length === 0) {
+            this.LOGGER.error("Empty or null url received");
+            this.completedSuccessfully = false;
+            this.complete = true;
+            return;
+        }
+        
         let userResponse: JSON;
 
         this.LOGGER.debug("Retrieving users from:", this.jenkinsUserUrl);
@@ -42,7 +49,8 @@ export class JenkinsUserListService extends JenkinsDataRetrieverService {
             });
 
         /* An error occurred, job list unretrievable */
-        if (this.util.isInvalid(userResponse)) {
+        if (this.util.isInvalid(userResponse) || !userResponse.hasOwnProperty("users") || this.util.isInvalid(userResponse["users"])) {
+            this.LOGGER.error("No users found in response");
             this.userList = new Array<IJenkinsUser>();
             this.completedSuccessfully = false;
             this.complete = true;
@@ -50,13 +58,6 @@ export class JenkinsUserListService extends JenkinsDataRetrieverService {
         }
 
         this.LOGGER.debug("Received response:", userResponse);
-
-        if (!userResponse.hasOwnProperty("users")) {
-            this.LOGGER.error("No users found in response");
-            this.completedSuccessfully = false;
-            this.complete = true;
-            return;
-        }
 
         for (let user of userResponse["users"]) {
             let jenkinsUser: IJenkinsUser = new JenkinsUser();

@@ -48,7 +48,7 @@ export class JenkinsJobListService extends JenkinsDataRetrieverService {
             });
 
         /* An error occurred, job list unretrievable */
-        if (jobListResponse === undefined || jobListResponse["jobs"] === undefined || 
+        if (jobListResponse === undefined || !jobListResponse.hasOwnProperty("jobs") || jobListResponse["jobs"] === undefined || 
             jobListResponse["jobs"] === null ||
             (jobListResponse["jobs"] as Array<JSON>).length === 0) {
             
