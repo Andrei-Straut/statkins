@@ -18,7 +18,7 @@ let loggerService: Logger = undefined;
 let utilService: UtilMockService = new UtilMockService();
 let configService: ConfigMockService = new ConfigMockService();
 let proxyErrorService: ProxyObservableErrorMockService = new ProxyObservableErrorMockService();
-let proxyCustomResponseService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService(JSON.parse("{}"));
+let proxyCustomResponseService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
 
 describe('JenkinsBuildService', () => {
     
@@ -133,7 +133,8 @@ describe('JenkinsBuildService', () => {
 
 function createService(data: any): JenkinsBuildService {
     let jsonData = new AndreiStrautInfoMasterBuild14DataProvider().getBuildData();
-    let proxyService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService(jsonData as JSON);
+    let proxyService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
+    proxyService.setResponse(jsonData as JSON);
     
     let service: JenkinsBuildService = new JenkinsBuildService(configService, proxyService, utilService, loggerService, data);
     return service;

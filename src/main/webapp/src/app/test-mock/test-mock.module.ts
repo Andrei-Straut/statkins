@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ConfigMockService} from './services/config.mock.service';
 import {UtilMockService} from './services/util.mock.service';
-import {ProxyMockService} from './services/proxy.mock.service';
+import {ProxyCustomResponseMockService} from './services/proxy.custom-response.mock.service';
 import {IJenkinsDataMockService} from './services/jenkins-data.mock.service';
 
 import {ConfigModule} from '../config/config.module';
@@ -19,7 +19,7 @@ import {JenkinsDataProviderService} from './services/jenkins-data-provider.servi
     providers: [
         ConfigMockService, 
         UtilMockService, 
-        ProxyMockService, 
+        ProxyCustomResponseMockService,
         IJenkinsDataMockService,
         
         JenkinsDataProviderService]

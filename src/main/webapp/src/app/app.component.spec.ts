@@ -16,11 +16,11 @@ import {JenkinsDataAnalyzerModule} from './jenkins-data-analyzer/jenkins-data-an
 import {IJenkinsDataMockService} from './test-mock/services/jenkins-data.mock.service';
 import {UtilMockService} from './test-mock/services/util.mock.service';
 import {ConfigMockService} from './test-mock/services/config.mock.service';
-import {ProxyMockService} from './test-mock/services/proxy.mock.service';
+import {ProxyCustomResponseMockService} from './test-mock/services/proxy.custom-response.mock.service';
 
 let utilService: UtilMockService = new UtilMockService();
 let configService: ConfigMockService = new ConfigMockService();
-let proxyService: ProxyMockService = new ProxyMockService();
+let proxyService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
 
 describe('AppComponent', () => {
     

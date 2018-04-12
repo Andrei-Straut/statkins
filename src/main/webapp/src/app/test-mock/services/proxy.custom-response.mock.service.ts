@@ -10,8 +10,12 @@ export class ProxyCustomResponseMockService extends ProxyService {
     
     private desiredResponse: JSON;
 
-    constructor(desiredResponse:JSON) {
+    constructor() {
         super(null, null, new ConfigMockService());
+        this.desiredResponse = JSON.parse("{}");
+    }
+    
+    setResponse(desiredResponse: JSON) {
         this.desiredResponse = desiredResponse;
     }
 

@@ -8,7 +8,7 @@ import {UtilModule} from '../../util/util.module';
 import {JenkinsDataRetrieverComponent} from './jenkins-data-retriever.component';
 import {Logger} from '../../../../node_modules/angular2-logger/core';
 import {ConfigMockService} from '../../test-mock/services/config.mock.service';
-import {ProxyMockService} from '../../test-mock/services/proxy.mock.service';
+import {ProxyCustomResponseMockService} from '../../test-mock/services/proxy.custom-response.mock.service';
 import {UtilMockService} from '../../test-mock/services/util.mock.service';
 
 import {JenkinsNodeService} from '../services/jenkins-node.service';
@@ -25,7 +25,7 @@ import {JenkinsActionService} from '../services/jenkins-action.service';
 
 let loggerService: Logger = undefined;
 let configService: ConfigMockService = new ConfigMockService();
-let proxyService: ProxyMockService = new ProxyMockService();
+let proxyService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
 let utilService: UtilMockService = new UtilMockService();
 
 describe('JenkinsDataRetrieverComponent', () => {

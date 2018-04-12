@@ -28,6 +28,13 @@ export class JenkinsViewListService extends JenkinsDataRetrieverService {
     }
 
     async execute() {
+        if (this.jenkinsViewListUrl === undefined || this.jenkinsViewListUrl === null || this.jenkinsViewListUrl.length === 0) {
+            this.LOGGER.error("Empty or null url received");
+            this.completedSuccessfully = false;
+            this.complete = true;
+            return;
+        }
+        
         let viewListResponse: JSON;
 
         this.LOGGER.debug("Retrieving view list from:", this.jenkinsViewListUrl);
@@ -42,8 +49,7 @@ export class JenkinsViewListService extends JenkinsDataRetrieverService {
             });
 
         /* An error occurred, view list unretrievable */
-        if (this.util.isInvalid(viewListResponse)) {
-            this.viewList = new Array<IJenkinsView>();
+        if (this.util.isInvalid(viewListResponse) || this.util.isInvalid(viewListResponse["views"])) {
             this.completedSuccessfully = false;
             this.complete = true;
             return;
