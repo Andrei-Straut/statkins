@@ -87,8 +87,16 @@ describe('JenkinsUserService', () => {
         userListProxyService.setDefaultResponse(userListJsonData);
         await userListService.execute();
         let userListData = userListService.getData();
-        
-        let userProxyService = configureUserProxyService();
+                
+        let noReplyData = new AndreiStrautInfoNoReplyUserDataProvider().getUserData();
+        let andreiStrautData = new AndreiStrautInfoAndreiStrautUserDataProvider().getUserData();
+        let andreiDotStrautData = new AndreiStrautInfoAndreiDotStrautUserDataProvider().getUserData();
+
+        let userProxyService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
+        userProxyService.addResponse(((noReplyData["absoluteUrl"] as string).replace(/\/$/, "") + '/' + configService.apiSuffix), noReplyData);
+        userProxyService.addResponse(((andreiStrautData["absoluteUrl"] as string).replace(/\/$/, "") + '/' + configService.apiSuffix), andreiStrautData);
+        userProxyService.addResponse(((andreiDotStrautData["absoluteUrl"] as string).replace(/\/$/, "") + '/' + configService.apiSuffix), andreiDotStrautData);
+    
         let service: JenkinsUserService = new JenkinsUserService(configService, userProxyService, utilService, loggerService, userListData);
         await service.execute();
 
@@ -133,13 +141,10 @@ describe('JenkinsUserService', () => {
         delete andreiStrautData["fullName"];
         delete andreiDotStrautData["fullName"];
 
-        let responses: Map<string, any> = new Map<string, any>();
-        responses.set(((noReplyData["absoluteUrl"] as string).replace(/\/$/, "") + '/' + configService.apiSuffix), noReplyData);
-        responses.set(((andreiStrautData["absoluteUrl"] as string).replace(/\/$/, "") + '/' + configService.apiSuffix), andreiStrautData);
-        responses.set(((andreiDotStrautData["absoluteUrl"] as string).replace(/\/$/, "") + '/' + configService.apiSuffix), andreiDotStrautData);
-
         let userProxyService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
-        userProxyService.setResponses(responses);
+        userProxyService.addResponse(((noReplyData["absoluteUrl"] as string).replace(/\/$/, "") + '/' + configService.apiSuffix), noReplyData);
+        userProxyService.addResponse(((andreiStrautData["absoluteUrl"] as string).replace(/\/$/, "") + '/' + configService.apiSuffix), andreiStrautData);
+        userProxyService.addResponse(((andreiDotStrautData["absoluteUrl"] as string).replace(/\/$/, "") + '/' + configService.apiSuffix), andreiDotStrautData);
         
         let service: JenkinsUserService = new JenkinsUserService(configService, userProxyService, utilService, loggerService, userListData);
         await service.execute();
@@ -170,13 +175,10 @@ describe('JenkinsUserService', () => {
         delete andreiStrautData["absoluteUrl"];
         delete andreiDotStrautData["absoluteUrl"];
 
-        let responses: Map<string, any> = new Map<string, any>();
-        responses.set(noReplyDataUrl, noReplyData);
-        responses.set(andreiStrautDataUrl, andreiStrautData);
-        responses.set(andreiDotStrautUrl, andreiDotStrautData);
-
         let userProxyService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
-        userProxyService.setResponses(responses);
+        userProxyService.addResponse(noReplyDataUrl, noReplyData);
+        userProxyService.addResponse(andreiStrautDataUrl, andreiStrautData)
+        userProxyService.addResponse(andreiDotStrautUrl, andreiDotStrautData)
         
         let service: JenkinsUserService = new JenkinsUserService(configService, userProxyService, utilService, loggerService, userListData);
         await service.execute();
@@ -225,20 +227,4 @@ describe('JenkinsUserService', () => {
 function createService(data: any): JenkinsUserService {
     let service: JenkinsUserService = new JenkinsUserService(configService, proxyErrorService, utilService, loggerService, data);
     return service;
-}
-
-function configureUserProxyService(): ProxyCustomResponseMockService {
-    let noReplyData = new AndreiStrautInfoNoReplyUserDataProvider().getUserData();
-    let andreiStrautData = new AndreiStrautInfoAndreiStrautUserDataProvider().getUserData();
-    let andreiDotStrautData = new AndreiStrautInfoAndreiDotStrautUserDataProvider().getUserData();
-
-    let responses: Map<string, any> = new Map<string, any>();
-    responses.set(((noReplyData["absoluteUrl"] as string).replace(/\/$/, "") + '/' + configService.apiSuffix), noReplyData);
-    responses.set(((andreiStrautData["absoluteUrl"] as string).replace(/\/$/, "") + '/' + configService.apiSuffix), andreiStrautData);
-    responses.set(((andreiDotStrautData["absoluteUrl"] as string).replace(/\/$/, "") + '/' + configService.apiSuffix), andreiDotStrautData);
-    
-    let userProxyService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
-    userProxyService.setResponses(responses);
-    
-    return userProxyService;
 }
