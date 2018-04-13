@@ -58,8 +58,9 @@ export class JenkinsViewService extends JenkinsDataRetrieverService {
                         continue;
                     }
 
-                    if (!(<JSON> viewJson).hasOwnProperty("name")) {
+                    if (!(viewJson as JSON).hasOwnProperty("name")) {
                         this.LOGGER.warn("No view details found for:", viewJson);
+                        this.allItemsRetrievedSuccessfully = false;
                         continue;
                     }
 

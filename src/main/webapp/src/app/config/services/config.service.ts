@@ -20,15 +20,23 @@ export class ConfigService {
     readonly loggerLevel:number = 3;
     readonly defaultDepth = "?depth=1";
     
+    readonly devProxyUrl = "http://localhost:8089";
+    readonly stagingProxyURL = "http://vm-transnet-009.dci.co-int.net:8080/drp/api/post/";
+    readonly liveProxyURL = "https://www.andreistraut.info/drp/api/post/";
+    
+    readonly devJenkinsURL = "http://ptlisvltnet016.dci.co-int.net/";
+    readonly stagingJenkinsURL = "http://ptlisvltnet016.dci.co-int.net/";
+    readonly liveJenkinsURL = "https://www.andreistraut.info/jenkins/";
+    
     readonly jenkinsTimeInQueueActionId = "jenkins.metrics.impl.TimeInQueueAction";
     
     get proxyUrl():string {
         if(this._configuration === "DEV") {
-            return "http://localhost:8089";
+            return this.devProxyUrl;
         } else if(this._configuration === "STAGING") {
-            return "http://vm-transnet-009.dci.co-int.net:8080/drp/api/post/";
+            return this.stagingProxyURL;
         } else if(this._configuration === "LIVE") {
-            return "https://www.andreistraut.info/drp/api/post/";
+            return this.liveProxyURL;
         }
         
         return undefined;
@@ -36,11 +44,11 @@ export class ConfigService {
     
     get jenkinsUrl():string {
         if(this._configuration === "DEV") {
-            return "http://ptlisvltnet016.dci.co-int.net/";
+            return this.devJenkinsURL;
         } else if(this._configuration === "STAGING") {
-            return "http://ptlisvltnet016.dci.co-int.net/";
+            return this.stagingJenkinsURL;
         } else if(this._configuration === "LIVE") {
-            return "https://www.andreistraut.info/jenkins/";
+            return this.liveJenkinsURL;
         }
         
         return undefined;

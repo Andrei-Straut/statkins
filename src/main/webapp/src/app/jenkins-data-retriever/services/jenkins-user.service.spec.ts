@@ -79,7 +79,7 @@ describe('JenkinsUserService', () => {
         expect(service.isSuccessful()).toBeFalsy();
     });
 
-    it('getData should return correct results response with user', async () => {
+    it('getData should return correct results for response with user', async () => {
         let userListJsonData: JSON = new AndreiStrautInfoMasterUserListDataProvider().getUserListData();
         let userListProxyService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
         let userListService: JenkinsUserListService = new JenkinsUserListService(configService, userListProxyService, utilService, loggerService, "SomeUrl");
