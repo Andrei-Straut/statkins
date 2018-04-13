@@ -56,7 +56,7 @@ export class ConfigService {
     
     constructor() {
         this._INSTANCE_ID = this.uuidv4();
-        this.copyright = '© ' + this.developerName + ' ' + new Date().getFullYear();
+        this.copyright = 'Copyright © ' + this.developerName + ' ' + new Date().getFullYear();
     }
 
     private uuidv4() {
