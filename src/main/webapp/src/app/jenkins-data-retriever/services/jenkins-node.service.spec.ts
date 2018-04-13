@@ -120,6 +120,7 @@ describe('JenkinsNodeService', () => {
 
         expect(service.isComplete()).toBeTruthy();
         expect(service.isSuccessful()).toBeTruthy();
+        expect(service.isDataComplete()).toBeTruthy();
         
         expect(service.getData().length).toBe(2);
         
