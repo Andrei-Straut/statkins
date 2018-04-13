@@ -134,7 +134,7 @@ describe('JenkinsBuildService', () => {
 function createService(data: any): JenkinsBuildService {
     let jsonData = new AndreiStrautInfoMasterBuild14DataProvider().getBuildData();
     let proxyService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
-    proxyService.setResponse(jsonData as JSON);
+    proxyService.setDefaultResponse(jsonData as JSON);
     
     let service: JenkinsBuildService = new JenkinsBuildService(configService, proxyService, utilService, loggerService, data);
     return service;

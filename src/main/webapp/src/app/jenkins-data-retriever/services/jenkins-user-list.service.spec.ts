@@ -98,7 +98,7 @@ describe('JenkinsUserListService', () => {
         (data["users"]as Array<JSON>).forEach(user => delete user["user"]);
         
         let proxyService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
-        proxyService.setResponse(data);
+        proxyService.setDefaultResponse(data);
         
         let service: JenkinsUserListService = new JenkinsUserListService(configService, proxyService, utilService, loggerService, "SomeUrl");
         await service.execute();
@@ -113,7 +113,7 @@ describe('JenkinsUserListService', () => {
         let data: JSON = new AndreiStrautInfoMasterUserListDataProvider().getUserListData();
         
         let proxyService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
-        proxyService.setResponse(data);
+        proxyService.setDefaultResponse(data);
         
         let service: JenkinsUserListService = new JenkinsUserListService(configService, proxyService, utilService, loggerService, "SomeUrl");
         await service.execute();

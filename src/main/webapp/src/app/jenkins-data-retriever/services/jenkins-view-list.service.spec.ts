@@ -97,7 +97,7 @@ describe('JenkinsViewListService', () => {
         let data: JSON = new AndreiStrautInfoMasterViewListDataProvider().getViewListData();
         
         let proxyService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
-        proxyService.setResponse(data);
+        proxyService.setDefaultResponse(data);
         
         let service: JenkinsViewListService = new JenkinsViewListService(configService, proxyService, utilService, loggerService, "SomeUrl");
         await service.execute();

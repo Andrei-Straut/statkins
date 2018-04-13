@@ -95,7 +95,7 @@ describe('JenkinsJobListService', () => {
         let data: JSON = new AndreiStrautInfoMasterJobListDataProvider().getJobListData();
         
         let proxyService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
-        proxyService.setResponse(data);
+        proxyService.setDefaultResponse(data);
         let service: JenkinsJobListService = new JenkinsJobListService(configService, proxyService, loggerService, "SomeUrl");
         await service.execute();
 

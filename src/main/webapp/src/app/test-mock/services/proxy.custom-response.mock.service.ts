@@ -8,20 +8,40 @@ import {ConfigMockService} from './config.mock.service';
 @Injectable()
 export class ProxyCustomResponseMockService extends ProxyService {
     
-    private desiredResponse: JSON;
+    private defaultResponse: JSON;
+    private desiredResponses: Map<string, any>;
 
     constructor() {
         super(null, null, new ConfigMockService());
-        this.desiredResponse = JSON.parse("{}");
+        this.defaultResponse = JSON.parse("{}");
+        this.desiredResponses = new Map<string, any>();
     }
     
-    setResponse(desiredResponse: JSON) {
-        this.desiredResponse = desiredResponse;
+    setDefaultResponse(desiredResponse: JSON) {
+        this.defaultResponse = desiredResponse;
+    }
+    
+    addResponse(url:string, desiredResponse:any) {
+        if (this.desiredResponses === undefined || this.desiredResponses === null) {
+            this.desiredResponses = new Map<string, any>();
+        }
+        
+        this.desiredResponses.set(url, desiredResponse);
+    }
+    
+    setResponses(desiredResponses: Map<string, any>) {
+        this.desiredResponses = desiredResponses;
     }
 
     proxy(url: string): Observable<any> {
-        let proxyResponse = Observable.of(this.desiredResponse);
-
-        return proxyResponse;
+        if (this.desiredResponses === undefined || this.desiredResponses === null) {
+            return Observable.of(this.defaultResponse);
+        }
+        
+        if (this.desiredResponses.has(url)) {
+            return Observable.of(this.desiredResponses.get(url));
+        }
+        
+        return Observable.of(this.defaultResponse);
     }
 }
