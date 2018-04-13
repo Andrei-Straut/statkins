@@ -98,7 +98,7 @@ describe('JenkinsNodeService', () => {
         delete data["computer"];
         
         let proxyService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
-        proxyService.setResponse(data);
+        proxyService.setDefaultResponse(data);
         
         let service: JenkinsNodeService = new JenkinsNodeService(configService, proxyService, utilService, loggerService, "SomeUrl");
         await service.execute();
@@ -113,7 +113,7 @@ describe('JenkinsNodeService', () => {
         let data: JSON = new AndreiStrautInfoMasterNodeDataProvider().getNodeData();
         
         let proxyService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
-        proxyService.setResponse(data);
+        proxyService.setDefaultResponse(data);
         
         let service: JenkinsNodeService = new JenkinsNodeService(configService, proxyService, utilService, loggerService, "SomeUrl");
         await service.execute();

@@ -80,7 +80,7 @@ describe('JenkinsJobService', () => {
         let jobData: Array<IJenkinsJob> = new JenkinsDataProviderService().getData().jobs;
         let proxyCustomResponseService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
         let service: JenkinsJobService = new JenkinsJobService(configService, proxyCustomResponseService, utilService, loggerService, jobData);
-        proxyCustomResponseService.setResponse(JSON.parse(jobData[0].getJsonData()));
+        proxyCustomResponseService.setDefaultResponse(JSON.parse(jobData[0].getJsonData()));
         
         await service.execute();
 
@@ -99,7 +99,7 @@ describe('JenkinsJobService', () => {
         delete jobData[0].upstreamProjects;
         delete jobData[0].downstreamProjects;
         let proxyCustomResponseService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
-        proxyCustomResponseService.setResponse(JSON.parse(JSON.stringify(jobData[0])));
+        proxyCustomResponseService.setDefaultResponse(JSON.parse(JSON.stringify(jobData[0])));
         let service: JenkinsJobService = new JenkinsJobService(configService, proxyCustomResponseService, utilService, loggerService, jobData);
         
         await service.execute();
@@ -115,7 +115,7 @@ describe('JenkinsJobService', () => {
     it('getData should skip values and continue for response with empty jobs', async () => {
         let jobData: Array<IJenkinsJob> = new JenkinsDataProviderService().getData().jobs;
         let proxyCustomResponseService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
-        proxyCustomResponseService.setResponse(JSON.parse("{}"));
+        proxyCustomResponseService.setDefaultResponse(JSON.parse("{}"));
         let service: JenkinsJobService = new JenkinsJobService(configService, proxyCustomResponseService, utilService, loggerService, jobData);
         
         await service.execute();
@@ -130,7 +130,7 @@ describe('JenkinsJobService', () => {
         let jobData: Array<IJenkinsJob> = new JenkinsDataProviderService().getData().jobs;
         delete jobData[0].name;
         let proxyCustomResponseService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
-        proxyCustomResponseService.setResponse(JSON.parse(jobData[0].getJsonData()));
+        proxyCustomResponseService.setDefaultResponse(JSON.parse(jobData[0].getJsonData()));
         let service: JenkinsJobService = new JenkinsJobService(configService, proxyCustomResponseService, utilService, loggerService, jobData);
         
         await service.execute();
