@@ -155,6 +155,33 @@ describe('JenkinsUserService', () => {
         expect(service.isDataComplete()).toBeFalsy();
     });
     
+    it('getData should skip values and continue for response with undefined users', async () => {
+        let userListJsonData: JSON = new AndreiStrautInfoMasterUserListDataProvider().getUserListData();
+        let userListProxyService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
+        let userListService: JenkinsUserListService = new JenkinsUserListService(configService, userListProxyService, utilService, loggerService, "SomeUrl");
+        
+        userListProxyService.setDefaultResponse(userListJsonData);
+        await userListService.execute();
+        let userListData = userListService.getData();
+        
+        let noReplyData = new AndreiStrautInfoNoReplyUserDataProvider().getUserData();
+        let andreiStrautData = new AndreiStrautInfoAndreiStrautUserDataProvider().getUserData();
+        let andreiDotStrautData = new AndreiStrautInfoAndreiDotStrautUserDataProvider().getUserData();
+        
+        let userProxyService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();
+        userProxyService.addResponse(((noReplyData["absoluteUrl"] as string).replace(/\/$/, "") + '/' + configService.apiSuffix), noReplyData);
+        userProxyService.addResponse(((andreiStrautData["absoluteUrl"] as string).replace(/\/$/, "") + '/' + configService.apiSuffix), undefined);
+        userProxyService.addResponse(((andreiDotStrautData["absoluteUrl"] as string).replace(/\/$/, "") + '/' + configService.apiSuffix), andreiDotStrautData);
+        
+        let service: JenkinsUserService = new JenkinsUserService(configService, userProxyService, utilService, loggerService, userListData);
+        await service.execute();
+
+        expect(service.getData().length).toBe(3);
+        expect(service.isComplete()).toBeTruthy();
+        expect(service.isSuccessful()).toBeTruthy();
+        expect(service.isDataComplete()).toBeFalsy();
+    });
+    
     it('getData should skip values and continue for response with user without absoluteUrl', async () => {
         let userListJsonData: JSON = new AndreiStrautInfoMasterUserListDataProvider().getUserListData();
         let userListProxyService: ProxyCustomResponseMockService = new ProxyCustomResponseMockService();

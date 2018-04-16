@@ -49,7 +49,7 @@ export class JenkinsUserService extends JenkinsDataRetrieverService {
             .then(values => {
 
                 for (let userJson of <Array<JSON>> values) {
-                    if (!(<JSON> userJson).hasOwnProperty("fullName")) {
+                    if (this.util.isInvalid(userJson) || !(userJson as JSON).hasOwnProperty("fullName")) {
                         this.LOGGER.warn("No user details found for:", userJson);
                         this.allItemsRetrievedSuccessfully = false;
                         continue;
