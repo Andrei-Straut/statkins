@@ -125,7 +125,7 @@ describe('JenkinsNodeService', () => {
         expect(service.getData().length).toBe(2);
         
         expect((service.getData()[0] as IJenkinsNode).displayName).toBe("master");
-        expect((service.getData()[0] as IJenkinsNode).url).toBe("SomeUrl/computer/master");
+        expect((service.getData()[0] as IJenkinsNode).url).toBe("SomeUrl/computer/(master)");
         expect((service.getData()[0] as IJenkinsNode).executors.length).toBe(1);
         expect((service.getData()[0] as IJenkinsNode).offline).toBe(false);
         expect((service.getData()[0] as IJenkinsNode).actions.length).toBe(0);
