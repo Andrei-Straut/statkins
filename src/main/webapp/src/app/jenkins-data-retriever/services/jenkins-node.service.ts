@@ -107,6 +107,11 @@ export class JenkinsNodeService extends JenkinsDataRetrieverService {
             return undefined;
         }
         
-        return jenkinsUrl.replace(/\/$/, "") + '/' + config.slaveSuffix + nodeName;
+        let name = nodeName;
+        if (name.toLowerCase() === "master") {
+            name = '(' + nodeName + ')';
+        }
+        
+        return jenkinsUrl.replace(/\/$/, "") + '/' + config.slaveSuffix + name;
     }
 }
